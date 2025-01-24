@@ -247,7 +247,8 @@ def demander_choice_resolution_vidéo_or_bitrate_audio(download_sound_only:bool,
 def streams_video(download_sound_only: bool, youtube_video: YouTube):
     try:
         if download_sound_only:
-            streams = youtube_video.streams.filter(only_audio=True, file_extension='mp4').order_by('abr').desc()
+            # streams = youtube_video.streams.filter(only_audio=True, file_extension='mp4').order_by('abr').desc()
+            streams = youtube_video.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc()
         else:
             streams = youtube_video.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc()
         
