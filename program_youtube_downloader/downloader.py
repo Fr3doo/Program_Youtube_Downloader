@@ -64,10 +64,10 @@ class YoutubeDownloader:
                 file_path.unlink()
         except OSError:
             logging.exception("Error during MP4 to MP3 conversion")
-            print("[WARMING] un fichier MP3 portant le même nom, déjà existant!")
+            logging.warning("[WARMING] un fichier MP3 portant le même nom, déjà existant!")
             if file_path.exists():
                 file_path.unlink()
-            print()
+            logging.info("")
 
     def download_multiple_videos(
         self,
@@ -132,43 +132,42 @@ class YoutubeDownloader:
                 else:
                     choice_user = 1
                 choice_once = False
-                print()
-                print()
+                logging.info("")
+                logging.info("")
                 cli_utils.print_separator()
-                print("*             Stream vidéo selectionnée:                    *")
+                logging.info("*             Stream vidéo selectionnée:                    *")
                 cli_utils.print_separator()
-                print(
-                    "Number of link url video youtube in file: ",
+                logging.info("Number of link url video youtube in file: %s",
                     len(url_list),
                 )
-                print()
+                logging.info("")
 
             itag = streams[choice_user - 1].itag  # type: ignore
             stream = youtube_video.streams.get_by_itag(itag)
 
-            print(f"Titre: {video_title[0:53]}")
+            logging.info("Titre: %s", video_title[0:53])
 
             current_file = save_path / stream.default_filename  # type: ignore
             if current_file.exists():
-                print("[WARMING] un fichier MP4 portant le même nom, déjà existant!")
+                logging.warning("[WARMING] un fichier MP4 portant le même nom, déjà existant!")
 
             try:
                 out_file = Path(stream.download(output_path=str(save_path)))  # type: ignore
-                print()
+                logging.info("")
             except Exception as e:  # pragma: no cover - network/io issues
                 logging.exception("Download failed")
-                print()
+                logging.info("")
                 logging.error("[ERREUR] : le téléchargement a échoué : %s", e)
-                print()
+                logging.info("")
                 continue
 
             if out_file and download_sound_only:
                 self.conversion_mp4_in_mp3(out_file)
 
-        print()
-        print("Fin du téléchargement")
+        logging.info("")
+        logging.info("Fin du téléchargement")
         cli_utils.print_separator()
-        print()
+        logging.info("")
         input("Appuyer sur ENTREE pour revenir au menu d'accueil")
         program_break_time(3, "Le menu d'accueil va revenir dans")
         clear_screen()

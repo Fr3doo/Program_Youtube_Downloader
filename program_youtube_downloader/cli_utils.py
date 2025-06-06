@@ -25,14 +25,14 @@ def ask_numeric_value(valeur_min: int, valeur_max: int) -> int:
         try:
             v_int = int(v_str)
         except ValueError:
-            print("FAIL : Vous devez rentrer une valeur numérique.")
-            print()
+            logging.warning("FAIL : Vous devez rentrer une valeur numérique.")
+            logging.info("")
             continue
         if not (valeur_min <= v_int <= valeur_max):
-            print(
+            logging.warning(
                 f"FAIL : Vous devez rentrer un nombre (entre {valeur_min} et {valeur_max} )."
             )
-            print()
+            logging.info("")
             continue
 
         return v_int
@@ -80,10 +80,10 @@ def demander_save_file_path() -> Path:
                 path.mkdir(parents=True, exist_ok=True)
             except OSError:
                 logging.exception("Directory creation failed")
-                print("[ERREUR] : Impossible de créer le dossier")
+                logging.error("[ERREUR] : Impossible de créer le dossier")
                 return demander_save_file_path()
         else:
-            print("[ERREUR] : Le dossier n'existe pas")
+            logging.error("[ERREUR] : Le dossier n'existe pas")
             return demander_save_file_path()
 
     return path
@@ -104,8 +104,8 @@ def ask_youtube_url() -> str:
         if url.lower().startswith(BASE_YOUTUBE_URL):
             return url
 
-        print("ERREUR : Vous devez renter une URL de vidéo youtube")
-        print("le prefixe attendu est : https://www.youtube.com/")
+        logging.error("ERREUR : Vous devez renter une URL de vidéo youtube")
+        logging.error("le prefixe attendu est : https://www.youtube.com/")
 
 
 def demander_youtube_link_file() -> list[str]:
@@ -126,7 +126,7 @@ def demander_youtube_link_file() -> list[str]:
             number_links_file = len(lignes)
 
             if not number_links_file:
-                print("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
+                logging.error("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
                 return demander_youtube_link_file()
 
             for i in range(0, len(lignes)):
@@ -136,18 +136,18 @@ def demander_youtube_link_file() -> list[str]:
                 if url_video.lower().startswith(BASE_YOUTUBE_URL):
                     link_url_video_youtube_final.append(url_video)
                 else:
-                    print("[ERREUR] : ")
-                    print("le prefixe attendu est : https://www.youtube.com/")
-                    print(f"  le lien sur la ligne n° {compteur_ligne} ne sera pas télécharger")
-                    print("")
+                    logging.error("[ERREUR] : ")
+                    logging.error("le prefixe attendu est : https://www.youtube.com/")
+                    logging.error(f"  le lien sur la ligne n° {compteur_ligne} ne sera pas télécharger")
+                    logging.error("")
                     number_erreur += 1
 
             if number_erreur == number_links_file:
-                print("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
+                logging.error("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
                 return demander_youtube_link_file()
     except OSError as e:
         logging.exception("[ERREUR] : Le fichier n'est pas accessible")
-        print("[ERREUR] : Le fichier n'est pas accessible")
+        logging.error("[ERREUR] : Le fichier n'est pas accessible")
 
     return link_url_video_youtube_final
 

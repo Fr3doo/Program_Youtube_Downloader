@@ -61,13 +61,13 @@ def menu() -> None:
 
         match reponse_utilisateur_pour_choix_dans_menu:
             case 9:
-                print()
-                print()
-                print("*************************************************************")
-                print("*                                                           *")
-                print("*                    Fin du programme                       *")
-                print("*                                                           *")
-                print("*************************************************************")
+                logging.info("")
+                logging.info("")
+                logging.info("*************************************************************")
+                logging.info("*                                                           *")
+                logging.info("*                    Fin du programme                       *")
+                logging.info("*                                                           *")
+                logging.info("*************************************************************")
                 break
             case 1 | 5:
                 url_video_send_user_list: list[str] = []
@@ -107,7 +107,7 @@ def menu() -> None:
                     link_url_playlist_youtube = youtube_downloader.Playlist(url_playlist_send_user)
                 except Exception as exc:
                     logging.exception("Error connecting to playlist")
-                    print("[ERREUR] : Connexion à la Playlist impossible")
+                    logging.error("[ERREUR] : Connexion à la Playlist impossible")
                 else:
                     if reponse_utilisateur_pour_choix_dans_menu == 3:
                         download_sound_only = False
@@ -128,7 +128,7 @@ def menu() -> None:
                     link_url_channel_youtube = youtube_downloader.Channel(url_channel_send_user)
                 except Exception as exc:
                     logging.exception("Error connecting to channel")
-                    print("[ERREUR] : Connexion à la chaîne Youtube impossible")
+                    logging.error("[ERREUR] : Connexion à la chaîne Youtube impossible")
                 else:
                     if reponse_utilisateur_pour_choix_dans_menu == 4:
                         download_sound_only = False
