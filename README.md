@@ -81,4 +81,6 @@ Ce projet est destiné à un usage personnel pour faciliter la récupération de
 
 Les contributions sont les bienvenues ! Vous pouvez ouvrir une *issue* pour signaler un problème ou demander une fonctionnalité. Pour proposer une correction ou une amélioration, créez une *pull request* depuis votre fork du dépôt.
 
+Veuillez vous assurer que toute utilisation de cet outil respecte les Conditions d'utilisation de YouTube ainsi que les lois en vigueur dans votre pays. Les auteurs du projet déclinent toute responsabilité quant aux conséquences d'un usage inapproprié ou illégal.
+
 
