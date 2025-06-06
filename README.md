@@ -87,6 +87,14 @@ Image :
 
 Ce projet est destiné à un usage personnel pour faciliter la récupération de contenu YouTube.
 
+## Tests
+
+Les tests unitaires sont écrits avec `pytest`. Après l’installation des dépendances, exécutez :
+
+```bash
+pytest
+```
+
 ## Contribuer
 
 Les contributions sont les bienvenues ! Vous pouvez ouvrir une *issue* pour signaler un problème ou demander une fonctionnalité. Pour proposer une correction ou une amélioration, créez une *pull request* depuis votre fork du dépôt.
