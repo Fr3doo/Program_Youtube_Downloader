@@ -29,6 +29,13 @@ download videos, playlists or channels, or to extract audio only.
   - `colorama` (affichage en couleur)
   - et les paquets utilisés pour l’emballage avec `pyinstaller`
 
+Pour automatiser la création de `.venv` et l'installation des dépendances,
+vous pouvez lancer :
+
+```bash
+scripts/setup_env.sh
+```
+
 Installez-les avec :
 
 ```bash
