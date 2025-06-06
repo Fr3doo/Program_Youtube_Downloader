@@ -118,3 +118,57 @@ def test_download_multiple_videos_no_streams(monkeypatch, tmp_path: Path) -> Non
 
     assert not any(tmp_path.iterdir())
     assert not progress.called
+
+
+def test_download_multiple_videos_constructor_exception(monkeypatch, tmp_path: Path) -> None:
+    """Generic constructor exceptions should be ignored."""
+
+    def fake_constructor(url: str) -> DummyYT:
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr("builtins.input", lambda *args, **kwargs: "")
+    monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: None)
+    monkeypatch.setattr(cli_utils, "pause_return_to_menu", lambda *a, **k: None)
+
+    progress = DummyHandler()
+    yd = YoutubeDownloader(progress_handler=progress, youtube_cls=fake_constructor)
+    options = DownloadOptions(
+        save_path=tmp_path,
+        download_sound_only=False,
+    )
+    yd.download_multiple_videos([
+        "https://youtu.be/boom",
+    ], options)
+
+    assert not any(tmp_path.iterdir())
+    assert not progress.called
+
+
+def test_download_multiple_videos_streams_error(monkeypatch, tmp_path: Path) -> None:
+    """HTTPError during stream retrieval should skip download."""
+
+    class FailingStreams:
+        def filter(self, *a, **k):
+            raise HTTPError(url="u", code=404, msg="x", hdrs=None, fp=None)
+
+    def fake_constructor(url: str) -> DummyYT:
+        yt = DummyYT(url)
+        yt.streams = FailingStreams()
+        return yt
+
+    monkeypatch.setattr("builtins.input", lambda *args, **kwargs: "")
+    monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: None)
+    monkeypatch.setattr(cli_utils, "pause_return_to_menu", lambda *a, **k: None)
+
+    progress = DummyHandler()
+    yd = YoutubeDownloader(progress_handler=progress, youtube_cls=fake_constructor)
+    options = DownloadOptions(
+        save_path=tmp_path,
+        download_sound_only=False,
+    )
+    yd.download_multiple_videos([
+        "https://youtu.be/error",
+    ], options)
+
+    assert not any(tmp_path.iterdir())
+    assert not progress.called
