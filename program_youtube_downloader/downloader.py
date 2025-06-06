@@ -5,7 +5,7 @@ import logging
 
 from pytubefix import YouTube
 
-from youtube_downloader import (
+from .youtube_downloader import (
     demander_save_file_path,
     on_download_progress,
     demander_choice_resolution_vidéo_or_bitrate_audio,

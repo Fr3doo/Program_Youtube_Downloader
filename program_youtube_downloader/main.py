@@ -6,8 +6,8 @@ import argparse
 if '__annotations__' not in globals():
     __annotations__ = {}
 
-import youtube_downloader
-from downloader import YoutubeDownloader
+from . import youtube_downloader
+from .downloader import YoutubeDownloader
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:

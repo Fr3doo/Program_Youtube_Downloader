@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from downloader import YoutubeDownloader
+from program_youtube_downloader.downloader import YoutubeDownloader
 
 
 def test_conversion_mp4_in_mp3(tmp_path: Path) -> None:
