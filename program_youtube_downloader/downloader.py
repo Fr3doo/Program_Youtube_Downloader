@@ -8,8 +8,8 @@ from pytubefix import YouTube
 from .youtube_downloader import (
     program_break_time,
     clear_screen,
-    print_separator,
 )
+from . import cli_utils
 
 
 class YoutubeDownloader:
@@ -118,9 +118,9 @@ class YoutubeDownloader:
                 choice_once = False
                 print()
                 print()
-                print_separator()
+                cli_utils.print_separator()
                 print("*             Stream vidéo selectionnée:                    *")
-                print_separator()
+                cli_utils.print_separator()
                 print(
                     "Number of link url video youtube in file: ",
                     len(url_list),
@@ -151,7 +151,7 @@ class YoutubeDownloader:
 
         print()
         print("Fin du téléchargement")
-        print_separator()
+        cli_utils.print_separator()
         print()
         input("Appuyer sur ENTREE pour revenir au menu d'accueil")
         program_break_time(3, "Le menu d'accueil va revenir dans")
