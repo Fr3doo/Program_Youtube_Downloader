@@ -3,6 +3,7 @@
 import sys
 import argparse
 import logging
+import os
 
 if '__annotations__' not in globals():
     __annotations__ = {}
@@ -15,6 +16,12 @@ from .downloader import YoutubeDownloader
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """Return the parsed CLI arguments."""
     parser = argparse.ArgumentParser(description="Program Youtube Downloader")
+    parser.add_argument(
+        "--log-level",
+        default=os.environ.get("PYDL_LOG_LEVEL", "ERROR"),
+        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+        help="Set logging level (overrides PYDL_LOG_LEVEL)",
+    )
     subparsers = parser.add_subparsers(dest="command")
 
     video_parser = subparsers.add_parser("video", help="Download one or more videos")
@@ -163,6 +170,7 @@ def menu() -> None:
 def main(argv: list[str] | None = None) -> None:
     """Parse arguments and dispatch to subcommands."""
     args = parse_args(argv)
+    logging.getLogger().setLevel(args.log_level)
     command = args.command
     yd = YoutubeDownloader()
 

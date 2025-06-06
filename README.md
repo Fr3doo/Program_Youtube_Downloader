@@ -90,6 +90,26 @@ consultez [AGENTS.md](AGENTS.md).
 
 Ce projet est destiné à un usage personnel pour faciliter la récupération de contenu YouTube.
 
+## Journalisation
+
+L'outil utilise le module `logging` de Python pour afficher les messages d'erreur.
+Par défaut, seuls les messages de niveau `ERROR` sont affichés. Vous pouvez
+activer un niveau plus verbeux de deux manières&nbsp;:
+
+1. En définissant la variable d'environnement `PYDL_LOG_LEVEL` avant d'exécuter
+   le programme&nbsp;:
+
+   ```bash
+   PYDL_LOG_LEVEL=DEBUG python main.py video https://youtu.be/example
+   ```
+
+2. Ou en utilisant l'option de ligne de commande `--log-level` qui prend le
+   pas sur la variable d'environnement&nbsp;:
+
+   ```bash
+   python main.py --log-level INFO video https://youtu.be/example
+   ```
+
 ## Tests
 
 Les tests unitaires sont écrits avec `pytest`. Après l’installation des dépendances, exécutez :

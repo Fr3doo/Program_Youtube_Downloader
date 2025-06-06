@@ -31,14 +31,17 @@ class YoutubeDownloader:
                 )
             return streams
         except HTTPError as e:
-            print(
-                f"[ERREUR] : Impossible d'accéder aux flux pour la vidéo. Code HTTP : {e.code}, Message : {e.reason}"
+            logging.error(
+                "[ERREUR] : Impossible d'accéder aux flux pour la vidéo. Code HTTP : %s, Message : %s",
+                e.code,
+                e.reason,
             )
             return None
         except Exception as e:  # pragma: no cover - defensive
             logging.exception("Unexpected error while retrieving streams")
-            print(
-                f"[ERREUR] : Une erreur inattendue s'est produite lors de la récupération des flux : {e}"
+            logging.error(
+                "[ERREUR] : Une erreur inattendue s'est produite lors de la récupération des flux : %s",
+                e,
             )
             return None
 
@@ -73,7 +76,7 @@ class YoutubeDownloader:
 
         url_list = list(url_youtube_video_links)
         if not url_list:
-            print("[ERREUR] : il y a aucune vidéo à télécharger")
+            logging.error("[ERREUR] : il y a aucune vidéo à télécharger")
             return url_list
 
         for url_video in url_list:
@@ -82,31 +85,35 @@ class YoutubeDownloader:
                 if progress_callback:
                     youtube_video.register_on_progress_callback(progress_callback)
             except KeyError as e:
-                print(f"[ERREUR] : Problème de clé dans les données : {e}")
+                logging.error("[ERREUR] : Problème de clé dans les données : %s", e)
                 continue
             except Exception as e:  # pragma: no cover - defensive
                 logging.exception("Unexpected error while connecting to video")
-                print(f"[ERREUR] : Connexion à la vidéo impossible : {e}")
+                logging.error("[ERREUR] : Connexion à la vidéo impossible : %s", e)
                 continue
 
             streams = self.streams_video(download_sound_only, youtube_video)
             if not streams:
-                print(
-                    f"[ERREUR] : Les flux pour la vidéo ({url_video}) n'ont pas pu être récupérés."
+                logging.error(
+                    "[ERREUR] : Les flux pour la vidéo (%s) n'ont pas pu être récupérés.",
+                    url_video,
                 )
                 continue
 
             try:
                 video_title = youtube_video.title
             except KeyError as e:
-                print(
-                    f"[ERREUR] : Impossible d'accéder au titre de la vidéo {url_video}. Détail : {e}"
+                logging.error(
+                    "[ERREUR] : Impossible d'accéder au titre de la vidéo %s. Détail : %s",
+                    url_video,
+                    e,
                 )
                 continue
             except Exception as e:  # pragma: no cover - defensive
                 logging.exception("Unexpected error while accessing video title")
-                print(
-                    f"[ERREUR] : Une erreur inattendue s'est produite lors de l'accès au titre : {e}"
+                logging.error(
+                    "[ERREUR] : Une erreur inattendue s'est produite lors de l'accès au titre : %s",
+                    e,
                 )
                 continue
 
@@ -142,7 +149,7 @@ class YoutubeDownloader:
             except Exception as e:  # pragma: no cover - network/io issues
                 logging.exception("Download failed")
                 print()
-                print(f"[ERREUR] : le téléchargement a échoué : {e}")
+                logging.error("[ERREUR] : le téléchargement a échoué : %s", e)
                 print()
                 continue
 
