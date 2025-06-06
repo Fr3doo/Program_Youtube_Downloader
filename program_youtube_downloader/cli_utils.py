@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import logging
+from typing import Iterable, Any
 
 from .constants import (
     TITLE_PROGRAM,
@@ -39,6 +40,7 @@ def ask_numeric_value(valeur_min: int, valeur_max: int) -> int:
 
 
 def afficher_menu_acceuil() -> int:
+    """Display the main menu and return the number of available choices."""
     print()
     print()
     print_separator()
@@ -109,6 +111,8 @@ def ask_youtube_url() -> str:
 
 
 def demander_youtube_link_file() -> list[str]:
+    """Read a text file of YouTube URLs and return the valid entries."""
+
     link_url_video_youtube_final: list[str] = []
     print()
     print()
@@ -152,7 +156,10 @@ def demander_youtube_link_file() -> list[str]:
     return link_url_video_youtube_final
 
 
-def demander_choice_resolution_vidéo_or_bitrate_audio(download_sound_only: bool, list_available_streams) -> int:
+def demander_choice_resolution_vidéo_or_bitrate_audio(
+    download_sound_only: bool, list_available_streams: Iterable[Any]
+) -> int:
+    """Prompt the user to choose a resolution or bitrate from ``list_available_streams``."""
     i = 0
     valeur_choix_maximale = i
 
