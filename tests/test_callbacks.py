@@ -58,3 +58,54 @@ def test_download_multiple_videos_custom_callbacks(monkeypatch, tmp_path: Path) 
     assert (tmp_path / "sample.mp4").exists()
     assert created['yt'].progress is progress_cb
     assert called['choice']
+
+
+def test_download_multiple_videos_instantiation_error(monkeypatch, tmp_path: Path) -> None:
+    """YouTube constructor failure should be handled gracefully."""
+
+    def fake_constructor(url: str) -> DummyYT:
+        raise KeyError("boom")
+
+    monkeypatch.setattr(downloader_module, "YouTube", fake_constructor)
+    monkeypatch.setattr("builtins.input", lambda *args, **kwargs: "")
+    monkeypatch.setattr(downloader_module, "program_break_time", lambda *a, **k: None)
+    monkeypatch.setattr(downloader_module, "clear_screen", lambda *a, **k: None)
+
+    called = {}
+
+    def progress_cb(stream, chunk, bytes_remaining) -> None:
+        called['progress'] = True
+
+    yd = YoutubeDownloader()
+    yd.download_multiple_videos([
+        "https://youtu.be/fail"
+    ], False, save_path=tmp_path, progress_callback=progress_cb)
+
+    assert not any(tmp_path.iterdir())
+    assert 'progress' not in called
+
+
+def test_download_multiple_videos_no_streams(monkeypatch, tmp_path: Path) -> None:
+    """When no streams are returned, nothing should be downloaded."""
+
+    def fake_constructor(url: str) -> DummyYT:
+        return DummyYT(url)
+
+    monkeypatch.setattr(downloader_module, "YouTube", fake_constructor)
+    monkeypatch.setattr(YoutubeDownloader, "streams_video", lambda self, dso, yt: None)
+    monkeypatch.setattr("builtins.input", lambda *args, **kwargs: "")
+    monkeypatch.setattr(downloader_module, "program_break_time", lambda *a, **k: None)
+    monkeypatch.setattr(downloader_module, "clear_screen", lambda *a, **k: None)
+
+    called = {}
+
+    def progress_cb(stream, chunk, bytes_remaining) -> None:
+        called['progress'] = True
+
+    yd = YoutubeDownloader()
+    yd.download_multiple_videos([
+        "https://youtu.be/nostreams"
+    ], False, save_path=tmp_path, progress_callback=progress_cb)
+
+    assert not any(tmp_path.iterdir())
+    assert called == {}
