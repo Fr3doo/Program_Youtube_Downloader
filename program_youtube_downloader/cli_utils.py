@@ -3,7 +3,7 @@
 from pathlib import Path
 import logging
 
-from .youtube_downloader import (
+from .constants import (
     TITLE_PROGRAM,
     TITLE_QUESTION_MENU_ACCUEIL,
     CHOICE_MENU_ACCUEIL,
