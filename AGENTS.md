@@ -32,6 +32,10 @@ main()
 
 **Dependencies**: `pytubefix`, validation helpers and progress agent.
 
+`YoutubeDownloader` accepts an optional `youtube_cls` factory to create
+`pytubefix.YouTube` objects. Tests can supply a dummy constructor to avoid
+network access.
+
 Usage:
 ```python
 from downloader import YoutubeDownloader
