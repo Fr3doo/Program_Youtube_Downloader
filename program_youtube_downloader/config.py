@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional, Callable, Any
 
-from .progress import on_download_progress
+from .progress import ProgressHandler, ProgressBarHandler
 
 
 @dataclass
@@ -12,4 +12,4 @@ class DownloadOptions:
     save_path: Optional[Path] = None
     download_sound_only: bool = False
     choice_callback: Optional[Callable[[bool, Any], int]] = None
-    progress_callback: Optional[Callable[[Any, Any, int], None]] = on_download_progress
+    progress_handler: Optional[ProgressHandler] = None

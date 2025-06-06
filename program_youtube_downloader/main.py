@@ -12,7 +12,7 @@ from . import youtube_downloader
 from . import cli_utils
 from .downloader import YoutubeDownloader
 from .config import DownloadOptions
-from .progress import on_download_progress
+
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -81,7 +81,6 @@ def menu() -> None:
                     save_path=save_path,
                     download_sound_only=download_sound_only,
                     choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-                    progress_callback=on_download_progress,
                 )
                 yd.download_multiple_videos(
                     url_video_send_user_list,
@@ -97,7 +96,6 @@ def menu() -> None:
                     save_path=save_path,
                     download_sound_only=download_sound_only,
                     choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-                    progress_callback=on_download_progress,
                 )
                 yd.download_multiple_videos(
                     youtube_video_links,
@@ -119,7 +117,6 @@ def menu() -> None:
                         save_path=save_path,
                         download_sound_only=download_sound_only,
                         choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-                        progress_callback=on_download_progress,
                     )
                     yd.download_multiple_videos(
                         link_url_playlist_youtube,
@@ -141,7 +138,6 @@ def menu() -> None:
                         save_path=save_path,
                         download_sound_only=download_sound_only,
                         choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-                        progress_callback=on_download_progress,
                     )
                     yd.download_multiple_videos(
                         link_url_channel_youtube,
@@ -198,7 +194,6 @@ def main(argv: list[str] | None = None) -> None:
             save_path=save_path,
             download_sound_only=args.audio,
             choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-            progress_callback=on_download_progress,
         )
         yd.download_multiple_videos(
             args.urls,
@@ -211,7 +206,6 @@ def main(argv: list[str] | None = None) -> None:
             save_path=save_path,
             download_sound_only=args.audio,
             choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-            progress_callback=on_download_progress,
         )
         yd.download_multiple_videos(
             playlist,
@@ -224,7 +218,6 @@ def main(argv: list[str] | None = None) -> None:
             save_path=save_path,
             download_sound_only=args.audio,
             choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-            progress_callback=on_download_progress,
         )
         yd.download_multiple_videos(
             channel,

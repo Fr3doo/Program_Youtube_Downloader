@@ -11,10 +11,14 @@ from .youtube_downloader import (
 )
 from . import cli_utils
 from .config import DownloadOptions
+from .progress import ProgressHandler, ProgressBarHandler
 
 
 class YoutubeDownloader:
     """Responsible for fetching streams and saving downloaded files."""
+
+    def __init__(self, progress_handler: ProgressHandler | None = None) -> None:
+        self.progress_handler = progress_handler or ProgressBarHandler()
 
     def streams_video(self, download_sound_only: bool, youtube_video: YouTube):
         try:
@@ -70,7 +74,7 @@ class YoutubeDownloader:
         download_sound_only = options.download_sound_only
         save_path = options.save_path or Path.cwd()
         choice_callback = options.choice_callback
-        progress_callback = options.progress_callback
+        progress_handler = options.progress_handler or self.progress_handler
 
         choice_once = True
 
@@ -82,8 +86,8 @@ class YoutubeDownloader:
         for url_video in url_list:
             try:
                 youtube_video = YouTube(url_video)
-                if progress_callback:
-                    youtube_video.register_on_progress_callback(progress_callback)
+                if progress_handler:
+                    youtube_video.register_on_progress_callback(progress_handler.on_progress)
             except KeyError as e:
                 logging.error("[ERREUR] : Problème de clé dans les données : %s", e)
                 continue
