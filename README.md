@@ -16,7 +16,8 @@ Principales fonctionnalités :
 A simple command-line tool for downloading YouTube content using
 [pytubefix](https://pypi.org/project/pytubefix/). It requires Python 3.10 or
 newer and the dependencies listed in `requirements.txt` installed inside a
-virtual environment. Start it with `python main.py` and follow the menu to
+virtual environment. After installing the package with `pip install .`,
+run the `program-youtube-downloader` command and follow the menu to
 download videos, playlists or channels, or to extract audio only.
 
 ## Prérequis
@@ -34,12 +35,22 @@ Installez-les avec :
 pip install -r requirements.txt
 ```
 
-## Lancement
+## Installation
 
-Exécutez simplement le script principal :
+Dans votre environnement virtuel, installez le paquet en mode local :
 
 ```bash
-python main.py
+pip install .
+```
+
+La commande `program-youtube-downloader` est alors disponible dans votre shell.
+
+## Lancement
+
+Une fois le paquet installé, lancez le programme avec :
+
+```bash
+program-youtube-downloader
 ```
 
 Un menu s’affichera pour choisir le type de téléchargement (vidéo ou audio, playlist, chaîne, etc.). Les fichiers récupérés sont enregistrés dans le dossier spécifié par l’utilisateur.
@@ -99,18 +110,18 @@ Par défaut, seuls les messages de niveau `ERROR` sont affichés. Vous pouvez
 activer un niveau plus verbeux de deux manières&nbsp;:
 
 1. En définissant la variable d'environnement `PYDL_LOG_LEVEL` avant d'exécuter
-   le programme&nbsp;:
+    le programme&nbsp;:
 
-   ```bash
-   PYDL_LOG_LEVEL=DEBUG python main.py video https://youtu.be/example
-   ```
+    ```bash
+    PYDL_LOG_LEVEL=DEBUG program-youtube-downloader video https://youtu.be/example
+    ```
 
 2. Ou en utilisant l'option de ligne de commande `--log-level` qui prend le
    pas sur la variable d'environnement&nbsp;:
 
-   ```bash
-   python main.py --log-level INFO video https://youtu.be/example
-   ```
+    ```bash
+    program-youtube-downloader --log-level INFO video https://youtu.be/example
+    ```
 
 ## Tests
 

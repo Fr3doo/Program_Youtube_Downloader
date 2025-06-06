@@ -13,3 +13,6 @@ dependencies = [
     "pytubefix",
     "colorama",
 ]
+
+[project.scripts]
+program-youtube-downloader = "program_youtube_downloader.main:main"
