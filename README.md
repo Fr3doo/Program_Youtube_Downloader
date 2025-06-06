@@ -124,6 +124,8 @@ Pour une description détaillée des agents internes et de leurs responsabilité
 consultez [AGENTS.md](AGENTS.md).
 Un aperçu complet de la base de code en français est disponible dans
 [docs/overview_fr.md](docs/overview_fr.md).
+L'historique des versions est disponible dans
+[docs/changelog.md](docs/changelog.md).
 
 Ce projet est destiné à un usage personnel pour faciliter la récupération de contenu YouTube.
 
