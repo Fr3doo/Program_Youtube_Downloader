@@ -18,19 +18,24 @@ def print_separator() -> None:
 
 def ask_numeric_value(valeur_min: int, valeur_max: int) -> int:
     """Ask the user for a numeric value within a range."""
-    v_str = input(f"Donnez une valeur entre {valeur_min} et {valeur_max} : \n --> ")
-    try:
-        v_int = int(v_str)
-    except ValueError:
-        print("FAIL : Vous devez rentrer une valeur numérique.")
-        print()
-        return ask_numeric_value(valeur_min, valeur_max)
-    if not (valeur_min <= v_int <= valeur_max):
-        print(f"FAIL : Vous devez rentrer un nombre (entre {valeur_min} et {valeur_max} ).")
-        print()
-        return ask_numeric_value(valeur_min, valeur_max)
+    while True:
+        v_str = input(
+            f"Donnez une valeur entre {valeur_min} et {valeur_max} : \n --> "
+        )
+        try:
+            v_int = int(v_str)
+        except ValueError:
+            print("FAIL : Vous devez rentrer une valeur numérique.")
+            print()
+            continue
+        if not (valeur_min <= v_int <= valeur_max):
+            print(
+                f"FAIL : Vous devez rentrer un nombre (entre {valeur_min} et {valeur_max} )."
+            )
+            print()
+            continue
 
-    return v_int
+        return v_int
 
 
 def afficher_menu_acceuil() -> int:
