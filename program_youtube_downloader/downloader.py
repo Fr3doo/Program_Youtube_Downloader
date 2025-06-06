@@ -25,7 +25,10 @@ class YoutubeDownloader:
         self.progress_handler = progress_handler or ProgressBarHandler()
         self.youtube_cls = youtube_cls
 
-    def streams_video(self, download_sound_only: bool, youtube_video: YouTube):
+    def streams_video(
+        self, download_sound_only: bool, youtube_video: YouTube
+    ) -> Optional[Any]:
+        """Return available streams for ``youtube_video``."""
         try:
             if download_sound_only:
                 streams = (
@@ -56,6 +59,7 @@ class YoutubeDownloader:
             return None
 
     def conversion_mp4_in_mp3(self, file_downloaded: Union[str, Path]) -> None:
+        """Rename the downloaded MP4 file to MP3 and remove the source."""
         file_path = Path(file_downloaded)
         try:
             new_file = file_path.with_suffix(".mp3")

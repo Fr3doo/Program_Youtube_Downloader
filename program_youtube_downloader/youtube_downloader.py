@@ -27,13 +27,15 @@ from .constants import (
 # ----------------------------------- FONCTIONS --------------------------------------------- #
 # ------------------------------------------------------------------------------------------- #
 def clear_screen() -> None:
-    if(os.name == 'posix'):
+    """Clear the terminal screen on Windows or POSIX systems."""
+    if os.name == 'posix':
         os.system('clear')
     else:
         os.system('cls')
 
 
-def program_break_time(memorization_time:int, affichage_text:str) -> None:
+def program_break_time(memorization_time: int, affichage_text: str) -> None:
+    """Display a short countdown with ``affichage_text`` as prefix."""
     duree_restante_avant_lancement = memorization_time
     print(f"{affichage_text} {memorization_time} secondes ", end="", flush=True)
     for i in range(memorization_time):
