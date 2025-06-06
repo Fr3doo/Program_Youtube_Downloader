@@ -1,6 +1,7 @@
 # main.py
 # pyinstaller --onefile --add-data "mypy.ini;." --hidden-import "youtube_downloader" main.py
 import sys
+import argparse
 
 if '__annotations__' not in globals():
     __annotations__ = {}
@@ -8,7 +9,29 @@ if '__annotations__' not in globals():
 import youtube_downloader
 
 
-def main() -> None:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """Return the parsed CLI arguments."""
+    parser = argparse.ArgumentParser(description="Program Youtube Downloader")
+    subparsers = parser.add_subparsers(dest="command")
+
+    video_parser = subparsers.add_parser("video", help="Download one or more videos")
+    video_parser.add_argument("urls", nargs="+", help="Video URL(s)")
+    video_parser.add_argument("--audio", action="store_true", help="Download audio only")
+
+    playlist_parser = subparsers.add_parser("playlist", help="Download a playlist")
+    playlist_parser.add_argument("url", help="Playlist URL")
+    playlist_parser.add_argument("--audio", action="store_true", help="Download audio only")
+
+    channel_parser = subparsers.add_parser("channel", help="Download a channel")
+    channel_parser.add_argument("url", help="Channel URL")
+    channel_parser.add_argument("--audio", action="store_true", help="Download audio only")
+
+    subparsers.add_parser("menu", help="Run interactive menu")
+
+    return parser.parse_args(argv)
+
+
+def menu() -> None:
     """Run the main menu loop."""
 
     # --------------------------------------------------------------------------
@@ -101,6 +124,27 @@ def main() -> None:
 #         except Exception as e:
 #             error_type, _, error_traceback = sys.exc_info()
 #             print(f"Échec avec le client : {client}, itag : {itag} avec l'erreur : {e}\n\n\n\n")
+
+def main(argv: list[str] | None = None) -> None:
+    """Parse arguments and dispatch to subcommands."""
+    args = parse_args(argv)
+    command = args.command
+
+    if command is None or command == "menu":
+        menu()
+        return
+
+    if command == "video":
+        youtube_downloader.download_multiple_videos(args.urls, args.audio)
+    elif command == "playlist":
+        playlist = youtube_downloader.Playlist(args.url)
+        youtube_downloader.download_multiple_videos(playlist, args.audio)  # type: ignore
+    elif command == "channel":
+        channel = youtube_downloader.Channel(args.url)
+        youtube_downloader.download_multiple_videos(channel, args.audio)  # type: ignore
+    else:
+        raise SystemExit(f"Unknown command: {command}")
+
 
 if __name__ == "__main__":
     main()
