@@ -14,6 +14,9 @@ from colorama import init
 init(autoreset=True)
 from pathlib import Path
 from typing import Optional, Union
+import logging
+
+logging.basicConfig(level=logging.ERROR)
 
 
 # Projet "Program Youtube Downloader"
@@ -68,7 +71,7 @@ def ask_numeric_value(valeur_min: int, valeur_max: int) -> int:
     v_str = input(f"Donnez une valeur entre {valeur_min} et {valeur_max} : \n --> " )
     try:
         v_int = int(v_str)
-    except:
+    except ValueError:
         print("FAIL : Vous devez rentrer une valeur numérique.")
         print()
         return ask_numeric_value(valeur_min, valeur_max)
@@ -165,7 +168,8 @@ def demander_youtube_link_file() -> list[str]:
             if number_erreur == number_links_file:
                 print("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
                 return demander_youtube_link_file()
-    except Exception:
+    except OSError as e:
+        logging.exception("[ERREUR] : Le fichier n'est pas accessible")
         print("[ERREUR] : Le fichier n'est pas accessible")
 
     return link_url_video_youtube_final
@@ -259,6 +263,7 @@ def streams_video(download_sound_only: bool, youtube_video: YouTube):
         return None
 
     except Exception as e:
+        logging.exception("Unexpected error while retrieving streams")
         print(f"[ERREUR] : Une erreur inattendue s'est produite lors de la récupération des flux : {e}")
         return None
 
@@ -272,7 +277,8 @@ def conversion_mp4_in_mp3(file_downloaded: Union[str, Path]) -> None:
         file_path.rename(new_file)
         if file_path.exists():
             file_path.unlink()
-    except Exception:
+    except OSError as e:
+        logging.exception("Error during MP4 to MP3 conversion")
         print("[WARMING] un fichier MP3 portant le même nom, déjà existant!")
         if file_path.exists():
             file_path.unlink()
@@ -313,6 +319,7 @@ def download_multiple_videos(url_youtube_video_links: list[str], download_sound_
             print(f"[ERREUR] : Problème de clé dans les données : {e}")
             continue
         except Exception as e:
+            logging.exception("Unexpected error while connecting to video")
             print(f"[ERREUR] : Connexion à la vidéo impossible : {e}")
             continue
 
@@ -327,6 +334,7 @@ def download_multiple_videos(url_youtube_video_links: list[str], download_sound_
             print(f"[ERREUR] : Impossible d'accéder au titre de la vidéo {url_video}. Détail : {e}")
             continue
         except Exception as e:
+            logging.exception("Unexpected error while accessing video title")
             print(f"[ERREUR] : Une erreur inattendue s'est produite lors de l'accès au titre : {e}")
             continue
 
@@ -359,6 +367,7 @@ def download_multiple_videos(url_youtube_video_links: list[str], download_sound_
             out_file = Path(stream.download(output_path=str(save_path)))  # type: ignore
             print("")
         except Exception as e:
+            logging.exception("Download failed")
             print("")
             print(f"[ERREUR] : le téléchargement a échoué : {e}")
             print("")
