@@ -7,6 +7,7 @@ if '__annotations__' not in globals():
     __annotations__ = {}
 
 from . import youtube_downloader
+from . import cli_utils
 from .downloader import YoutubeDownloader
 
 
@@ -42,8 +43,8 @@ def menu() -> None:
     yd = YoutubeDownloader()
 
     while True:
-        choix_max_menu_accueil = youtube_downloader.afficher_menu_acceuil()
-        reponse_utilisateur_pour_choix_dans_menu = youtube_downloader.ask_numeric_value(
+        choix_max_menu_accueil = cli_utils.afficher_menu_acceuil()
+        reponse_utilisateur_pour_choix_dans_menu = cli_utils.ask_numeric_value(
             1, choix_max_menu_accueil
         )
         download_sound_only = True
@@ -60,34 +61,34 @@ def menu() -> None:
                 break
             case 1 | 5:
                 url_video_send_user_list: list[str] = []
-                url_video_send_user: str = youtube_downloader.ask_youtube_url()
+                url_video_send_user: str = cli_utils.ask_youtube_url()
                 url_video_send_user_list.append(url_video_send_user)
                 if reponse_utilisateur_pour_choix_dans_menu == 1:
                     download_sound_only = False
 
-                save_path = youtube_downloader.demander_save_file_path()
+                save_path = cli_utils.demander_save_file_path()
                 yd.download_multiple_videos(
                     url_video_send_user_list,
                     download_sound_only,
                     save_path=save_path,
-                    choice_callback=youtube_downloader.demander_choice_resolution_vidéo_or_bitrate_audio,
+                    choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
                     progress_callback=youtube_downloader.on_download_progress,
                 )
             case 2 | 6:
-                youtube_video_links: list[str] = youtube_downloader.demander_youtube_link_file()
+                youtube_video_links: list[str] = cli_utils.demander_youtube_link_file()
                 if reponse_utilisateur_pour_choix_dans_menu == 2:
                     download_sound_only = False
 
-                save_path = youtube_downloader.demander_save_file_path()
+                save_path = cli_utils.demander_save_file_path()
                 yd.download_multiple_videos(
                     youtube_video_links,
                     download_sound_only,
                     save_path=save_path,
-                    choice_callback=youtube_downloader.demander_choice_resolution_vidéo_or_bitrate_audio,
+                    choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
                     progress_callback=youtube_downloader.on_download_progress,
                 )
             case 3 | 7:
-                url_playlist_send_user: str = youtube_downloader.ask_youtube_url()
+                url_playlist_send_user: str = cli_utils.ask_youtube_url()
                 try:
                     link_url_playlist_youtube = youtube_downloader.Playlist(url_playlist_send_user)
                 except:
@@ -96,16 +97,16 @@ def menu() -> None:
                     if reponse_utilisateur_pour_choix_dans_menu == 3:
                         download_sound_only = False
 
-                    save_path = youtube_downloader.demander_save_file_path()
+                    save_path = cli_utils.demander_save_file_path()
                     yd.download_multiple_videos(
                         link_url_playlist_youtube,
                         download_sound_only,
                         save_path=save_path,
-                        choice_callback=youtube_downloader.demander_choice_resolution_vidéo_or_bitrate_audio,
+                        choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
                         progress_callback=youtube_downloader.on_download_progress,
                     )  # type: ignore
             case 4 | 8:
-                url_channel_send_user: str = youtube_downloader.ask_youtube_url()
+                url_channel_send_user: str = cli_utils.ask_youtube_url()
                 try:
                     link_url_channel_youtube = youtube_downloader.Channel(url_channel_send_user)
                 except:
@@ -114,12 +115,12 @@ def menu() -> None:
                     if reponse_utilisateur_pour_choix_dans_menu == 4:
                         download_sound_only = False
 
-                    save_path = youtube_downloader.demander_save_file_path()
+                    save_path = cli_utils.demander_save_file_path()
                     yd.download_multiple_videos(
                         link_url_channel_youtube,
                         download_sound_only,
                         save_path=save_path,
-                        choice_callback=youtube_downloader.demander_choice_resolution_vidéo_or_bitrate_audio,
+                        choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
                         progress_callback=youtube_downloader.on_download_progress,
                     )  # type: ignore
 
@@ -167,32 +168,32 @@ def main(argv: list[str] | None = None) -> None:
         return
 
     if command == "video":
-        save_path = youtube_downloader.demander_save_file_path()
+        save_path = cli_utils.demander_save_file_path()
         yd.download_multiple_videos(
             args.urls,
             args.audio,
             save_path=save_path,
-            choice_callback=youtube_downloader.demander_choice_resolution_vidéo_or_bitrate_audio,
+            choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
             progress_callback=youtube_downloader.on_download_progress,
         )
     elif command == "playlist":
         playlist = youtube_downloader.Playlist(args.url)
-        save_path = youtube_downloader.demander_save_file_path()
+        save_path = cli_utils.demander_save_file_path()
         yd.download_multiple_videos(
             playlist,
             args.audio,
             save_path=save_path,
-            choice_callback=youtube_downloader.demander_choice_resolution_vidéo_or_bitrate_audio,
+            choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
             progress_callback=youtube_downloader.on_download_progress,
         )  # type: ignore
     elif command == "channel":
         channel = youtube_downloader.Channel(args.url)
-        save_path = youtube_downloader.demander_save_file_path()
+        save_path = cli_utils.demander_save_file_path()
         yd.download_multiple_videos(
             channel,
             args.audio,
             save_path=save_path,
-            choice_callback=youtube_downloader.demander_choice_resolution_vidéo_or_bitrate_audio,
+            choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
             progress_callback=youtube_downloader.on_download_progress,
         )  # type: ignore
     else:
