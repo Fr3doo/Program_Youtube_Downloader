@@ -1,14 +1,11 @@
 from urllib.error import HTTPError
 from pathlib import Path
-from typing import Optional, Union, Iterable
+from typing import Optional, Union, Iterable, Callable, Any
 import logging
 
 from pytubefix import YouTube
 
 from .youtube_downloader import (
-    demander_save_file_path,
-    on_download_progress,
-    demander_choice_resolution_vidéo_or_bitrate_audio,
     program_break_time,
     clear_screen,
     print_separator,
@@ -60,11 +57,19 @@ class YoutubeDownloader:
             print()
 
     def download_multiple_videos(
-        self, url_youtube_video_links: Iterable[str], download_sound_only: bool
+        self,
+        url_youtube_video_links: Iterable[str],
+        download_sound_only: bool,
+        *,
+        save_path: Optional[Path] = None,
+        choice_callback: Optional[Callable[[bool, Any], int]] = None,
+        progress_callback: Optional[Callable[[Any, Any, int], None]] = None,
     ) -> Optional[list[str]]:
         """Download multiple YouTube videos or audio tracks."""
+
         choice_once = True
-        save_path = demander_save_file_path()
+        if save_path is None:
+            save_path = Path.cwd()
 
         url_list = list(url_youtube_video_links)
         if not url_list:
@@ -74,7 +79,8 @@ class YoutubeDownloader:
         for url_video in url_list:
             try:
                 youtube_video = YouTube(url_video)
-                youtube_video.register_on_progress_callback(on_download_progress)
+                if progress_callback:
+                    youtube_video.register_on_progress_callback(progress_callback)
             except KeyError as e:
                 print(f"[ERREUR] : Problème de clé dans les données : {e}")
                 continue
@@ -105,9 +111,10 @@ class YoutubeDownloader:
                 continue
 
             if choice_once:
-                choice_user = demander_choice_resolution_vidéo_or_bitrate_audio(
-                    download_sound_only, streams
-                )
+                if choice_callback:
+                    choice_user = choice_callback(download_sound_only, streams)
+                else:
+                    choice_user = 1
                 choice_once = False
                 print()
                 print()

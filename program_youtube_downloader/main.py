@@ -65,13 +65,27 @@ def menu() -> None:
                 if reponse_utilisateur_pour_choix_dans_menu == 1:
                     download_sound_only = False
 
-                yd.download_multiple_videos(url_video_send_user_list, download_sound_only)
+                save_path = youtube_downloader.demander_save_file_path()
+                yd.download_multiple_videos(
+                    url_video_send_user_list,
+                    download_sound_only,
+                    save_path=save_path,
+                    choice_callback=youtube_downloader.demander_choice_resolution_vidéo_or_bitrate_audio,
+                    progress_callback=youtube_downloader.on_download_progress,
+                )
             case 2 | 6:
                 youtube_video_links: list[str] = youtube_downloader.demander_youtube_link_file()
                 if reponse_utilisateur_pour_choix_dans_menu == 2:
                     download_sound_only = False
 
-                yd.download_multiple_videos(youtube_video_links, download_sound_only)
+                save_path = youtube_downloader.demander_save_file_path()
+                yd.download_multiple_videos(
+                    youtube_video_links,
+                    download_sound_only,
+                    save_path=save_path,
+                    choice_callback=youtube_downloader.demander_choice_resolution_vidéo_or_bitrate_audio,
+                    progress_callback=youtube_downloader.on_download_progress,
+                )
             case 3 | 7:
                 url_playlist_send_user: str = youtube_downloader.ask_youtube_url()
                 try:
@@ -82,7 +96,14 @@ def menu() -> None:
                     if reponse_utilisateur_pour_choix_dans_menu == 3:
                         download_sound_only = False
 
-                    yd.download_multiple_videos(link_url_playlist_youtube, download_sound_only)  # type: ignore
+                    save_path = youtube_downloader.demander_save_file_path()
+                    yd.download_multiple_videos(
+                        link_url_playlist_youtube,
+                        download_sound_only,
+                        save_path=save_path,
+                        choice_callback=youtube_downloader.demander_choice_resolution_vidéo_or_bitrate_audio,
+                        progress_callback=youtube_downloader.on_download_progress,
+                    )  # type: ignore
             case 4 | 8:
                 url_channel_send_user: str = youtube_downloader.ask_youtube_url()
                 try:
@@ -93,7 +114,14 @@ def menu() -> None:
                     if reponse_utilisateur_pour_choix_dans_menu == 4:
                         download_sound_only = False
 
-                    yd.download_multiple_videos(link_url_channel_youtube, download_sound_only)  # type: ignore
+                    save_path = youtube_downloader.demander_save_file_path()
+                    yd.download_multiple_videos(
+                        link_url_channel_youtube,
+                        download_sound_only,
+                        save_path=save_path,
+                        choice_callback=youtube_downloader.demander_choice_resolution_vidéo_or_bitrate_audio,
+                        progress_callback=youtube_downloader.on_download_progress,
+                    )  # type: ignore
 
     
 # import sys
@@ -139,13 +167,34 @@ def main(argv: list[str] | None = None) -> None:
         return
 
     if command == "video":
-        yd.download_multiple_videos(args.urls, args.audio)
+        save_path = youtube_downloader.demander_save_file_path()
+        yd.download_multiple_videos(
+            args.urls,
+            args.audio,
+            save_path=save_path,
+            choice_callback=youtube_downloader.demander_choice_resolution_vidéo_or_bitrate_audio,
+            progress_callback=youtube_downloader.on_download_progress,
+        )
     elif command == "playlist":
         playlist = youtube_downloader.Playlist(args.url)
-        yd.download_multiple_videos(playlist, args.audio)  # type: ignore
+        save_path = youtube_downloader.demander_save_file_path()
+        yd.download_multiple_videos(
+            playlist,
+            args.audio,
+            save_path=save_path,
+            choice_callback=youtube_downloader.demander_choice_resolution_vidéo_or_bitrate_audio,
+            progress_callback=youtube_downloader.on_download_progress,
+        )  # type: ignore
     elif command == "channel":
         channel = youtube_downloader.Channel(args.url)
-        yd.download_multiple_videos(channel, args.audio)  # type: ignore
+        save_path = youtube_downloader.demander_save_file_path()
+        yd.download_multiple_videos(
+            channel,
+            args.audio,
+            save_path=save_path,
+            choice_callback=youtube_downloader.demander_choice_resolution_vidéo_or_bitrate_audio,
+            progress_callback=youtube_downloader.on_download_progress,
+        )  # type: ignore
     else:
         raise SystemExit(f"Unknown command: {command}")
 
