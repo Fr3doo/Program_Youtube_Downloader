@@ -1,6 +1,13 @@
 # Program Youtube Downloader
 
-Ce projet permet de télécharger des vidéos ou uniquement la piste audio depuis YouTube grâce à la bibliothèque [pytubefix](https://pypi.org/project/pytubefix/). Une interface en ligne de commande guide l’utilisateur dans le choix du contenu à récupérer (vidéos unitaires, playlists ou chaînes complètes) et dans la qualité souhaitée.
+Ce projet permet de télécharger tous types de contenus YouTube grâce à la bibliothèque [pytubefix](https://pypi.org/project/pytubefix/). Vous pouvez récupérer des vidéos individuelles, des playlists entières ou même toutes les vidéos d’une chaîne, et choisir de n’enregistrer que la piste audio si besoin. Une interface en ligne de commande vous aide à sélectionner précisément ce que vous voulez et la qualité de sortie.
+
+Principales fonctionnalités :
+
+- Téléchargement de vidéos ou des pistes audio seules
+- Support des playlists et des chaînes complètes
+- Sélection de la qualité et du dossier de destination
+- Interface en ligne de commande simplifiée
 
 ## Prérequis
 
