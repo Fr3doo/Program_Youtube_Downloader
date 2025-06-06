@@ -12,7 +12,8 @@ Each agent groups related functions and responsibilities.
 
 **Outputs**: invokes download functions and terminates when the user chooses to quit.
 
-**Dependencies**: `youtube_downloader` module.
+**Dependencies**: `youtube_downloader` module. Menu labels are defined in
+[`constants.py`](program_youtube_downloader/constants.py).
 
 Usage:
 ```python
@@ -81,6 +82,8 @@ Usage:
 **Inputs**: values typed by the user.
 
 **Outputs**: validated and sanitized inputs.
+Relies on `BASE_YOUTUBE_URL` from
+[`constants.py`](program_youtube_downloader/constants.py).
 
 Usage:
 ```python
