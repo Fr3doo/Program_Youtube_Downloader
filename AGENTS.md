@@ -105,6 +105,12 @@ graph TD
     Download --> Progress
     Download --> Conversion
 ```
+## Séquence des opérations
+1. L’**Agent CLI** collecte le choix de menu de l’utilisateur.
+2. L’**Agent de validation** vérifie que chaque valeur ou URL fournie est valide avant de continuer.
+3. En fonction de la sélection, l’**Agent CLI** appelle l’**Agent de téléchargement**.
+4. Pendant chaque téléchargement, l’**Agent de téléchargement** émet des mises à jour de progression via l’**Agent de progression**.
+5. Une fois qu’un fichier vidéo est téléchargé, l’**Agent de conversion** peut le convertir en MP3 si le mode audio seul a été sélectionné.
 
 ## Best Practices
 - Keep agents small and focused on a single responsibility.
