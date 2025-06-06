@@ -58,6 +58,7 @@ Que voulez-vous télécharger sur Youtube ?
     9 - Quitter le programme
 ```
 Image :
+
 ![Menu](assets/menu_options.png)
 
 ## Structure du projet
