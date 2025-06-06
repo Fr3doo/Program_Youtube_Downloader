@@ -9,6 +9,16 @@ Principales fonctionnalités :
 - Sélection de la qualité et du dossier de destination
 - Interface en ligne de commande simplifiée
 
+---
+
+**English summary**
+
+A simple command-line tool for downloading YouTube content using
+[pytubefix](https://pypi.org/project/pytubefix/). It requires Python 3.10 or
+newer and the dependencies listed in `requirements.txt` installed inside a
+virtual environment. Start it with `python main.py` and follow the menu to
+download videos, playlists or channels, or to extract audio only.
+
 ## Prérequis
 
 - Python 3.10 ou plus récent
