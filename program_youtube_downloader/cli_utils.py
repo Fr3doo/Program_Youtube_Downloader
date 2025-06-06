@@ -59,14 +59,34 @@ def afficher_menu_acceuil() -> int:
 
 
 def demander_save_file_path() -> Path:
+    """Ask for a destination directory and ensure it exists."""
+
     print()
     print()
     print_separator()
     print("*             Sauvegarde fichier                            *")
     print_separator()
-    save_path = input("Indiquez l'endroit où vous voulez stocker le fichier : \n --> ")
 
-    return Path(save_path)
+    save_path = input("Indiquez l'endroit où vous voulez stocker le fichier : \n --> ")
+    path = Path(save_path).expanduser().resolve()
+
+    if path.is_file():
+        path = path.parent
+
+    if not path.exists():
+        create = input("Le dossier n'existe pas. Voulez-vous le créer ? [y/N] : ")
+        if create.lower().startswith("y"):
+            try:
+                path.mkdir(parents=True, exist_ok=True)
+            except OSError:
+                logging.exception("Directory creation failed")
+                print("[ERREUR] : Impossible de créer le dossier")
+                return demander_save_file_path()
+        else:
+            print("[ERREUR] : Le dossier n'existe pas")
+            return demander_save_file_path()
+
+    return path
 
 
 def ask_youtube_url() -> str:
