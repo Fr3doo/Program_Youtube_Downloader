@@ -2,6 +2,7 @@
 # pyinstaller --onefile --add-data "mypy.ini;." --hidden-import "youtube_downloader" main.py
 import sys
 import argparse
+import logging
 
 if '__annotations__' not in globals():
     __annotations__ = {}
@@ -91,7 +92,8 @@ def menu() -> None:
                 url_playlist_send_user: str = cli_utils.ask_youtube_url()
                 try:
                     link_url_playlist_youtube = youtube_downloader.Playlist(url_playlist_send_user)
-                except:
+                except Exception as exc:
+                    logging.exception("Error connecting to playlist")
                     print("[ERREUR] : Connexion à la Playlist impossible")
                 else:
                     if reponse_utilisateur_pour_choix_dans_menu == 3:
@@ -109,7 +111,8 @@ def menu() -> None:
                 url_channel_send_user: str = cli_utils.ask_youtube_url()
                 try:
                     link_url_channel_youtube = youtube_downloader.Channel(url_channel_send_user)
-                except:
+                except Exception as exc:
+                    logging.exception("Error connecting to channel")
                     print("[ERREUR] : Connexion à la chaîne Youtube impossible")
                 else:
                     if reponse_utilisateur_pour_choix_dans_menu == 4:
