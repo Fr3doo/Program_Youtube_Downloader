@@ -23,7 +23,7 @@ main()
 ## Download Agent
 **Purpose**: Fetch videos or audios from YouTube and manage download workflows.**
 
-**Entry point**: `download_multiple_videos()` in [youtube_downloader.py](youtube_downloader.py) lines 282-383.
+**Entry point**: `download_multiple_videos()` in [downloader.py](downloader.py) lines 62-153.
 
 **Inputs**: list of YouTube URLs (or Playlist/Channel), boolean `download_sound_only`.
 
@@ -33,9 +33,10 @@ main()
 
 Usage:
 ```python
-from youtube_downloader import download_multiple_videos
+from downloader import YoutubeDownloader
 urls = ["https://www.youtube.com/watch?v=dQw4w9WgXcQ"]
-download_multiple_videos(urls, False)
+yd = YoutubeDownloader()
+yd.download_multiple_videos(urls, False)
 ```
 
 ## Conversion Agent
@@ -92,7 +93,7 @@ choice = demander_valeur_numerique_utilisateur(1, 3)
 | Agent | File(s) | Main Functions |
 |-------|---------|----------------|
 | CLI Agent | `main.py` | `main()` |
-| Download Agent | `youtube_downloader.py` | `download_multiple_videos` |
+| Download Agent | `downloader.py` | `download_multiple_videos` |
 | Conversion Agent | `youtube_downloader.py` | `conversion_mp4_in_mp3` |
 | Progress Agent | `youtube_downloader.py` | `on_download_progress`, `progress_bar` |
 | Validation Agent | `youtube_downloader.py` | `demander_valeur_numerique_utilisateur`, `demander_url_vidéo_youtube`, `demander_youtube_link_file` |
