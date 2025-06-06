@@ -5,10 +5,6 @@ import logging
 
 from pytubefix import YouTube
 
-from .youtube_downloader import (
-    program_break_time,
-    clear_screen,
-)
 from . import cli_utils
 from .config import DownloadOptions
 from .progress import ProgressHandler, ProgressBarHandler
@@ -168,13 +164,8 @@ class YoutubeDownloader:
             if out_file and download_sound_only:
                 self.conversion_mp4_in_mp3(out_file)
 
-        logging.info("")
-        logging.info("Fin du téléchargement")
-        cli_utils.print_separator()
-        logging.info("")
-        input("Appuyer sur ENTREE pour revenir au menu d'accueil")
-        program_break_time(3, "Le menu d'accueil va revenir dans")
-        clear_screen()
+        cli_utils.print_end_download_message()
+        cli_utils.pause_return_to_menu()
 
         return None
 

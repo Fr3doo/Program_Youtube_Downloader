@@ -10,6 +10,7 @@ from .constants import (
     CHOICE_MENU_ACCUEIL,
     BASE_YOUTUBE_URL,
 )
+from .youtube_downloader import program_break_time, clear_screen
 
 
 def print_separator() -> None:
@@ -193,3 +194,18 @@ def demander_choice_resolution_vidéo_or_bitrate_audio(
     print_separator()
     v_int = ask_numeric_value(1, valeur_choix_maximale)
     return v_int
+
+
+def print_end_download_message() -> None:
+    """Display a message indicating the downloads are finished."""
+    logging.info("")
+    logging.info("Fin du téléchargement")
+    print_separator()
+    logging.info("")
+
+
+def pause_return_to_menu() -> None:
+    """Pause execution until the user presses ENTER and clear the screen."""
+    input("Appuyer sur ENTREE pour revenir au menu d'accueil")
+    program_break_time(3, "Le menu d'accueil va revenir dans")
+    clear_screen()

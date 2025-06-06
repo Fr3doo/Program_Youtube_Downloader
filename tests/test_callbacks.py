@@ -1,5 +1,6 @@
 from pathlib import Path
 from program_youtube_downloader import downloader as downloader_module
+from program_youtube_downloader import cli_utils
 from program_youtube_downloader.downloader import YoutubeDownloader
 from program_youtube_downloader.config import DownloadOptions
 
@@ -45,8 +46,8 @@ def test_download_multiple_videos_custom_callbacks(monkeypatch, tmp_path: Path) 
 
     monkeypatch.setattr(YoutubeDownloader, "streams_video", lambda self, dso, yt: yt.streams)
     monkeypatch.setattr("builtins.input", lambda *args, **kwargs: "")
-    monkeypatch.setattr(downloader_module, "program_break_time", lambda *a, **k: None)
-    monkeypatch.setattr(downloader_module, "clear_screen", lambda *a, **k: None)
+    monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: None)
+    monkeypatch.setattr(cli_utils, "pause_return_to_menu", lambda *a, **k: None)
 
     called = {}
 
@@ -77,8 +78,8 @@ def test_download_multiple_videos_instantiation_error(monkeypatch, tmp_path: Pat
         raise KeyError("boom")
 
     monkeypatch.setattr("builtins.input", lambda *args, **kwargs: "")
-    monkeypatch.setattr(downloader_module, "program_break_time", lambda *a, **k: None)
-    monkeypatch.setattr(downloader_module, "clear_screen", lambda *a, **k: None)
+    monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: None)
+    monkeypatch.setattr(cli_utils, "pause_return_to_menu", lambda *a, **k: None)
 
     progress = DummyHandler()
     yd = YoutubeDownloader(progress_handler=progress, youtube_cls=fake_constructor)
@@ -102,8 +103,8 @@ def test_download_multiple_videos_no_streams(monkeypatch, tmp_path: Path) -> Non
 
     monkeypatch.setattr(YoutubeDownloader, "streams_video", lambda self, dso, yt: None)
     monkeypatch.setattr("builtins.input", lambda *args, **kwargs: "")
-    monkeypatch.setattr(downloader_module, "program_break_time", lambda *a, **k: None)
-    monkeypatch.setattr(downloader_module, "clear_screen", lambda *a, **k: None)
+    monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: None)
+    monkeypatch.setattr(cli_utils, "pause_return_to_menu", lambda *a, **k: None)
 
     progress = DummyHandler()
     yd = YoutubeDownloader(progress_handler=progress, youtube_cls=fake_constructor)
