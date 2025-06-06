@@ -85,6 +85,9 @@ Image :
 - `requirements.txt` : liste des dépendances Python nécessaires.
 - `mypy.ini` : configuration minimale pour `mypy`.
 
+Pour une description détaillée des agents internes et de leurs responsabilités,
+consultez [AGENTS.md](AGENTS.md).
+
 Ce projet est destiné à un usage personnel pour faciliter la récupération de contenu YouTube.
 
 ## Tests
