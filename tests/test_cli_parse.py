@@ -28,3 +28,15 @@ def test_parse_no_subcommand() -> None:
     args = parse_args([])
     assert args.command is None
 
+
+def test_parse_log_level_cli() -> None:
+    args = parse_args(["--log-level", "DEBUG", "video", "https://youtu.be/x"])
+    assert args.log_level == "DEBUG"
+    assert args.command == "video"
+
+
+def test_parse_log_level_env(monkeypatch) -> None:
+    monkeypatch.setenv("PYDL_LOG_LEVEL", "INFO")
+    args = parse_args(["video", "https://youtu.be/x"])
+    assert args.log_level == "INFO"
+
