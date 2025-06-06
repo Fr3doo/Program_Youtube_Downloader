@@ -87,6 +87,7 @@ Image :
 
 Pour une description détaillée des agents internes et de leurs responsabilités,
 consultez [AGENTS.md](AGENTS.md).
+Une traduction en français est disponible dans [AGENTS_FR.md](AGENTS_FR.md).
 
 Ce projet est destiné à un usage personnel pour faciliter la récupération de contenu YouTube.
 
