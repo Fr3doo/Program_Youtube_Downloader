@@ -11,6 +11,7 @@ from .constants import (
     BASE_YOUTUBE_URL,
 )
 from .youtube_downloader import program_break_time, clear_screen
+from .validators import validate_youtube_url
 
 
 def print_separator() -> None:
@@ -104,7 +105,7 @@ def ask_youtube_url() -> str:
         url = url.replace(
             "https://www.youtube.com/@", "https://www.youtube.com/c/"
         )
-        if url.lower().startswith(BASE_YOUTUBE_URL):
+        if validate_youtube_url(url):
             return url
 
         logging.error("ERREUR : Vous devez renter une URL de vidéo youtube")
@@ -135,10 +136,10 @@ def demander_youtube_link_file() -> list[str]:
                 return demander_youtube_link_file()
 
             for i in range(0, len(lignes)):
-                url_video = lignes[i]
+                url_video = lignes[i].strip()
                 compteur_ligne += 1
 
-                if url_video.lower().startswith(BASE_YOUTUBE_URL):
+                if validate_youtube_url(url_video):
                     link_url_video_youtube_final.append(url_video)
                 else:
                     logging.error("[ERREUR] : ")

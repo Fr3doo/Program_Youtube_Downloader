@@ -59,3 +59,17 @@ def test_demander_save_file_path_retry(monkeypatch, tmp_path):
     monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
     p = cli_utils.demander_save_file_path()
     assert p == existing.resolve()
+
+
+def test_demander_youtube_link_file(monkeypatch, tmp_path):
+    links_file = tmp_path / "links.txt"
+    links_file.write_text(
+        "https://www.youtube.com/watch?v=ok\ninvalid\nhttps://youtu.be/abc\n"
+    )
+    inputs = iter([str(links_file)])
+    monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
+    links = cli_utils.demander_youtube_link_file()
+    assert links == [
+        "https://www.youtube.com/watch?v=ok",
+        "https://youtu.be/abc",
+    ]
