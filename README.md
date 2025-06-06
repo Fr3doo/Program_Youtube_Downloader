@@ -33,6 +33,33 @@ Pour générer une version autonome du programme vous pouvez utiliser `pyinstall
 pyinstaller --onefile --add-data "mypy.ini;." --hidden-import "youtube_downloader" main.py
 ```
 
+## Aperçu
+
+Voici un exemple de lancement de l'application montrant les différentes options
+du menu :
+
+```
+Python version: 3.12.10 (main, May 13 2025, 04:05:34) [GCC 13.3.0]
+__annotations__ exists: True
+
+*************************************************************
+*            Program Youtube Downloader                     *
+*************************************************************
+Que voulez-vous télécharger sur Youtube ?
+
+    1 - une vidéo                              - (format mp4)
+    2 - des vidéos                             - (format mp4)
+    3 - une playlist vidéo                     - (format mp4)
+    4 - des vidéos d'une chaîne Youtube        - (format mp4)
+    5 - la piste audio d'une vidéo             - (format mp3)
+    6 - les pistes audios de plusieurs vidéos  - (format mp3)
+    7 - les pistes audios d'une playlist       - (format mp3)
+    8 - les pistes audios d'une chaîne         - (format mp3)
+    9 - Quitter le programme
+```
+
+![Menu](assets/menu_options.png)
+
 ## Structure du projet
 
 - `main.py` : point d’entrée du programme contenant la boucle de menu.
