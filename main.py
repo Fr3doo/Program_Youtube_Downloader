@@ -17,7 +17,7 @@ def main() -> None:
 
     while True:
         choix_max_menu_accueil = youtube_downloader.afficher_menu_acceuil()
-        reponse_utilisateur_pour_choix_dans_menu = youtube_downloader.demander_valeur_numerique_utilisateur(
+        reponse_utilisateur_pour_choix_dans_menu = youtube_downloader.ask_numeric_value(
             1, choix_max_menu_accueil
         )
         download_sound_only = True
@@ -34,7 +34,7 @@ def main() -> None:
                 break
             case 1 | 5:
                 url_video_send_user_list: list[str] = []
-                url_video_send_user: str = youtube_downloader.demander_url_vidéo_youtube()
+                url_video_send_user: str = youtube_downloader.ask_youtube_url()
                 url_video_send_user_list.append(url_video_send_user)
                 if reponse_utilisateur_pour_choix_dans_menu == 1:
                     download_sound_only = False
@@ -47,7 +47,7 @@ def main() -> None:
 
                 youtube_downloader.download_multiple_videos(youtube_video_links, download_sound_only)
             case 3 | 7:
-                url_playlist_send_user: str = youtube_downloader.demander_url_vidéo_youtube()
+                url_playlist_send_user: str = youtube_downloader.ask_youtube_url()
                 try:
                     link_url_playlist_youtube = youtube_downloader.Playlist(url_playlist_send_user)
                 except:
@@ -58,7 +58,7 @@ def main() -> None:
 
                     youtube_downloader.download_multiple_videos(link_url_playlist_youtube, download_sound_only)  # type: ignore
             case 4 | 8:
-                url_channel_send_user: str = youtube_downloader.demander_url_vidéo_youtube()
+                url_channel_send_user: str = youtube_downloader.ask_youtube_url()
                 try:
                     link_url_channel_youtube = youtube_downloader.Channel(url_channel_send_user)
                 except:
