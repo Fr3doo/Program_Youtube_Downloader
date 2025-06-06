@@ -33,3 +33,29 @@ def test_ask_youtube_url_invalid_then_valid(monkeypatch):
     monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
     url = cli_utils.ask_youtube_url()
     assert url == "https://www.youtube.com/watch?v=good"
+
+
+def test_demander_save_file_path_existing(tmp_path, monkeypatch):
+    inputs = iter([str(tmp_path)])
+    monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
+    p = cli_utils.demander_save_file_path()
+    assert p == tmp_path.resolve()
+
+
+def test_demander_save_file_path_create(tmp_path, monkeypatch):
+    new_dir = tmp_path / "newdir"
+    inputs = iter([str(new_dir), "y"])
+    monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
+    p = cli_utils.demander_save_file_path()
+    assert p == new_dir.resolve()
+    assert new_dir.exists()
+
+
+def test_demander_save_file_path_retry(monkeypatch, tmp_path):
+    missing = tmp_path / "missing"
+    existing = tmp_path / "exists"
+    existing.mkdir()
+    inputs = iter([str(missing), "n", str(existing)])
+    monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
+    p = cli_utils.demander_save_file_path()
+    assert p == existing.resolve()
