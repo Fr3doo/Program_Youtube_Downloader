@@ -1,16 +1,23 @@
 import sys
+from typing import Protocol
+
 import colorama
 from colorama import init
 
 init(autoreset=True)
 
 
-def on_download_progress(stream, chunk, bytes_remaining) -> None:
-    """Display progress percentage while downloading."""
-    total_bytes_download = stream.filesize
-    bytes_downloaded = stream.filesize - bytes_remaining
-    progress = (bytes_downloaded / total_bytes_download) * 100
-    progress_bar(progress)
+class ProgressHandler(Protocol):
+    """Interface for receiving progress events from pytube."""
+
+    def on_progress(self, stream, chunk, bytes_remaining) -> None:  # pragma: no cover - typing
+        """Handle a download progress event."""
+        raise NotImplementedError
+
+
+def on_download_progress(stream, chunk, bytes_remaining) -> None:  # pragma: no cover - legacy
+    """Backward compatible wrapper around :class:`ProgressBarHandler`."""
+    ProgressBarHandler().on_progress(stream, chunk, bytes_remaining)
 
 
 def progress_bar(
@@ -35,3 +42,13 @@ def progress_bar(
         print(colorama.Fore.RESET)
 
     sys.stdout.flush()
+
+
+class ProgressBarHandler:
+    """Default progress handler displaying a textual bar."""
+
+    def on_progress(self, stream, chunk, bytes_remaining) -> None:
+        total_bytes_download = stream.filesize
+        bytes_downloaded = stream.filesize - bytes_remaining
+        progress = (bytes_downloaded / total_bytes_download) * 100
+        progress_bar(progress)
