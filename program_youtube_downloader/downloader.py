@@ -17,8 +17,13 @@ from .progress import ProgressHandler, ProgressBarHandler
 class YoutubeDownloader:
     """Responsible for fetching streams and saving downloaded files."""
 
-    def __init__(self, progress_handler: ProgressHandler | None = None) -> None:
+    def __init__(
+        self,
+        progress_handler: ProgressHandler | None = None,
+        youtube_cls: Callable[[str], YouTube] = YouTube,
+    ) -> None:
         self.progress_handler = progress_handler or ProgressBarHandler()
+        self.youtube_cls = youtube_cls
 
     def streams_video(self, download_sound_only: bool, youtube_video: YouTube):
         try:
@@ -85,7 +90,7 @@ class YoutubeDownloader:
 
         for url_video in url_list:
             try:
-                youtube_video = YouTube(url_video)
+                youtube_video = self.youtube_cls(url_video)
                 if progress_handler:
                     youtube_video.register_on_progress_callback(progress_handler.on_progress)
             except KeyError as e:

@@ -43,7 +43,6 @@ def test_download_multiple_videos_custom_callbacks(monkeypatch, tmp_path: Path) 
         created['yt'] = yt
         return yt
 
-    monkeypatch.setattr(downloader_module, "YouTube", fake_constructor)
     monkeypatch.setattr(YoutubeDownloader, "streams_video", lambda self, dso, yt: yt.streams)
     monkeypatch.setattr("builtins.input", lambda *args, **kwargs: "")
     monkeypatch.setattr(downloader_module, "program_break_time", lambda *a, **k: None)
@@ -56,7 +55,7 @@ def test_download_multiple_videos_custom_callbacks(monkeypatch, tmp_path: Path) 
         return 1
 
     progress = DummyHandler()
-    yd = YoutubeDownloader(progress_handler=progress)
+    yd = YoutubeDownloader(progress_handler=progress, youtube_cls=fake_constructor)
     options = DownloadOptions(
         save_path=tmp_path,
         download_sound_only=False,
@@ -77,13 +76,12 @@ def test_download_multiple_videos_instantiation_error(monkeypatch, tmp_path: Pat
     def fake_constructor(url: str) -> DummyYT:
         raise KeyError("boom")
 
-    monkeypatch.setattr(downloader_module, "YouTube", fake_constructor)
     monkeypatch.setattr("builtins.input", lambda *args, **kwargs: "")
     monkeypatch.setattr(downloader_module, "program_break_time", lambda *a, **k: None)
     monkeypatch.setattr(downloader_module, "clear_screen", lambda *a, **k: None)
 
     progress = DummyHandler()
-    yd = YoutubeDownloader(progress_handler=progress)
+    yd = YoutubeDownloader(progress_handler=progress, youtube_cls=fake_constructor)
     options = DownloadOptions(
         save_path=tmp_path,
         download_sound_only=False,
@@ -102,14 +100,13 @@ def test_download_multiple_videos_no_streams(monkeypatch, tmp_path: Path) -> Non
     def fake_constructor(url: str) -> DummyYT:
         return DummyYT(url)
 
-    monkeypatch.setattr(downloader_module, "YouTube", fake_constructor)
     monkeypatch.setattr(YoutubeDownloader, "streams_video", lambda self, dso, yt: None)
     monkeypatch.setattr("builtins.input", lambda *args, **kwargs: "")
     monkeypatch.setattr(downloader_module, "program_break_time", lambda *a, **k: None)
     monkeypatch.setattr(downloader_module, "clear_screen", lambda *a, **k: None)
 
     progress = DummyHandler()
-    yd = YoutubeDownloader(progress_handler=progress)
+    yd = YoutubeDownloader(progress_handler=progress, youtube_cls=fake_constructor)
     options = DownloadOptions(
         save_path=tmp_path,
         download_sound_only=False,
