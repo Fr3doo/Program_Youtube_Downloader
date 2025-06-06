@@ -94,9 +94,24 @@ Image :
 - `main.py` : point d’entrée du programme contenant la boucle de menu.
 - `downloader.py` : logique principale de téléchargement et conversions.
 - `cli_utils.py` : fonctions d'interaction utilisateur et gestion des menus.
-- `youtube_downloader.py` : constantes et utilitaires de progression.
+- `constants.py` : libellés du menu et URL de base communes.
+- `progress.py` : gestion de l'affichage de la barre de progression.
+- `validators.py` : vérifications des liens YouTube fournis par l'utilisateur.
+- `config.py` : objet `DownloadOptions` pour paramétrer les téléchargements.
+- `youtube_downloader.py` : utilitaires généraux (effacement d'écran, compte à rebours).
 - `requirements.txt` : liste des dépendances Python nécessaires.
 - `mypy.ini` : configuration minimale pour `mypy`.
+
+Exemple d'utilisation en tant que bibliothèque :
+
+```python
+from program_youtube_downloader.downloader import YoutubeDownloader
+from program_youtube_downloader.config import DownloadOptions
+
+yd = YoutubeDownloader()
+options = DownloadOptions(download_sound_only=True)
+yd.download_multiple_videos(["https://youtu.be/dQw4w9WgXcQ"], options)
+```
 
 Pour une description détaillée des agents internes et de leurs responsabilités,
 consultez [AGENTS.md](AGENTS.md).

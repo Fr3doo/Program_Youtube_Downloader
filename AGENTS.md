@@ -47,7 +47,7 @@ yd.download_multiple_videos(urls, False)
 ## Conversion Agent
 **Purpose**: Convert a downloaded mp4 file to mp3.**
 
-**Entry point**: `conversion_mp4_in_mp3()` in [youtube_downloader.py](youtube_downloader.py) lines 267-279.
+**Entry point**: `conversion_mp4_in_mp3()` in [downloader.py](downloader.py) lines 57-67.
 
 **Inputs**: path to the downloaded mp4 file.
 
@@ -55,8 +55,9 @@ yd.download_multiple_videos(urls, False)
 
 Usage:
 ```python
-from youtube_downloader import conversion_mp4_in_mp3
-conversion_mp4_in_mp3("video.mp4")
+from downloader import YoutubeDownloader
+yd = YoutubeDownloader()
+yd.conversion_mp4_in_mp3("video.mp4")
 ```
 
 ## Progress Agent
@@ -79,20 +80,19 @@ Usage:
 **Purpose**: Validate user input and sanitize values.**
 
 **Entry points**:
-- `demander_valeur_numerique_utilisateur()` in [youtube_downloader.py](youtube_downloader.py) lines 65-78.
-- `demander_url_vidéo_youtube()` in [youtube_downloader.py](youtube_downloader.py) lines 112-125.
-- `demander_youtube_link_file()` in [youtube_downloader.py](youtube_downloader.py) lines 128-171.
+- `ask_numeric_value()` in [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py) lines 22-39.
+- `ask_youtube_url()` in [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py) lines 96-113.
+- `demander_youtube_link_file()` in [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py) lines 115-159.
+- `validate_youtube_url()` in [program_youtube_downloader/validators.py](program_youtube_downloader/validators.py) lines 4-18.
 
 **Inputs**: values typed by the user.
 
-**Outputs**: validated and sanitized inputs.
-Relies on `BASE_YOUTUBE_URL` from
-[`constants.py`](program_youtube_downloader/constants.py).
+**Outputs**: validated and sanitized inputs using `BASE_YOUTUBE_URL` from [`constants.py`](program_youtube_downloader/constants.py).
 
 Usage:
 ```python
-from youtube_downloader import demander_valeur_numerique_utilisateur
-choice = demander_valeur_numerique_utilisateur(1, 3)
+from program_youtube_downloader.cli_utils import ask_numeric_value
+value = ask_numeric_value(1, 3)
 ```
 
 ## Summary
@@ -101,24 +101,28 @@ choice = demander_valeur_numerique_utilisateur(1, 3)
 |-------|---------|----------------|
 | CLI Agent | `main.py` | `main()` |
 | Download Agent | `downloader.py` | `download_multiple_videos` |
-| Conversion Agent | `youtube_downloader.py` | `conversion_mp4_in_mp3` |
+| Conversion Agent | `downloader.py` | `conversion_mp4_in_mp3` |
 | Progress Agent | `program_youtube_downloader/progress.py` | `on_download_progress`, `progress_bar` |
-| Validation Agent | `youtube_downloader.py` | `demander_valeur_numerique_utilisateur`, `demander_url_vidéo_youtube`, `demander_youtube_link_file` |
+| Validation Agent | `program_youtube_downloader/cli_utils.py` | `ask_numeric_value`, `ask_youtube_url`, `demander_youtube_link_file` |
+| Constants Agent | `program_youtube_downloader/constants.py` | menu labels, `BASE_YOUTUBE_URL` |
+| Config Agent | `program_youtube_downloader/config.py` | `DownloadOptions` dataclass |
 
 ## Interaction Diagram
 ```mermaid
 graph TD
+    CLI --> Constants
     CLI --> Validation
     CLI --> Download
     Download --> Progress
     Download --> Conversion
+    Download --> Config
 ```
 ## Sequence of Operations
-1. **CLI Agent** collects the user's menu choice.
-2. The **Validation Agent** checks that each provided value or URL is valid before continuing.
-3. Based on the selection, the **CLI Agent** calls the **Download Agent**.
-4. During each download, the **Download Agent** emits progress updates through the **Progress Agent**.
-5. Once a video file is downloaded, the **Conversion Agent** can convert it to MP3 if audio-only mode was selected.
+1. **CLI Agent** affiche le menu grâce aux chaînes du **Constants Agent** et récupère le choix de l'utilisateur.
+2. Le **Validation Agent** vérifie que chaque valeur ou URL saisie est correcte.
+3. Le **CLI Agent** construit un objet **DownloadOptions** du **Config Agent** puis appelle le **Download Agent**.
+4. Pendant le téléchargement, le **Download Agent** envoie les mises à jour au **Progress Agent**.
+5. Une fois le fichier vidéo téléchargé, le **Conversion Agent** peut le convertir en MP3 si l'option audio seul est activée.
 
 ## Best Practices
 - Keep agents small and focused on a single responsibility.
