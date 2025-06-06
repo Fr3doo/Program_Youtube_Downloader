@@ -122,6 +122,8 @@ yd.download_multiple_videos(["https://youtu.be/dQw4w9WgXcQ"], options)
 
 Pour une description détaillée des agents internes et de leurs responsabilités,
 consultez [AGENTS.md](AGENTS.md).
+Un aperçu complet de la base de code en français est disponible dans
+[docs/overview_fr.md](docs/overview_fr.md).
 
 Ce projet est destiné à un usage personnel pour faciliter la récupération de contenu YouTube.
 
