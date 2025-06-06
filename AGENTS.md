@@ -108,13 +108,16 @@ graph TD
 
 ## Best Practices
 - Keep agents small and focused on a single responsibility.
+- Keep each agent self-contained with clear input/output.
 - Expose a minimal API to other modules.
+- Reuse type hints consistently (see current use of `typing` and `Optional` in `youtube_downloader.py`).
 - When adding features, favor extending an existing agent rather than duplicating logic.
-- Write tests for new behaviour in `tests/`.
+- Write tests for new behaviour in `tests/` using `pytest`.
 
 ## Adding a new agent
 1. Create a module or function group implementing the new behaviour.
 2. Document it in **AGENTS.md** with its purpose, entry points and usage.
+   - Update the summary table and extend the mermaid diagram.
 3. Provide unit tests demonstrating its interactions with existing agents.
 4. Link any new documentation from the README.
 
