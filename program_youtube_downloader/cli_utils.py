@@ -71,19 +71,21 @@ def demander_save_file_path() -> Path:
 
 def ask_youtube_url() -> str:
     """Prompt the user for a YouTube video URL."""
-    print()
-    print()
-    print_separator()
-    print("*             Url de votre vidéo Youtube                    *")
-    print_separator()
-    url = input("Indiquez l'url de la vidéo Youtube : \n --> ")
-    url = url.replace('https://www.youtube.com/@', 'https://www.youtube.com/c/')
-    if url.lower().startswith(BASE_YOUTUBE_URL):
-        return url
+    while True:
+        print()
+        print()
+        print_separator()
+        print("*             Url de votre vidéo Youtube                    *")
+        print_separator()
+        url = input("Indiquez l'url de la vidéo Youtube : \n --> ")
+        url = url.replace(
+            "https://www.youtube.com/@", "https://www.youtube.com/c/"
+        )
+        if url.lower().startswith(BASE_YOUTUBE_URL):
+            return url
 
-    print("ERREUR : Vous devez renter une URL de vidéo youtube")
-    print("le prefixe attendu est : https://www.youtube.com/")
-    return ask_youtube_url()
+        print("ERREUR : Vous devez renter une URL de vidéo youtube")
+        print("le prefixe attendu est : https://www.youtube.com/")
 
 
 def demander_youtube_link_file() -> list[str]:
