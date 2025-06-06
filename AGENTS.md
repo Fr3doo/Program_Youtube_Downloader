@@ -6,9 +6,9 @@ Each agent groups related functions and responsibilities.
 ## CLI Agent
 **Purpose**: Provide the command line interface and dispatch user choices.
 
-**Entry point**: `main()` in [main.py](main.py) lines 11-70.
+**Entry point**: `main()` in [main.py](main.py) lines 128-150.
 
-**Inputs**: user selections from the menu.
+**Inputs**: command-line arguments or user selections from the menu.
 
 **Outputs**: invokes download functions and terminates when the user chooses to quit.
 
