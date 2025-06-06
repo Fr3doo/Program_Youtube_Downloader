@@ -69,3 +69,9 @@ Image :
 - `mypy.ini` : configuration minimale pour `mypy`.
 
 Ce projet est destiné à un usage personnel pour faciliter la récupération de contenu YouTube.
+
+## Contribuer
+
+Les contributions sont les bienvenues ! Vous pouvez ouvrir une *issue* pour signaler un problème ou demander une fonctionnalité. Pour proposer une correction ou une amélioration, créez une *pull request* depuis votre fork du dépôt.
+
+
