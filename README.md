@@ -81,7 +81,9 @@ Image :
 ## Structure du projet
 
 - `main.py` : point d’entrée du programme contenant la boucle de menu.
-- `youtube_downloader.py` : toutes les fonctions de téléchargement (gestion des flux, choix de qualité, conversion en MP3, etc.).
+- `downloader.py` : logique principale de téléchargement et conversions.
+- `cli_utils.py` : fonctions d'interaction utilisateur et gestion des menus.
+- `youtube_downloader.py` : constantes et utilitaires de progression.
 - `requirements.txt` : liste des dépendances Python nécessaires.
 - `mypy.ini` : configuration minimale pour `mypy`.
 
