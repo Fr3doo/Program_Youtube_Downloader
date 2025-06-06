@@ -108,12 +108,15 @@ graph TD
 
 ## Bonnes pratiques
 - Garder les agents petits et centrés sur une seule responsabilité.
+- Garder chaque agent autonome avec des entrées/sorties claires.
 - Exposer une API minimale aux autres modules.
+- Réutiliser les annotations de types de manière cohérente (voir l'utilisation actuelle de `typing` et `Optional` dans `youtube_downloader.py`).
 - Lors de l'ajout de fonctionnalités, préférer étendre un agent existant plutôt que dupliquer la logique.
-- Écrire des tests pour tout nouveau comportement dans `tests/`.
+- Écrire des tests pour les nouveaux comportements dans `tests/` en utilisant `pytest`.
 
 ## Ajouter un nouvel agent
 1. Créer un module ou un groupe de fonctions mettant en œuvre le nouveau comportement.
 2. Le documenter dans **AGENTS_FR.md** avec son but, ses points d'entrée et son utilisation.
-3. Fournir des tests unitaires démontrant ses interactions avec les agents existants.
-4. Lier toute nouvelle documentation depuis le README.
+    - Mettre à jour le tableau récapitulatif et étendre le diagramme mermaid.
+4. Fournir des tests unitaires démontrant ses interactions avec les agents existants.
+5. Lier toute nouvelle documentation depuis le README.
