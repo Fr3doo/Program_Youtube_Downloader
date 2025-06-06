@@ -11,6 +11,7 @@ if '__annotations__' not in globals():
 from . import youtube_downloader
 from . import cli_utils
 from .downloader import YoutubeDownloader
+from .progress import on_download_progress
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -80,7 +81,7 @@ def menu() -> None:
                     download_sound_only,
                     save_path=save_path,
                     choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-                    progress_callback=youtube_downloader.on_download_progress,
+                    progress_callback=on_download_progress,
                 )
             case 2 | 6:
                 youtube_video_links: list[str] = cli_utils.demander_youtube_link_file()
@@ -93,7 +94,7 @@ def menu() -> None:
                     download_sound_only,
                     save_path=save_path,
                     choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-                    progress_callback=youtube_downloader.on_download_progress,
+                    progress_callback=on_download_progress,
                 )
             case 3 | 7:
                 url_playlist_send_user: str = cli_utils.ask_youtube_url()
@@ -112,7 +113,7 @@ def menu() -> None:
                         download_sound_only,
                         save_path=save_path,
                         choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-                        progress_callback=youtube_downloader.on_download_progress,
+                        progress_callback=on_download_progress,
                     )  # type: ignore
             case 4 | 8:
                 url_channel_send_user: str = cli_utils.ask_youtube_url()
@@ -131,7 +132,7 @@ def menu() -> None:
                         download_sound_only,
                         save_path=save_path,
                         choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-                        progress_callback=youtube_downloader.on_download_progress,
+                        progress_callback=on_download_progress,
                     )  # type: ignore
 
     
@@ -185,7 +186,7 @@ def main(argv: list[str] | None = None) -> None:
             args.audio,
             save_path=save_path,
             choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-            progress_callback=youtube_downloader.on_download_progress,
+            progress_callback=on_download_progress,
         )
     elif command == "playlist":
         playlist = youtube_downloader.Playlist(args.url)
@@ -195,7 +196,7 @@ def main(argv: list[str] | None = None) -> None:
             args.audio,
             save_path=save_path,
             choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-            progress_callback=youtube_downloader.on_download_progress,
+            progress_callback=on_download_progress,
         )  # type: ignore
     elif command == "channel":
         channel = youtube_downloader.Channel(args.url)
@@ -205,7 +206,7 @@ def main(argv: list[str] | None = None) -> None:
             args.audio,
             save_path=save_path,
             choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-            progress_callback=youtube_downloader.on_download_progress,
+            progress_callback=on_download_progress,
         )  # type: ignore
     else:
         raise SystemExit(f"Unknown command: {command}")

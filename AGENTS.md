@@ -59,8 +59,8 @@ conversion_mp4_in_mp3("video.mp4")
 **Purpose**: Display progress information while downloads are running.**
 
 **Entry points**:
-- `on_download_progress()` in [youtube_downloader.py](youtube_downloader.py) lines 174-183.
-- `progress_bar()` in [youtube_downloader.py](youtube_downloader.py) lines 186-208.
+- `on_download_progress()` in [program_youtube_downloader/progress.py](program_youtube_downloader/progress.py) lines 8-13.
+- `progress_bar()` in [program_youtube_downloader/progress.py](program_youtube_downloader/progress.py) lines 16-37.
 
 **Inputs**: stream callbacks from `pytubefix`, progress percentages.
 
@@ -98,7 +98,7 @@ choice = demander_valeur_numerique_utilisateur(1, 3)
 | CLI Agent | `main.py` | `main()` |
 | Download Agent | `downloader.py` | `download_multiple_videos` |
 | Conversion Agent | `youtube_downloader.py` | `conversion_mp4_in_mp3` |
-| Progress Agent | `youtube_downloader.py` | `on_download_progress`, `progress_bar` |
+| Progress Agent | `program_youtube_downloader/progress.py` | `on_download_progress`, `progress_bar` |
 | Validation Agent | `youtube_downloader.py` | `demander_valeur_numerique_utilisateur`, `demander_url_vidéo_youtube`, `demander_youtube_link_file` |
 
 ## Interaction Diagram

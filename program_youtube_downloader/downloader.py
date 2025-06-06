@@ -9,6 +9,7 @@ from .youtube_downloader import (
     program_break_time,
     clear_screen,
 )
+from .progress import on_download_progress
 from . import cli_utils
 
 
@@ -66,7 +67,7 @@ class YoutubeDownloader:
         *,
         save_path: Optional[Path] = None,
         choice_callback: Optional[Callable[[bool, Any], int]] = None,
-        progress_callback: Optional[Callable[[Any, Any, int], None]] = None,
+        progress_callback: Optional[Callable[[Any, Any, int], None]] = on_download_progress,
     ) -> Optional[list[str]]:
         """Download multiple YouTube videos or audio tracks."""
 
