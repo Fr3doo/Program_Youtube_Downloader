@@ -58,22 +58,24 @@ def program_break_time(memorization_time:int, affichage_text:str) -> None:
         duree_restante_avant_lancement -= 1
 
 
-def seprateur_menu_affichage() -> None:
+def print_separator() -> None:
+    """Display a visual separator used in menus."""
     print("*************************************************************")
 
 
-def demander_valeur_numerique_utilisateur(valeur_min:int, valeur_max:int) -> int:
+def ask_numeric_value(valeur_min: int, valeur_max: int) -> int:
+    """Ask the user for a numeric value within a range."""
     v_str = input(f"Donnez une valeur entre {valeur_min} et {valeur_max} : \n --> " )
     try:
         v_int = int(v_str)
     except:
         print("FAIL : Vous devez rentrer une valeur numérique.")
         print()
-        return demander_valeur_numerique_utilisateur(valeur_min, valeur_max)
+        return ask_numeric_value(valeur_min, valeur_max)
     if not (valeur_min <= v_int <= valeur_max):
         print(f"FAIL : Vous devez rentrer un nombre (entre {valeur_min} et {valeur_max} ).")
         print()
-        return demander_valeur_numerique_utilisateur(valeur_min, valeur_max)
+        return ask_numeric_value(valeur_min, valeur_max)
 
     return v_int
 
@@ -81,9 +83,9 @@ def demander_valeur_numerique_utilisateur(valeur_min:int, valeur_max:int) -> int
 def afficher_menu_acceuil() -> int:
     print()
     print()
-    seprateur_menu_affichage()
+    print_separator()
     print(f"*            {TITLE_PROGRAM}                     *")
-    seprateur_menu_affichage()
+    print_separator()
     print(f"{TITLE_QUESTION_MENU_ACCUEIL}                          ")
     print()
     i = 0
@@ -92,7 +94,7 @@ def afficher_menu_acceuil() -> int:
         i += 1
         print(f"    {i} - {choix_menu}                              ")
     print("                                                           ")
-    seprateur_menu_affichage() 
+    print_separator() 
     valeur_choix_maximale = i
     
     return valeur_choix_maximale
@@ -101,20 +103,21 @@ def afficher_menu_acceuil() -> int:
 def demander_save_file_path() -> Path:
     print()
     print()
-    seprateur_menu_affichage()
+    print_separator()
     print("*             Sauvegarde fichier                            *")
-    seprateur_menu_affichage()
+    print_separator()
     save_path = input("Indiquez l'endroit où vous voulez stocker le fichier : \n --> ")
 
     return Path(save_path)
 
 
-def demander_url_vidéo_youtube() -> str:
+def ask_youtube_url() -> str:
+    """Prompt the user for a YouTube video URL."""
     print()
     print()
-    seprateur_menu_affichage()
+    print_separator()
     print("*             Url de votre vidéo Youtube                    *")
-    seprateur_menu_affichage()
+    print_separator()
     url =  input("Indiquez l'url de la vidéo Youtube : \n --> ")
     url = url.replace('https://www.youtube.com/@', 'https://www.youtube.com/c/')
     if url.lower().startswith(BASE_YOUTUBE_URL):
@@ -122,16 +125,16 @@ def demander_url_vidéo_youtube() -> str:
     
     print("ERREUR : Vous devez renter une URL de vidéo youtube")
     print("le prefixe attendu est : https://www.youtube.com/")
-    return demander_url_vidéo_youtube()
+    return ask_youtube_url()
         
     
 def demander_youtube_link_file() -> list[str]:
     link_url_video_youtube_final: list[str] = []
     print()
     print()
-    seprateur_menu_affichage()
+    print_separator()
     print("*             Fichier contenant les urls Youtube            *")
-    seprateur_menu_affichage()
+    print_separator()
     fichier_user = input("Indiquez le nom du fichier : \n --> ")
     print()
     try:
@@ -212,32 +215,32 @@ def demander_choice_resolution_vidéo_or_bitrate_audio(download_sound_only:bool,
     if download_sound_only:
         print()
         print()
-        seprateur_menu_affichage()
+        print_separator()
         print("*             Choississez la qualité audio                  *")
-        seprateur_menu_affichage()
+        print_separator()
         for stream in list_available_streams:
             choix_menu = stream.abr # Pour la qualité de l'audio
             i += 1
             print(f"      {i} - {choix_menu} ") 
             valeur_choix_maximale = i
         
-        seprateur_menu_affichage()
-        v_int = demander_valeur_numerique_utilisateur(1, valeur_choix_maximale)
+        print_separator()
+        v_int = ask_numeric_value(1, valeur_choix_maximale)
         return v_int
         
     print()
     print()
-    seprateur_menu_affichage()
+    print_separator()
     print("*             Choississez la résolution vidéo               *")
-    seprateur_menu_affichage()
+    print_separator()
     for stream in list_available_streams:
         choix_menu = stream.resolution # pour la qualite de la vidéo
         i += 1
         print(f"      {i} - {choix_menu} ")
         valeur_choix_maximale = i
     
-    seprateur_menu_affichage()
-    v_int = demander_valeur_numerique_utilisateur(1, valeur_choix_maximale)
+    print_separator()
+    v_int = ask_numeric_value(1, valeur_choix_maximale)
     return v_int
 
 
@@ -332,9 +335,9 @@ def download_multiple_videos(url_youtube_video_links: list[str], download_sound_
             choice_once_bitrate_audio_or_resolution_video_user = False 
             print()
             print()
-            seprateur_menu_affichage()
+            print_separator()
             print("*             Stream vidéo selectionnée:                    *")
-            seprateur_menu_affichage()
+            print_separator()
             print('Number of link url video youtube in file: ', len(url_youtube_video_links))
             print()
 
@@ -370,7 +373,7 @@ def download_multiple_videos(url_youtube_video_links: list[str], download_sound_
 
     print()
     print("Fin du téléchargement")
-    seprateur_menu_affichage()
+    print_separator()
     print()
     input("Appuyer sur ENTREE pour revenir au menu d'accueil")
     program_break_time(3,"Le menu d'accueil va revenir dans" )
