@@ -7,6 +7,7 @@ if '__annotations__' not in globals():
     __annotations__ = {}
 
 import youtube_downloader
+from downloader import YoutubeDownloader
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -38,6 +39,8 @@ def menu() -> None:
     # ------------------------------- PROGRAMME PRINCIPAL ----------------------
     # --------------------------------------------------------------------------
 
+    yd = YoutubeDownloader()
+
     while True:
         choix_max_menu_accueil = youtube_downloader.afficher_menu_acceuil()
         reponse_utilisateur_pour_choix_dans_menu = youtube_downloader.ask_numeric_value(
@@ -62,13 +65,13 @@ def menu() -> None:
                 if reponse_utilisateur_pour_choix_dans_menu == 1:
                     download_sound_only = False
 
-                youtube_downloader.download_multiple_videos(url_video_send_user_list, download_sound_only)
+                yd.download_multiple_videos(url_video_send_user_list, download_sound_only)
             case 2 | 6:
                 youtube_video_links: list[str] = youtube_downloader.demander_youtube_link_file()
                 if reponse_utilisateur_pour_choix_dans_menu == 2:
                     download_sound_only = False
 
-                youtube_downloader.download_multiple_videos(youtube_video_links, download_sound_only)
+                yd.download_multiple_videos(youtube_video_links, download_sound_only)
             case 3 | 7:
                 url_playlist_send_user: str = youtube_downloader.ask_youtube_url()
                 try:
@@ -79,7 +82,7 @@ def menu() -> None:
                     if reponse_utilisateur_pour_choix_dans_menu == 3:
                         download_sound_only = False
 
-                    youtube_downloader.download_multiple_videos(link_url_playlist_youtube, download_sound_only)  # type: ignore
+                    yd.download_multiple_videos(link_url_playlist_youtube, download_sound_only)  # type: ignore
             case 4 | 8:
                 url_channel_send_user: str = youtube_downloader.ask_youtube_url()
                 try:
@@ -90,7 +93,7 @@ def menu() -> None:
                     if reponse_utilisateur_pour_choix_dans_menu == 4:
                         download_sound_only = False
 
-                    youtube_downloader.download_multiple_videos(link_url_channel_youtube, download_sound_only)  # type: ignore
+                    yd.download_multiple_videos(link_url_channel_youtube, download_sound_only)  # type: ignore
 
     
 # import sys
@@ -129,19 +132,20 @@ def main(argv: list[str] | None = None) -> None:
     """Parse arguments and dispatch to subcommands."""
     args = parse_args(argv)
     command = args.command
+    yd = YoutubeDownloader()
 
     if command is None or command == "menu":
         menu()
         return
 
     if command == "video":
-        youtube_downloader.download_multiple_videos(args.urls, args.audio)
+        yd.download_multiple_videos(args.urls, args.audio)
     elif command == "playlist":
         playlist = youtube_downloader.Playlist(args.url)
-        youtube_downloader.download_multiple_videos(playlist, args.audio)  # type: ignore
+        yd.download_multiple_videos(playlist, args.audio)  # type: ignore
     elif command == "channel":
         channel = youtube_downloader.Channel(args.url)
-        youtube_downloader.download_multiple_videos(channel, args.audio)  # type: ignore
+        yd.download_multiple_videos(channel, args.audio)  # type: ignore
     else:
         raise SystemExit(f"Unknown command: {command}")
 
