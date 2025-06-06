@@ -23,3 +23,13 @@ def test_ask_youtube_url_invalid_prefix(monkeypatch):
     monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
     url = cli_utils.ask_youtube_url()
     assert url == "https://www.youtube.com/watch?v=ok"
+
+
+def test_ask_youtube_url_invalid_then_valid(monkeypatch):
+    inputs = iter([
+        "invalid",
+        "https://www.youtube.com/watch?v=good",
+    ])
+    monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
+    url = cli_utils.ask_youtube_url()
+    assert url == "https://www.youtube.com/watch?v=good"
