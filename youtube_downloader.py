@@ -13,7 +13,7 @@ import colorama
 from colorama import init
 init(autoreset=True)
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 
 # Projet "Program Youtube Downloader"
@@ -98,15 +98,15 @@ def afficher_menu_acceuil() -> int:
     return valeur_choix_maximale
 
 
-def demander_save_file_path() -> str:
+def demander_save_file_path() -> Path:
     print()
     print()
     seprateur_menu_affichage()
     print("*             Sauvegarde fichier                            *")
     seprateur_menu_affichage()
-    save_path =  input("Indiquez l'endroit où vous voulez stocker le fichier : \n --> ")
-    
-    return save_path
+    save_path = input("Indiquez l'endroit où vous voulez stocker le fichier : \n --> ")
+
+    return Path(save_path)
 
 
 def demander_url_vidéo_youtube() -> str:
@@ -132,11 +132,11 @@ def demander_youtube_link_file() -> list[str]:
     seprateur_menu_affichage()
     print("*             Fichier contenant les urls Youtube            *")
     seprateur_menu_affichage()
-    fichier_user =  input("Indiquez le nom du fichier : \n --> ")
+    fichier_user = input("Indiquez le nom du fichier : \n --> ")
     print()
     try:
-        # "fichier_url_video.txt"
-        with open(fichier_user, "r") as fichier:
+        file_path = Path(fichier_user)
+        with file_path.open("r") as fichier:
             lignes = fichier.readlines()  # .readlines() pour tout lire et recuperer une List [] en retour
             compteur_ligne = 0
             number_erreur = 0
@@ -261,18 +261,18 @@ def streams_video(download_sound_only: bool, youtube_video: YouTube):
 
 
 
-def conversion_mp4_in_mp3(file_downloaded:str) -> None:
-    base, ext = os.path.splitext(file_downloaded) # os.path.splitext('myFile.txt') : renvoie un tuple ('myFile', '.txt') :
+
+def conversion_mp4_in_mp3(file_downloaded: Union[str, Path]) -> None:
+    file_path = Path(file_downloaded)
     try:
-        new_file = base + '.mp3'
-        os.rename(file_downloaded, new_file)
-        if Path(file_downloaded).exists():
-        # if os.path.exists(file_downloaded): # os.path.exists('/myDir/myFile') : renvoie True si le fichier ou directory existe.
-                                            # Si c'est un lien symbolique qui pointe vers un fichier qui n'existe pas, renvoie False
-            os.remove(file_downloaded)
-    except:
+        new_file = file_path.with_suffix(".mp3")
+        file_path.rename(new_file)
+        if file_path.exists():
+            file_path.unlink()
+    except Exception:
         print("[WARMING] un fichier MP3 portant le même nom, déjà existant!")
-        os.remove(file_downloaded)
+        if file_path.exists():
+            file_path.unlink()
         print()
 
 
@@ -347,15 +347,14 @@ def download_multiple_videos(url_youtube_video_links: list[str], download_sound_
         # print()
         
         # control exist the file mp4
-        current_file = save_path + "\\" + stream.default_filename # type: ignore
-        if Path(current_file).exists(): # os.path.exists('/myDir/myFile') : renvoie True si le fichier ou directory existe.
-                                        # Si c'est un lien symbolique qui pointe vers un fichier qui n'existe pas, renvoie False
-            print("[WARMING] un fichier MP4 portant le même nom, déjà existant!")   
+        current_file = save_path / stream.default_filename  # type: ignore
+        if current_file.exists():
+            print("[WARMING] un fichier MP4 portant le même nom, déjà existant!")
         
         # downloading the file mp4
         try:
-            out_file = stream.download(output_path=save_path) # type: ignore
-            print("")  
+            out_file = Path(stream.download(output_path=str(save_path)))  # type: ignore
+            print("")
         except Exception as e:
             print("")
             print(f"[ERREUR] : le téléchargement a échoué : {e}")
