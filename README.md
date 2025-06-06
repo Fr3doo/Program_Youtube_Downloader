@@ -4,7 +4,8 @@ Ce projet permet de télécharger des vidéos ou uniquement la piste audio depui
 
 ## Prérequis
 
-- Python 3
+- Python 3.10 ou plus récent
+- Créez un environnement virtuel : `python -m venv .venv`
 - Les dépendances listées dans `requirements.txt` :
   - `pytubefix` (pour récupérer correctement les flux YouTube)
   - `colorama` (affichage en couleur)
