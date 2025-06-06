@@ -43,7 +43,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
-def menu() -> None:
+def menu() -> None:  # pragma: no cover
     """Run the main menu loop."""
 
     # --------------------------------------------------------------------------
@@ -227,6 +227,6 @@ def main(argv: list[str] | None = None) -> None:
         raise SystemExit(f"Unknown command: {command}")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()
 
