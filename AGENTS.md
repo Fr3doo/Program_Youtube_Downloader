@@ -1,42 +1,43 @@
-# Project Agents
 
-This document describes the main agents that make up the **Program Youtube Downloader**.
-Each agent groups related functions and responsibilities.
+# Agents du projet
 
-## CLI Agent
-**Purpose**: Provide the command line interface and dispatch user choices.
+Ce document décrit les principaux agents qui composent **Program Youtube Downloader**.
+Chaque agent regroupe des fonctions et responsabilités associées.
 
-**Entry point**: `main()` in [main.py](main.py) lines 128-150.
+## Agent CLI
+**Rôle** : Fournir l'interface en ligne de commande et dispatcher les choix de l'utilisateur.
 
-**Inputs**: command-line arguments or user selections from the menu.
+**Point d'entrée** : `main()` dans [main.py](main.py) lignes 128-150.
 
-**Outputs**: invokes download functions and terminates when the user chooses to quit.
+**Entrées** : arguments de la ligne de commande ou sélections depuis le menu.
 
-**Dependencies**: `youtube_downloader` module. Menu labels are defined in
+**Sorties** : appelle les fonctions de téléchargement et se termine quand l'utilisateur choisit de quitter.
+
+**Dépendances** : module `youtube_downloader`. Les libellés du menu sont définis dans
 [`constants.py`](program_youtube_downloader/constants.py).
 
-Usage:
+Utilisation :
 ```python
 from main import main
 main()
 ```
 
-## Download Agent
-**Purpose**: Fetch videos or audios from YouTube and manage download workflows.**
+## Agent de téléchargement
+**Rôle** : Récupérer des vidéos ou des pistes audio depuis YouTube et gérer les flux de téléchargement.**
 
-**Entry point**: `download_multiple_videos()` in [downloader.py](downloader.py) lines 62-153.
+**Point d'entrée** : `download_multiple_videos()` dans [downloader.py](downloader.py) lignes 62-153.
 
-**Inputs**: list of YouTube URLs (or Playlist/Channel), boolean `download_sound_only`.
+**Entrées** : liste d'URLs YouTube (ou Playlist/Chaîne), booléen `download_sound_only`.
 
-**Outputs**: video or audio files saved to disk.
+**Sorties** : fichiers vidéo ou audio enregistrés sur le disque.
 
-**Dependencies**: `pytubefix`, validation helpers and progress agent.
+**Dépendances** : `pytubefix`, fonctions de validation et agent de progression.
 
-`YoutubeDownloader` accepts an optional `youtube_cls` factory to create
-`pytubefix.YouTube` objects. Tests can supply a dummy constructor to avoid
-network access.
+`YoutubeDownloader` accepte facultativement une fabrique `youtube_cls` pour créer des
+objets `pytubefix.YouTube`. Les tests peuvent fournir un constructeur factice pour éviter
+l'accès réseau.
 
-Usage:
+Utilisation :
 ```python
 from downloader import YoutubeDownloader
 urls = ["https://www.youtube.com/watch?v=dQw4w9WgXcQ"]
@@ -44,70 +45,70 @@ yd = YoutubeDownloader()
 yd.download_multiple_videos(urls, False)
 ```
 
-## Conversion Agent
-**Purpose**: Convert a downloaded mp4 file to mp3.**
+## Agent de conversion
+**Rôle** : Convertir un fichier mp4 téléchargé en mp3.**
 
-**Entry point**: `conversion_mp4_in_mp3()` in [downloader.py](downloader.py) lines 57-67.
+**Point d'entrée** : `conversion_mp4_in_mp3()` dans [downloader.py](downloader.py) lignes 57-67.
 
-**Inputs**: path to the downloaded mp4 file.
+**Entrées** : chemin vers le fichier mp4 téléchargé.
 
-**Outputs**: an mp3 file saved to disk, old mp4 removed.
+**Sorties** : fichier mp3 enregistré sur le disque, ancien mp4 supprimé.
 
-Usage:
+Utilisation :
 ```python
 from downloader import YoutubeDownloader
 yd = YoutubeDownloader()
 yd.conversion_mp4_in_mp3("video.mp4")
 ```
 
-## Progress Agent
-**Purpose**: Display progress information while downloads are running.**
+## Agent de progression
+**Rôle** : Afficher les informations d'avancement pendant les téléchargements.**
 
-**Entry points**:
-- `on_download_progress()` in [program_youtube_downloader/progress.py](program_youtube_downloader/progress.py) lines 8-13.
-- `progress_bar()` in [program_youtube_downloader/progress.py](program_youtube_downloader/progress.py) lines 16-37.
+**Points d'entrée** :
+- `on_download_progress()` dans [program_youtube_downloader/progress.py](program_youtube_downloader/progress.py) lignes 8-13.
+- `progress_bar()` dans [program_youtube_downloader/progress.py](program_youtube_downloader/progress.py) lignes 16-37.
 
-**Inputs**: stream callbacks from `pytubefix`, progress percentages.
+**Entrées** : rappels de flux provenant de `pytubefix`, pourcentages d'avancement.
 
-**Outputs**: textual progress bar in the console.
+**Sorties** : barre de progression textuelle dans la console.
 
-Usage:
+Utilisation :
 ```python
 # automatically used via download_multiple_videos
 ```
 
-## Validation Agent
-**Purpose**: Validate user input and sanitize values.**
+## Agent de validation
+**Rôle** : Valider les entrées utilisateur et les nettoyer.**
 
-**Entry points**:
-- `ask_numeric_value()` in [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py) lines 22-39.
-- `ask_youtube_url()` in [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py) lines 96-113.
-- `demander_youtube_link_file()` in [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py) lines 115-159.
-- `validate_youtube_url()` in [program_youtube_downloader/validators.py](program_youtube_downloader/validators.py) lines 4-18.
+**Points d'entrée** :
+- `ask_numeric_value()` dans [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py) lignes 22-39.
+- `ask_youtube_url()` dans [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py) lignes 96-113.
+- `demander_youtube_link_file()` dans [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py) lignes 115-159.
+- `validate_youtube_url()` dans [program_youtube_downloader/validators.py](program_youtube_downloader/validators.py) lignes 4-18.
 
-**Inputs**: values typed by the user.
+**Entrées** : valeurs saisies par l'utilisateur.
 
-**Outputs**: validated and sanitized inputs using `BASE_YOUTUBE_URL` from [`constants.py`](program_youtube_downloader/constants.py).
+**Sorties** : entrées validées et nettoyées à l'aide de `BASE_YOUTUBE_URL` depuis [`constants.py`](program_youtube_downloader/constants.py).
 
-Usage:
+Utilisation :
 ```python
 from program_youtube_downloader.cli_utils import ask_numeric_value
 value = ask_numeric_value(1, 3)
 ```
 
-## Summary
+## Résumé
 
-| Agent | File(s) | Main Functions |
-|-------|---------|----------------|
-| CLI Agent | `main.py` | `main()` |
-| Download Agent | `downloader.py` | `download_multiple_videos` |
-| Conversion Agent | `downloader.py` | `conversion_mp4_in_mp3` |
-| Progress Agent | `program_youtube_downloader/progress.py` | `on_download_progress`, `progress_bar` |
-| Validation Agent | `program_youtube_downloader/cli_utils.py` | `ask_numeric_value`, `ask_youtube_url`, `demander_youtube_link_file` |
-| Constants Agent | `program_youtube_downloader/constants.py` | menu labels, `BASE_YOUTUBE_URL` |
-| Config Agent | `program_youtube_downloader/config.py` | `DownloadOptions` dataclass |
+| Agent | Fichier(s) | Fonctions principales |
+|-------|------------|----------------------|
+| Agent CLI | `main.py` | `main()` |
+| Agent de téléchargement | `downloader.py` | `download_multiple_videos` |
+| Agent de conversion | `downloader.py` | `conversion_mp4_in_mp3` |
+| Agent de progression | `program_youtube_downloader/progress.py` | `on_download_progress`, `progress_bar` |
+| Agent de validation | `program_youtube_downloader/cli_utils.py` | `ask_numeric_value`, `ask_youtube_url`, `demander_youtube_link_file` |
+| Agent des constantes | `program_youtube_downloader/constants.py` | libellés du menu, `BASE_YOUTUBE_URL` |
+| Agent de configuration | `program_youtube_downloader/config.py` | dataclass `DownloadOptions` |
 
-## Interaction Diagram
+## Diagramme d'interaction
 ```mermaid
 graph TD
     CLI --> Constants
@@ -117,25 +118,25 @@ graph TD
     Download --> Conversion
     Download --> Config
 ```
-## Sequence of Operations
-1. **CLI Agent** affiche le menu grâce aux chaînes du **Constants Agent** et récupère le choix de l'utilisateur.
-2. Le **Validation Agent** vérifie que chaque valeur ou URL saisie est correcte.
-3. Le **CLI Agent** construit un objet **DownloadOptions** du **Config Agent** puis appelle le **Download Agent**.
-4. Pendant le téléchargement, le **Download Agent** envoie les mises à jour au **Progress Agent**.
-5. Une fois le fichier vidéo téléchargé, le **Conversion Agent** peut le convertir en MP3 si l'option audio seul est activée.
+## Séquence des opérations
+1. **Agent CLI** affiche le menu grâce aux chaînes de l'**Agent des constantes** et récupère le choix de l'utilisateur.
+2. L'**Agent de validation** vérifie que chaque valeur ou URL saisie est correcte.
+3. L'**Agent CLI** construit un objet **DownloadOptions** de l'**Agent de configuration** puis appelle l'**Agent de téléchargement**.
+4. Pendant le téléchargement, l'**Agent de téléchargement** envoie les mises à jour à l'**Agent de progression**.
+5. Une fois le fichier vidéo téléchargé, l'**Agent de conversion** peut le convertir en MP3 si l'option audio seul est activée.
 
-## Best Practices
-- Keep agents small and focused on a single responsibility.
-- Keep each agent self-contained with clear input/output.
-- Expose a minimal API to other modules.
-- Reuse type hints consistently (see current use of `typing` and `Optional` in `youtube_downloader.py`).
-- When adding features, favor extending an existing agent rather than duplicating logic.
-- Write tests for new behaviour in `tests/` using `pytest`.
+## Bonnes pratiques
+- Garder les agents petits et concentrés sur une seule responsabilité.
+- Chaque agent doit être autonome avec des entrées/sorties claires.
+- Exposer une API minimale aux autres modules.
+- Réutiliser systématiquement les hints de type (voir l'utilisation actuelle de `typing` et `Optional` dans `youtube_downloader.py`).
+- Lorsqu'on ajoute des fonctionnalités, privilégier l'extension d'un agent existant plutôt que la duplication de logique.
+- Écrire des tests pour tout nouveau comportement dans `tests/` avec `pytest`.
 
-## Adding a new agent
-1. Create a module or function group implementing the new behaviour.
-2. Document it in **AGENTS.md** with its purpose, entry points and usage.
-   - Update the summary table and extend the mermaid diagram.
-3. Provide unit tests demonstrating its interactions with existing agents.
-4. Link any new documentation from the README.
+## Ajouter un nouvel agent
+1. Créer un module ou un groupe de fonctions implémentant le nouveau comportement.
+2. Le documenter dans **AGENTS.md** en précisant son rôle, ses points d'entrée et son utilisation.
+   - Mettre à jour le tableau récapitulatif et étendre le diagramme mermaid.
+3. Fournir des tests unitaires démontrant ses interactions avec les agents existants.
+4. Lier toute nouvelle documentation depuis le README.
 
