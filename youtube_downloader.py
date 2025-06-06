@@ -135,38 +135,35 @@ def demander_youtube_link_file() -> list[str]:
     fichier_user =  input("Indiquez le nom du fichier : \n --> ")
     print()
     try:
-                    # "fichier_url_video.txt"
-        fichier = open(fichier_user, "r")
-    except:
+        # "fichier_url_video.txt"
+        with open(fichier_user, "r") as fichier:
+            lignes = fichier.readlines()  # .readlines() pour tout lire et recuperer une List [] en retour
+            compteur_ligne = 0
+            number_erreur = 0
+            number_links_file = len(lignes)
+
+            if not number_links_file:
+                print("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
+                return demander_youtube_link_file()
+
+            for i in range(0, len(lignes)):
+                url_video = lignes[i]
+                compteur_ligne += 1
+
+                if url_video.lower().startswith(BASE_YOUTUBE_URL):
+                    link_url_video_youtube_final.append(url_video)
+                else:
+                    print("[ERREUR] : ")
+                    print("le prefixe attendu est : https://www.youtube.com/")
+                    print(f"  le lien sur la ligne n° {compteur_ligne} ne sera pas télécharger")
+                    print("")
+                    number_erreur += 1
+
+            if number_erreur == number_links_file:
+                print("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
+                return demander_youtube_link_file()
+    except Exception:
         print("[ERREUR] : Le fichier n'est pas accessible")
-    else:
-        lignes = fichier.readlines() # .readlines() pour tout lire et recuperer une List [] en retour
-        compteur_ligne = 0
-        number_erreur = 0
-        number_links_file = len(lignes)
-        
-        if not number_links_file:
-            print("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
-            return demander_youtube_link_file()
-
-        for i in range(0,len(lignes)):
-            url_video = lignes[i]
-            compteur_ligne += 1
-            
-            if url_video.lower().startswith(BASE_YOUTUBE_URL):
-                link_url_video_youtube_final.append(url_video)
-            else:
-                print("[ERREUR] : ")
-                print("le prefixe attendu est : https://www.youtube.com/")
-                print(f"  le lien sur la ligne n° {compteur_ligne} ne sera pas télécharger")
-                print("")
-                number_erreur += 1
-                
-        if number_erreur == number_links_file:
-            print("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
-            return demander_youtube_link_file()
-
-        fichier.close()
 
     return link_url_video_youtube_final
 
