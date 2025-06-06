@@ -1,6 +1,7 @@
 from pathlib import Path
 from program_youtube_downloader import downloader as downloader_module
 from program_youtube_downloader.downloader import YoutubeDownloader
+from program_youtube_downloader.config import DownloadOptions
 
 class DummyStream:
     itag = 1
@@ -51,9 +52,15 @@ def test_download_multiple_videos_custom_callbacks(monkeypatch, tmp_path: Path) 
         called['progress'] = True
 
     yd = YoutubeDownloader()
+    options = DownloadOptions(
+        save_path=tmp_path,
+        download_sound_only=False,
+        choice_callback=choice_cb,
+        progress_callback=progress_cb,
+    )
     yd.download_multiple_videos([
         "https://youtu.be/dummy"
-    ], False, save_path=tmp_path, choice_callback=choice_cb, progress_callback=progress_cb)
+    ], options)
 
     assert (tmp_path / "sample.mp4").exists()
     assert created['yt'].progress is progress_cb
@@ -77,9 +84,14 @@ def test_download_multiple_videos_instantiation_error(monkeypatch, tmp_path: Pat
         called['progress'] = True
 
     yd = YoutubeDownloader()
+    options = DownloadOptions(
+        save_path=tmp_path,
+        download_sound_only=False,
+        progress_callback=progress_cb,
+    )
     yd.download_multiple_videos([
         "https://youtu.be/fail"
-    ], False, save_path=tmp_path, progress_callback=progress_cb)
+    ], options)
 
     assert not any(tmp_path.iterdir())
     assert 'progress' not in called
@@ -103,9 +115,14 @@ def test_download_multiple_videos_no_streams(monkeypatch, tmp_path: Path) -> Non
         called['progress'] = True
 
     yd = YoutubeDownloader()
+    options = DownloadOptions(
+        save_path=tmp_path,
+        download_sound_only=False,
+        progress_callback=progress_cb,
+    )
     yd.download_multiple_videos([
         "https://youtu.be/nostreams"
-    ], False, save_path=tmp_path, progress_callback=progress_cb)
+    ], options)
 
     assert not any(tmp_path.iterdir())
     assert called == {}
