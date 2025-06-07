@@ -110,12 +110,12 @@ def test_progressbarhandler_on_progress(capsys):
 # ---------------------------------------------------------------------------
 
 def test_program_break_time(monkeypatch, capsys):
-    """Countdown should print dots without sleeping when patched."""
+    """Countdown should print remaining seconds without sleeping when patched."""
     monkeypatch.setattr(youtube_downloader.time, "sleep", lambda x: None)
     youtube_downloader.program_break_time(3, "Wait")
     out = capsys.readouterr().out
-    assert out.count(".") == 3
     assert "Wait 3 secondes" in out
+    assert "3 2 1" in out
 
 
 def test_clear_screen(monkeypatch):
