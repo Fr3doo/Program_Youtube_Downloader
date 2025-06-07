@@ -106,6 +106,7 @@ Image :
 - `validators.py` : vérifications des liens YouTube fournis par l'utilisateur.
 - `config.py` : objet `DownloadOptions` pour paramétrer les téléchargements.
 - `youtube_downloader.py` : utilitaires généraux (effacement d'écran, compte à rebours).
+- `exceptions.py` : définitions des exceptions `DownloadError` et `ValidationError`.
 - `requirements.txt` : liste des dépendances Python nécessaires.
 - `mypy.ini` : configuration minimale pour `mypy`.
 

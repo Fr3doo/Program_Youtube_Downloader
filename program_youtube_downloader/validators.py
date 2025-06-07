@@ -2,7 +2,14 @@ from urllib.parse import urlparse
 
 
 def validate_youtube_url(url: str) -> bool:
-    """Return True if ``url`` appears to be a valid YouTube URL."""
+    """Check whether ``url`` is a valid YouTube address.
+
+    Args:
+        url: URL provided by the user.
+
+    Returns:
+        ``True`` if the URL looks like a YouTube link, ``False`` otherwise.
+    """
     if not url:
         return False
     url = url.strip()
