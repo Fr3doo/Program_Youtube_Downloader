@@ -83,7 +83,7 @@ Utilisation :
 **Points d'entrée** :
 - `ask_numeric_value()` dans [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py) lignes 22-39.
 - `ask_youtube_url()` dans [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py) lignes 96-113.
-- `demander_youtube_link_file()` dans [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py) lignes 115-159.
+- `ask_youtube_link_file()` dans [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py) lignes 115-159.
 - `validate_youtube_url()` dans [program_youtube_downloader/validators.py](program_youtube_downloader/validators.py) lignes 4-18.
 
 **Entrées** : valeurs saisies par l'utilisateur.
@@ -104,7 +104,7 @@ value = ask_numeric_value(1, 3)
 | Agent de téléchargement | `downloader.py` | `download_multiple_videos` |
 | Agent de conversion | `downloader.py` | `conversion_mp4_in_mp3` |
 | Agent de progression | `program_youtube_downloader/progress.py` | `on_download_progress`, `progress_bar` |
-| Agent de validation | `program_youtube_downloader/cli_utils.py` | `ask_numeric_value`, `ask_youtube_url`, `demander_youtube_link_file` |
+| Agent de validation | `program_youtube_downloader/cli_utils.py` | `ask_numeric_value`, `ask_youtube_url`, `ask_youtube_link_file` |
 | Agent des constantes | `program_youtube_downloader/constants.py` | libellés du menu, `BASE_YOUTUBE_URL` |
 | Agent de configuration | `program_youtube_downloader/config.py` | dataclass `DownloadOptions` |
 

@@ -25,7 +25,7 @@ def test_handle_video_option(monkeypatch, tmp_path):
 
 def test_handle_videos_option(monkeypatch, tmp_path):
     dd = DummyDownloader()
-    monkeypatch.setattr(main_module.cli_utils, "demander_youtube_link_file", lambda: ["https://youtu.be/a", "https://youtu.be/b"])
+    monkeypatch.setattr(main_module.cli_utils, "ask_youtube_link_file", lambda: ["https://youtu.be/a", "https://youtu.be/b"])
     monkeypatch.setattr(main_module, "create_download_options", lambda ao: DownloadOptions(save_path=tmp_path, download_sound_only=ao))
     main_module.handle_videos_option(dd, False)
     assert dd.called[0] == ["https://youtu.be/a", "https://youtu.be/b"]

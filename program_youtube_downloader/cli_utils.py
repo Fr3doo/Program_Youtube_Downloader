@@ -66,12 +66,8 @@ def ask_numeric_value(valeur_min: int, valeur_max: int, max_attempts: int = 3) -
         return v_int
 
 
-def afficher_menu_acceuil() -> int:
-    """Display the main menu.
-
-    Returns:
-        The number of available choices presented to the user.
-    """
+def display_main_menu() -> int:
+    """Display the main menu and return the number of choices."""
     print()
     print()
     print_separator()
@@ -91,7 +87,7 @@ def afficher_menu_acceuil() -> int:
     return valeur_choix_maximale
 
 
-def demander_save_file_path(max_attempts: int = 3) -> Path:
+def ask_save_file_path(max_attempts: int = 3) -> Path:
     """Prompt for a destination directory and create it if necessary.
 
     Args:
@@ -177,7 +173,7 @@ def ask_youtube_url(max_attempts: int = 3) -> str:
             raise ValidationError("URL invalide")
 
 
-def demander_youtube_link_file(max_attempts: int = 3) -> list[str]:
+def ask_youtube_link_file(max_attempts: int = 3) -> list[str]:
     """Load a list of YouTube URLs from a text file.
 
     Args:
@@ -247,7 +243,7 @@ def demander_youtube_link_file(max_attempts: int = 3) -> list[str]:
         return link_url_video_youtube_final
 
 
-def demander_choice_resolution_vidéo_or_bitrate_audio(
+def ask_resolution_or_bitrate(
     download_sound_only: bool, list_available_streams: Iterable[Any]
 ) -> int:
     """Prompt the user to choose a resolution or bitrate from ``list_available_streams``.

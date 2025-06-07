@@ -39,7 +39,7 @@ Couvre les fonctions d’aide pour les saisies utilisateur :
 
 - validation numérique (`ask_numeric_value`)
 - logique d'entrée d’URL (`ask_youtube_url`)
-- sélection et création de dossier (`demander_save_file_path`)
+- sélection et création de dossier (`ask_save_file_path`)
 - lecture d’un fichier contenant des liens YouTube
 
 ## `test_coverage_more.py`

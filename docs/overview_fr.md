@@ -23,7 +23,7 @@ Un tableau récapitulatif liste chaque agent avec son fichier et ses fonctions p
 ## Fonctionnement général
 
 1. L'utilisateur lance `program-youtube-downloader` depuis le terminal.
-2. Le **menu interactif** (ou une sous-commande) propose différents choix : télécharger une vidéo, plusieurs vidéos, une playlist, etc. Les options sont définies dans `constants.py` et affichées par `cli_utils.afficher_menu_acceuil`.
+2. Le **menu interactif** (ou une sous-commande) propose différents choix : télécharger une vidéo, plusieurs vidéos, une playlist, etc. Les options sont définies dans `constants.py` et affichées par `cli_utils.display_main_menu`.
 3. Les saisies de l'utilisateur (URL, dossier de destination, choix de résolution) sont validées par `cli_utils.py` et `validators.py`.
 4. Le téléchargeur (`YoutubeDownloader`) récupère les flux via `pytubefix`, affiche une barre de progression grâce au `ProgressBarHandler`, enregistre le fichier puis convertit en MP3 si nécessaire. Tout cela est orchestré par `download_multiple_videos`.
 5. `cli_utils.print_end_download_message` et `cli_utils.pause_return_to_menu` signalent la fin du téléchargement et renvoient l'utilisateur au menu principal.

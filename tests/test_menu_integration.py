@@ -13,7 +13,7 @@ class DummyDownloader:
 def run_menu_with_choice(monkeypatch, tmp_path, menu_choice):
     dd = DummyDownloader()
     monkeypatch.setattr(main_module, "YoutubeDownloader", lambda: dd)
-    monkeypatch.setattr(main_module.cli_utils, "afficher_menu_acceuil", lambda: len(main_module.MenuOption))
+    monkeypatch.setattr(main_module.cli_utils, "display_main_menu", lambda: len(main_module.MenuOption))
     choices = iter([menu_choice, main_module.MenuOption.QUIT.value])
     monkeypatch.setattr(main_module.cli_utils, "ask_numeric_value", lambda a, b: next(choices))
     monkeypatch.setattr(main_module.cli_utils, "ask_youtube_url", lambda: "https://youtu.be/x")

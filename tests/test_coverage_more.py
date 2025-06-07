@@ -62,16 +62,16 @@ def test_clear_screen_windows(monkeypatch):
     assert called.get("check") is True
 
 
-def test_demander_save_file_path_file(monkeypatch, tmp_path):
+def test_ask_save_file_path_file(monkeypatch, tmp_path):
     file_p = tmp_path / "file.txt"
     file_p.write_text("x")
     inputs = iter([str(file_p)])
     monkeypatch.setattr(builtins, "input", lambda *a, **k: next(inputs))
-    result = cli_utils.demander_save_file_path()
+    result = cli_utils.ask_save_file_path()
     assert result == tmp_path.resolve()
 
 
-def test_demander_save_file_path_mkdir_error(monkeypatch, tmp_path):
+def test_ask_save_file_path_mkdir_error(monkeypatch, tmp_path):
     new_dir = tmp_path / "newdir"
     inputs = iter([str(new_dir), "y", str(tmp_path)])
     monkeypatch.setattr(builtins, "input", lambda *a, **k: next(inputs))
@@ -85,22 +85,22 @@ def test_demander_save_file_path_mkdir_error(monkeypatch, tmp_path):
 
     failing.calls = 0
     monkeypatch.setattr(Path, "mkdir", failing)
-    result = cli_utils.demander_save_file_path()
+    result = cli_utils.ask_save_file_path()
     assert result == tmp_path.resolve()
 
 
-def test_demander_youtube_link_file_all_invalid(monkeypatch, tmp_path):
+def test_ask_youtube_link_file_all_invalid(monkeypatch, tmp_path):
     bad = tmp_path / "bad.txt"
     bad.write_text("not_a_url\n")
     good = tmp_path / "good.txt"
     good.write_text("https://youtu.be/ok\n")
     inputs = iter([str(bad), str(good)])
     monkeypatch.setattr(builtins, "input", lambda *a, **k: next(inputs))
-    links = cli_utils.demander_youtube_link_file()
+    links = cli_utils.ask_youtube_link_file()
     assert links == ["https://youtu.be/ok"]
 
 
-def test_demander_youtube_link_file_oserror(monkeypatch, tmp_path):
+def test_ask_youtube_link_file_oserror(monkeypatch, tmp_path):
     bad = tmp_path / "bad.txt"
     inputs = iter([str(bad), str(bad), str(bad)])
     monkeypatch.setattr(builtins, "input", lambda *a, **k: next(inputs))
@@ -108,7 +108,7 @@ def test_demander_youtube_link_file_oserror(monkeypatch, tmp_path):
         Path, "open", lambda self, *a, **k: (_ for _ in ()).throw(OSError())
     )
     with pytest.raises(cli_utils.ValidationError):
-        cli_utils.demander_youtube_link_file()
+        cli_utils.ask_youtube_link_file()
 
 
 def test_print_end_download_message(caplog):
@@ -141,11 +141,11 @@ class DummyDownloader:
 
 def test_create_download_options(monkeypatch, tmp_path):
     monkeypatch.setattr(
-        main_module.cli_utils, "demander_save_file_path", lambda: tmp_path
+        main_module.cli_utils, "ask_save_file_path", lambda: tmp_path
     )
     monkeypatch.setattr(
         main_module.cli_utils,
-        "demander_choice_resolution_vidéo_or_bitrate_audio",
+        "ask_resolution_or_bitrate",
         lambda *a, **k: 99,
     )
     opt = main_module.create_download_options(True)
@@ -153,7 +153,7 @@ def test_create_download_options(monkeypatch, tmp_path):
     assert opt.download_sound_only is True
     assert (
         opt.choice_callback
-        is main_module.cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio
+        is main_module.cli_utils.ask_resolution_or_bitrate
     )
 
 
@@ -161,11 +161,11 @@ def test_main_video_command(monkeypatch, tmp_path):
     dd = DummyDownloader()
     monkeypatch.setattr(main_module, "YoutubeDownloader", lambda: dd)
     monkeypatch.setattr(
-        main_module.cli_utils, "demander_save_file_path", lambda: tmp_path
+        main_module.cli_utils, "ask_save_file_path", lambda: tmp_path
     )
     monkeypatch.setattr(
         main_module.cli_utils,
-        "demander_choice_resolution_vidéo_or_bitrate_audio",
+        "ask_resolution_or_bitrate",
         lambda *a, **k: 1,
     )
     main_module.main(["video", "https://youtu.be/x"])
@@ -181,11 +181,11 @@ def test_main_playlist_command(monkeypatch, tmp_path):
         main_module.youtube_downloader, "Playlist", lambda u: ["https://youtu.be/1"]
     )
     monkeypatch.setattr(
-        main_module.cli_utils, "demander_save_file_path", lambda: tmp_path
+        main_module.cli_utils, "ask_save_file_path", lambda: tmp_path
     )
     monkeypatch.setattr(
         main_module.cli_utils,
-        "demander_choice_resolution_vidéo_or_bitrate_audio",
+        "ask_resolution_or_bitrate",
         lambda *a, **k: 1,
     )
     main_module.main(["playlist", "https://example.com/playlist"])
@@ -200,11 +200,11 @@ def test_main_channel_command(monkeypatch, tmp_path):
         main_module.youtube_downloader, "Channel", lambda u: ["https://youtu.be/2"]
     )
     monkeypatch.setattr(
-        main_module.cli_utils, "demander_save_file_path", lambda: tmp_path
+        main_module.cli_utils, "ask_save_file_path", lambda: tmp_path
     )
     monkeypatch.setattr(
         main_module.cli_utils,
-        "demander_choice_resolution_vidéo_or_bitrate_audio",
+        "ask_resolution_or_bitrate",
         lambda *a, **k: 1,
     )
     main_module.main(["channel", "https://example.com/channel"])
