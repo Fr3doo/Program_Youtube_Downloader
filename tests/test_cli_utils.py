@@ -1,4 +1,5 @@
 import pytest
+from pathlib import Path
 
 from program_youtube_downloader import cli_utils
 from program_youtube_downloader.exceptions import ValidationError
@@ -62,6 +63,22 @@ def test_demander_save_file_path_retry(monkeypatch, tmp_path):
     monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
     p = cli_utils.demander_save_file_path()
     assert p == existing.resolve()
+
+
+def test_demander_save_file_path_mkdir_failure(monkeypatch, tmp_path):
+    new_dir = tmp_path / "newdir"
+    inputs = iter([str(new_dir), "y", str(tmp_path)])
+    monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
+
+    def fail_once(self, *a, **k):
+        fail_once.calls += 1
+        raise OSError()
+
+    fail_once.calls = 0
+    monkeypatch.setattr(Path, "mkdir", fail_once)
+
+    result = cli_utils.demander_save_file_path()
+    assert result == tmp_path.resolve()
 
 
 def test_demander_youtube_link_file(monkeypatch, tmp_path):
