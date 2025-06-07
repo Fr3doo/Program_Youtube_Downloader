@@ -92,86 +92,89 @@ def create_download_options(audio_only: bool, output_dir: Path | None = None) ->
     )
 
 
+def handle_quit_option() -> None:
+    """Display the exit banner."""
+    logger.info("")
+    logger.info("")
+    logger.info("******************************************************")
+    logger.info("*                                                    *")
+    logger.info("*                    Fin du programme                *")
+    logger.info("*                                                    *")
+    logger.info("******************************************************")
+
+
+def handle_video_option(yd: YoutubeDownloader, audio_only: bool) -> None:
+    """Download a single video or its audio track."""
+    url = cli_utils.ask_youtube_url()
+    options = create_download_options(audio_only)
+    yd.download_multiple_videos([url], options)
+
+
+def handle_videos_option(yd: YoutubeDownloader, audio_only: bool) -> None:
+    """Download multiple videos or their audio tracks from a file."""
+    urls = cli_utils.demander_youtube_link_file()
+    options = create_download_options(audio_only)
+    yd.download_multiple_videos(urls, options)
+
+
+def handle_playlist_option(yd: YoutubeDownloader, audio_only: bool) -> None:
+    """Download an entire playlist."""
+    url = cli_utils.ask_youtube_url()
+    try:
+        playlist = youtube_downloader.Playlist(url)
+    except Exception:
+        logger.exception("Error connecting to playlist")
+        logger.error("[ERREUR] : Connexion à la Playlist impossible")
+        return
+    options = create_download_options(audio_only)
+    yd.download_multiple_videos(playlist, options)  # type: ignore
+
+
+def handle_channel_option(yd: YoutubeDownloader, audio_only: bool) -> None:
+    """Download all videos from a channel."""
+    url = cli_utils.ask_youtube_url()
+    try:
+        channel = youtube_downloader.Channel(url)
+    except Exception:
+        logger.exception("Error connecting to channel")
+        logger.error("[ERREUR] : Connexion à la chaîne Youtube impossible")
+        return
+    options = create_download_options(audio_only)
+    yd.download_multiple_videos(channel, options)  # type: ignore
+
+
 def menu() -> None:  # pragma: no cover
     """Interactively ask the user what to download and start the process."""
 
     # --------------------------------------------------------------------------
     # ------------------------------- PROGRAMME PRINCIPAL ----------------------
     # --------------------------------------------------------------------------
-
     yd = YoutubeDownloader()
 
     while True:
         choix_max_menu_accueil = cli_utils.afficher_menu_acceuil()
-        choix = MenuOption(
-            cli_utils.ask_numeric_value(1, choix_max_menu_accueil)
-        )
-        download_sound_only = True
+        choix = MenuOption(cli_utils.ask_numeric_value(1, choix_max_menu_accueil))
 
         match choix:
             case MenuOption.QUIT:
-                logger.info("")
-                logger.info("")
-                logger.info("*************************************************************")
-                logger.info("*                                                           *")
-                logger.info("*                    Fin du programme                       *")
-                logger.info("*                                                           *")
-                logger.info("*************************************************************")
+                handle_quit_option()
                 break
-            case MenuOption.VIDEO | MenuOption.VIDEO_AUDIO_ONLY:
-                url_video_send_user_list: list[str] = []
-                url_video_send_user: str = cli_utils.ask_youtube_url()
-                url_video_send_user_list.append(url_video_send_user)
-                if choix is MenuOption.VIDEO:
-                    download_sound_only = False
-
-                options = create_download_options(download_sound_only)
-                yd.download_multiple_videos(
-                    url_video_send_user_list,
-                    options,
-                )
-            case MenuOption.VIDEOS | MenuOption.VIDEOS_AUDIO_ONLY:
-                youtube_video_links: list[str] = cli_utils.demander_youtube_link_file()
-                if choix is MenuOption.VIDEOS:
-                    download_sound_only = False
-
-                options = create_download_options(download_sound_only)
-                yd.download_multiple_videos(
-                    youtube_video_links,
-                    options,
-                )
-            case MenuOption.PLAYLIST_VIDEO | MenuOption.PLAYLIST_AUDIO_ONLY:
-                url_playlist_send_user: str = cli_utils.ask_youtube_url()
-                try:
-                    link_url_playlist_youtube = youtube_downloader.Playlist(url_playlist_send_user)
-                except Exception as exc:
-                    logger.exception("Error connecting to playlist")
-                    logger.error("[ERREUR] : Connexion à la Playlist impossible")
-                else:
-                    if choix is MenuOption.PLAYLIST_VIDEO:
-                        download_sound_only = False
-
-                    options = create_download_options(download_sound_only)
-                    yd.download_multiple_videos(
-                        link_url_playlist_youtube,
-                        options,
-                    )  # type: ignore
-            case MenuOption.CHANNEL_VIDEOS | MenuOption.CHANNEL_AUDIO_ONLY:
-                url_channel_send_user: str = cli_utils.ask_youtube_url()
-                try:
-                    link_url_channel_youtube = youtube_downloader.Channel(url_channel_send_user)
-                except Exception as exc:
-                    logger.exception("Error connecting to channel")
-                    logger.error("[ERREUR] : Connexion à la chaîne Youtube impossible")
-                else:
-                    if choix is MenuOption.CHANNEL_VIDEOS:
-                        download_sound_only = False
-
-                    options = create_download_options(download_sound_only)
-                    yd.download_multiple_videos(
-                        link_url_channel_youtube,
-                        options,
-                    )  # type: ignore
+            case MenuOption.VIDEO:
+                handle_video_option(yd, False)
+            case MenuOption.VIDEO_AUDIO_ONLY:
+                handle_video_option(yd, True)
+            case MenuOption.VIDEOS:
+                handle_videos_option(yd, False)
+            case MenuOption.VIDEOS_AUDIO_ONLY:
+                handle_videos_option(yd, True)
+            case MenuOption.PLAYLIST_VIDEO:
+                handle_playlist_option(yd, False)
+            case MenuOption.PLAYLIST_AUDIO_ONLY:
+                handle_playlist_option(yd, True)
+            case MenuOption.CHANNEL_VIDEOS:
+                handle_channel_option(yd, False)
+            case MenuOption.CHANNEL_AUDIO_ONLY:
+                handle_channel_option(yd, True)
 
     
 # import sys
