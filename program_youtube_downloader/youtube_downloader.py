@@ -5,6 +5,7 @@ from pytube import Playlist
 from pytube import Channel
 import time
 import os
+import subprocess
 from pathlib import Path
 import logging
 
@@ -29,9 +30,9 @@ from .constants import (
 def clear_screen() -> None:
     """Clear the terminal screen on Windows or POSIX systems."""
     if os.name == 'posix':
-        os.system('clear')
+        subprocess.run(["clear"])
     else:
-        os.system('cls')
+        subprocess.run(["cls"], shell=True)
 
 
 def program_break_time(memorization_time: int, affichage_text: str) -> None:

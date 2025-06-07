@@ -118,15 +118,19 @@ def test_program_break_time(monkeypatch, capsys):
 
 
 def test_clear_screen(monkeypatch):
-    """clear_screen should invoke os.system with the proper command."""
+    """clear_screen should invoke subprocess.run with the proper command."""
     called = {}
 
-    def fake_system(cmd):
-        called["cmd"] = cmd
-    monkeypatch.setattr(youtube_downloader.os, "system", fake_system)
+    def fake_run(args, **kwargs):
+        called["args"] = list(args)
+        called.update(kwargs)
+
+    monkeypatch.setattr(youtube_downloader.subprocess, "run", fake_run)
     youtube_downloader.clear_screen()
-    expected = "clear" if os.name == "posix" else "cls"
-    assert called["cmd"] == expected
+    expected = ["clear"] if os.name == "posix" else ["cls"]
+    assert called["args"] == expected
+    if os.name != "posix":
+        assert called.get("shell") is True
 
 
 # ---------------------------------------------------------------------------

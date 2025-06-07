@@ -45,9 +45,15 @@ def test_validate_youtube_url_empty():
 def test_clear_screen_windows(monkeypatch):
     called = {}
     monkeypatch.setattr(youtube_downloader.os, "name", "nt", raising=False)
-    monkeypatch.setattr(youtube_downloader.os, "system", lambda cmd: called.setdefault("cmd", cmd))
+
+    def fake_run(args, **kwargs):
+        called["args"] = list(args)
+        called.update(kwargs)
+
+    monkeypatch.setattr(youtube_downloader.subprocess, "run", fake_run)
     youtube_downloader.clear_screen()
-    assert called["cmd"] == "cls"
+    assert called["args"] == ["cls"]
+    assert called.get("shell") is True
 
 
 def test_demander_save_file_path_file(monkeypatch, tmp_path):
