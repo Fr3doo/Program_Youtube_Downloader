@@ -1,19 +1,11 @@
 # main.py
 # pyinstaller --onefile --add-data "mypy.ini;." --hidden-import "youtube_downloader" main.py
+import os
 import sys
 import argparse
 import logging
 from pathlib import Path
 import os
-
-
-def setup_logging(level: str) -> None:
-    """Configure application-wide logging."""
-    logging.basicConfig(
-        level=getattr(logging, level.upper(), logging.ERROR),
-        format="%(levelname)s:%(name)s:%(message)s",
-        force=True,
-    )
 
 
 from . import youtube_downloader
@@ -29,7 +21,13 @@ if '__annotations__' not in globals():
     __annotations__ = {}
 
 
-
+def setup_logging(level: str) -> None:
+    """Configure application-wide logging."""
+    logging.basicConfig(
+        level=getattr(logging, level.upper(), logging.ERROR),
+        format="%(levelname)s:%(name)s:%(message)s",
+        force=True,
+    )
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """Parse command line arguments.
