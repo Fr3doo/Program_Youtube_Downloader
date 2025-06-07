@@ -3,6 +3,7 @@
 import sys
 import argparse
 import logging
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 import os
@@ -32,23 +33,41 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     video_parser = subparsers.add_parser("video", help="Download one or more videos")
     video_parser.add_argument("urls", nargs="+", help="Video URL(s)")
     video_parser.add_argument("--audio", action="store_true", help="Download audio only")
+    video_parser.add_argument(
+        "--output-dir",
+        type=Path,
+        help="Directory to save downloaded files",
+    )
 
     playlist_parser = subparsers.add_parser("playlist", help="Download a playlist")
     playlist_parser.add_argument("url", help="Playlist URL")
     playlist_parser.add_argument("--audio", action="store_true", help="Download audio only")
+    playlist_parser.add_argument(
+        "--output-dir",
+        type=Path,
+        help="Directory to save downloaded files",
+    )
 
     channel_parser = subparsers.add_parser("channel", help="Download a channel")
     channel_parser.add_argument("url", help="Channel URL")
     channel_parser.add_argument("--audio", action="store_true", help="Download audio only")
+    channel_parser.add_argument(
+        "--output-dir",
+        type=Path,
+        help="Directory to save downloaded files",
+    )
 
     subparsers.add_parser("menu", help="Run interactive menu")
 
     return parser.parse_args(argv)
 
 
-def create_download_options(audio_only: bool) -> DownloadOptions:
-    """Prompt for destination and return configured options."""
-    save_path = cli_utils.demander_save_file_path()
+def create_download_options(audio_only: bool, output_dir: Path | None = None) -> DownloadOptions:
+    """Return configured options, prompting for the path if needed."""
+    if output_dir is not None:
+        save_path = output_dir.expanduser().resolve()
+    else:
+        save_path = cli_utils.demander_save_file_path()
     return DownloadOptions(
         save_path=save_path,
         download_sound_only=audio_only,
@@ -182,21 +201,21 @@ def main(argv: list[str] | None = None) -> None:
         return
 
     if command == "video":
-        options = create_download_options(args.audio)
+        options = create_download_options(args.audio, args.output_dir)
         yd.download_multiple_videos(
             args.urls,
             options,
         )
     elif command == "playlist":
         playlist = youtube_downloader.Playlist(args.url)
-        options = create_download_options(args.audio)
+        options = create_download_options(args.audio, args.output_dir)
         yd.download_multiple_videos(
             playlist,
             options,
         )  # type: ignore
     elif command == "channel":
         channel = youtube_downloader.Channel(args.url)
-        options = create_download_options(args.audio)
+        options = create_download_options(args.audio, args.output_dir)
         yd.download_multiple_videos(
             channel,
             options,

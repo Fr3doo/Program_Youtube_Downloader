@@ -1,4 +1,5 @@
 from program_youtube_downloader.main import parse_args
+from pathlib import Path
 
 
 def test_parse_video_audio_flag() -> None:
@@ -39,4 +40,15 @@ def test_parse_log_level_env(monkeypatch) -> None:
     monkeypatch.setenv("PYDL_LOG_LEVEL", "INFO")
     args = parse_args(["video", "https://youtu.be/x"])
     assert args.log_level == "INFO"
+
+
+def test_parse_video_output_dir() -> None:
+    args = parse_args(["video", "https://youtu.be/x", "--output-dir", "dest"])
+    assert args.output_dir == Path("dest")
+
+
+def test_parse_playlist_output_dir() -> None:
+    url = "https://youtube.com/playlist?list=123"
+    args = parse_args(["playlist", url, "--output-dir", "/tmp/out"])
+    assert args.output_dir == Path("/tmp/out")
 
