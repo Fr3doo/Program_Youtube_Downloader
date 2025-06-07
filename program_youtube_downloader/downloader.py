@@ -7,6 +7,8 @@ logger = logging.getLogger(__name__)
 
 from pytubefix import YouTube
 
+from .exceptions import DownloadError
+
 from . import cli_utils
 from .config import DownloadOptions
 from .progress import ProgressHandler, ProgressBarHandler
@@ -153,15 +155,19 @@ class YoutubeDownloader:
             if current_file.exists():
                 logger.warning("[WARMING] un fichier MP4 portant le même nom, déjà existant!")
 
-            try:
-                out_file = Path(stream.download(output_path=str(save_path)))  # type: ignore
-                logger.info("")
-            except Exception as e:  # pragma: no cover - network/io issues
-                logger.exception("Download failed")
-                logger.info("")
-                logger.error("[ERREUR] : le téléchargement a échoué : %s", e)
-                logger.info("")
-                continue
+            out_file = None
+            for attempt in range(3):
+                try:
+                    out_file = Path(stream.download(output_path=str(save_path)))  # type: ignore
+                    logger.info("")
+                    break
+                except Exception as e:  # pragma: no cover - network/io issues
+                    logger.exception("Download failed")
+                    logger.info("")
+                    logger.error("[ERREUR] : le téléchargement a échoué : %s", e)
+                    logger.info("")
+                    if attempt == 2:
+                        raise DownloadError(f"Echec du téléchargement pour {url_video}") from e
 
             if out_file and download_sound_only:
                 self.conversion_mp4_in_mp3(out_file)

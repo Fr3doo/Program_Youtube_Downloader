@@ -96,10 +96,11 @@ def test_demander_youtube_link_file_all_invalid(monkeypatch, tmp_path):
 
 def test_demander_youtube_link_file_oserror(monkeypatch, tmp_path):
     bad = tmp_path / "bad.txt"
-    inputs = iter([str(bad)])
+    inputs = iter([str(bad), str(bad), str(bad)])
     monkeypatch.setattr(builtins, "input", lambda *a, **k: next(inputs))
     monkeypatch.setattr(Path, "open", lambda self, *a, **k: (_ for _ in ()).throw(OSError()))
-    assert cli_utils.demander_youtube_link_file() == []
+    with pytest.raises(cli_utils.ValidationError):
+        cli_utils.demander_youtube_link_file()
 
 
 def test_print_end_download_message(caplog):
