@@ -4,6 +4,7 @@ import sys
 import argparse
 import logging
 from pathlib import Path
+import os
 
 
 def setup_logging(level: str) -> None:
@@ -15,18 +16,18 @@ def setup_logging(level: str) -> None:
     )
 
 
-logger = logging.getLogger(__name__)
-import os
-
-if '__annotations__' not in globals():
-    __annotations__ = {}
-
 from . import youtube_downloader
 from . import cli_utils
 from .downloader import YoutubeDownloader
 from .exceptions import PlaylistConnectionError, ChannelConnectionError
 from .config import DownloadOptions
 from .constants import MenuOption
+
+logger = logging.getLogger(__name__)
+
+if '__annotations__' not in globals():
+    __annotations__ = {}
+
 
 
 
