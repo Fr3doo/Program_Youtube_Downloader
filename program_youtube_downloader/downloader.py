@@ -34,6 +34,82 @@ class YoutubeDownloader:
         self.progress_handler = progress_handler or ProgressBarHandler()
         self.youtube_cls = youtube_cls
 
+    # ------------------------------------------------------------------
+    # Private helpers
+    # ------------------------------------------------------------------
+
+    def _create_youtube(
+        self, url: str, progress_handler: ProgressHandler | None
+    ) -> YouTube | None:
+        """Instantiate ``YouTube`` and register the progress callback.
+
+        This wrapper centralises error handling around the ``youtube_cls``
+        factory provided at construction time.  It returns ``None`` if the
+        object cannot be created.
+        """
+
+        try:
+            yt = self.youtube_cls(url)
+            if progress_handler:
+                yt.register_on_progress_callback(progress_handler.on_progress)
+            return yt
+        except KeyError as e:
+            logger.error("[ERREUR] : Problème de clé dans les données : %s", e)
+            return None
+        except Exception as e:  # pragma: no cover - defensive
+            logger.exception("Unexpected error while connecting to video")
+            logger.error("[ERREUR] : Connexion à la vidéo impossible : %s", e)
+            return None
+
+    def _choose_stream(
+        self,
+        download_sound_only: bool,
+        streams: Any,
+        callback: Callable[[bool, Any], int] | None,
+    ) -> int:
+        """Return the index of the stream chosen by the user."""
+
+        if callback:
+            return callback(download_sound_only, streams)
+        return 1
+
+    def _download_stream(
+        self,
+        stream: Any,
+        save_path: Path,
+        url_video: str,
+        download_sound_only: bool,
+    ) -> None:
+        """Download ``stream`` to ``save_path`` with retries.
+
+        Raises :class:`DownloadError` after three failed attempts.
+        """
+
+        current_file = save_path / stream.default_filename  # type: ignore
+        if current_file.exists():
+            logger.warning(
+                "[WARMING] un fichier MP4 portant le même nom, déjà existant!"
+            )
+
+        out_file = None
+        for attempt in range(3):
+            try:
+                out_file = Path(stream.download(output_path=str(save_path)))
+                logger.info("")
+                break
+            except Exception as e:  # pragma: no cover - network/io issues
+                logger.exception("Download failed")
+                logger.info("")
+                logger.error("[ERREUR] : le téléchargement a échoué : %s", e)
+                logger.info("")
+                if attempt == 2:
+                    raise DownloadError(
+                        f"Echec du téléchargement pour {url_video}"
+                    ) from e
+
+        if out_file and download_sound_only:
+            self.conversion_mp4_in_mp3(out_file)
+
     def streams_video(
         self, download_sound_only: bool, youtube_video: YouTube
     ) -> Optional[Any]:
@@ -116,6 +192,7 @@ class YoutubeDownloader:
         progress_handler = options.progress_handler or self.progress_handler
 
         choice_once = True
+        choice_user = 1
 
         url_list = list(url_youtube_video_links)
         if not url_list:
@@ -123,16 +200,8 @@ class YoutubeDownloader:
             return url_list
 
         for url_video in url_list:
-            try:
-                youtube_video = self.youtube_cls(url_video)
-                if progress_handler:
-                    youtube_video.register_on_progress_callback(progress_handler.on_progress)
-            except KeyError as e:
-                logger.error("[ERREUR] : Problème de clé dans les données : %s", e)
-                continue
-            except Exception as e:  # pragma: no cover - defensive
-                logger.exception("Unexpected error while connecting to video")
-                logger.error("[ERREUR] : Connexion à la vidéo impossible : %s", e)
+            youtube_video = self._create_youtube(url_video, progress_handler)
+            if youtube_video is None:
                 continue
 
             streams = self.streams_video(download_sound_only, youtube_video)
@@ -161,10 +230,11 @@ class YoutubeDownloader:
                 continue
 
             if choice_once:
-                if choice_callback:
-                    choice_user = choice_callback(download_sound_only, streams)
-                else:
-                    choice_user = 1
+                choice_user = self._choose_stream(
+                    download_sound_only,
+                    streams,
+                    choice_callback,
+                )
                 choice_once = False
                 logger.info("")
                 logger.info("")
@@ -181,26 +251,12 @@ class YoutubeDownloader:
 
             logger.info("Titre: %s", video_title[0:53])
 
-            current_file = save_path / stream.default_filename  # type: ignore
-            if current_file.exists():
-                logger.warning("[WARMING] un fichier MP4 portant le même nom, déjà existant!")
-
-            out_file = None
-            for attempt in range(3):
-                try:
-                    out_file = Path(stream.download(output_path=str(save_path)))  # type: ignore
-                    logger.info("")
-                    break
-                except Exception as e:  # pragma: no cover - network/io issues
-                    logger.exception("Download failed")
-                    logger.info("")
-                    logger.error("[ERREUR] : le téléchargement a échoué : %s", e)
-                    logger.info("")
-                    if attempt == 2:
-                        raise DownloadError(f"Echec du téléchargement pour {url_video}") from e
-
-            if out_file and download_sound_only:
-                self.conversion_mp4_in_mp3(out_file)
+            self._download_stream(
+                stream,
+                save_path,
+                url_video,
+                download_sound_only,
+            )
 
         cli_utils.print_end_download_message()
         cli_utils.pause_return_to_menu()
