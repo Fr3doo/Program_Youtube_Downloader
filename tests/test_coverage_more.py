@@ -120,6 +120,19 @@ class DummyDownloader:
         self.called = (list(urls), options)
 
 
+def test_create_download_options(monkeypatch, tmp_path):
+    monkeypatch.setattr(main_module.cli_utils, "demander_save_file_path", lambda: tmp_path)
+    monkeypatch.setattr(
+        main_module.cli_utils,
+        "demander_choice_resolution_vidéo_or_bitrate_audio",
+        lambda *a, **k: 99,
+    )
+    opt = main_module.create_download_options(True)
+    assert opt.save_path == tmp_path
+    assert opt.download_sound_only is True
+    assert opt.choice_callback is main_module.cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio
+
+
 def test_main_video_command(monkeypatch, tmp_path):
     dd = DummyDownloader()
     monkeypatch.setattr(main_module, "YoutubeDownloader", lambda: dd)

@@ -44,6 +44,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def create_download_options(audio_only: bool) -> DownloadOptions:
+    """Prompt for destination and return configured options."""
+    save_path = cli_utils.demander_save_file_path()
+    return DownloadOptions(
+        save_path=save_path,
+        download_sound_only=audio_only,
+        choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
+    )
+
+
 def menu() -> None:  # pragma: no cover
     """Run the main menu loop."""
 
@@ -77,12 +87,7 @@ def menu() -> None:  # pragma: no cover
                 if choix is MenuOption.VIDEO:
                     download_sound_only = False
 
-                save_path = cli_utils.demander_save_file_path()
-                options = DownloadOptions(
-                    save_path=save_path,
-                    download_sound_only=download_sound_only,
-                    choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-                )
+                options = create_download_options(download_sound_only)
                 yd.download_multiple_videos(
                     url_video_send_user_list,
                     options,
@@ -92,12 +97,7 @@ def menu() -> None:  # pragma: no cover
                 if choix is MenuOption.VIDEOS:
                     download_sound_only = False
 
-                save_path = cli_utils.demander_save_file_path()
-                options = DownloadOptions(
-                    save_path=save_path,
-                    download_sound_only=download_sound_only,
-                    choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-                )
+                options = create_download_options(download_sound_only)
                 yd.download_multiple_videos(
                     youtube_video_links,
                     options,
@@ -113,12 +113,7 @@ def menu() -> None:  # pragma: no cover
                     if choix is MenuOption.PLAYLIST_VIDEO:
                         download_sound_only = False
 
-                    save_path = cli_utils.demander_save_file_path()
-                    options = DownloadOptions(
-                        save_path=save_path,
-                        download_sound_only=download_sound_only,
-                        choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-                    )
+                    options = create_download_options(download_sound_only)
                     yd.download_multiple_videos(
                         link_url_playlist_youtube,
                         options,
@@ -134,12 +129,7 @@ def menu() -> None:  # pragma: no cover
                     if choix is MenuOption.CHANNEL_VIDEOS:
                         download_sound_only = False
 
-                    save_path = cli_utils.demander_save_file_path()
-                    options = DownloadOptions(
-                        save_path=save_path,
-                        download_sound_only=download_sound_only,
-                        choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-                    )
+                    options = create_download_options(download_sound_only)
                     yd.download_multiple_videos(
                         link_url_channel_youtube,
                         options,
@@ -190,36 +180,21 @@ def main(argv: list[str] | None = None) -> None:
         return
 
     if command == "video":
-        save_path = cli_utils.demander_save_file_path()
-        options = DownloadOptions(
-            save_path=save_path,
-            download_sound_only=args.audio,
-            choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-        )
+        options = create_download_options(args.audio)
         yd.download_multiple_videos(
             args.urls,
             options,
         )
     elif command == "playlist":
         playlist = youtube_downloader.Playlist(args.url)
-        save_path = cli_utils.demander_save_file_path()
-        options = DownloadOptions(
-            save_path=save_path,
-            download_sound_only=args.audio,
-            choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-        )
+        options = create_download_options(args.audio)
         yd.download_multiple_videos(
             playlist,
             options,
         )  # type: ignore
     elif command == "channel":
         channel = youtube_downloader.Channel(args.url)
-        save_path = cli_utils.demander_save_file_path()
-        options = DownloadOptions(
-            save_path=save_path,
-            download_sound_only=args.audio,
-            choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
-        )
+        options = create_download_options(args.audio)
         yd.download_multiple_videos(
             channel,
             options,
