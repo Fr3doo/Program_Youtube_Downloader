@@ -47,10 +47,14 @@ def program_break_time(memorization_time: int, affichage_text: str) -> None:
         affichage_text: Message displayed before the countdown number.
     """
     duree_restante_avant_lancement = memorization_time
-    print(f"{affichage_text} {memorization_time} secondes ", end="", flush=True)
-    for i in range(memorization_time):
+    print(
+        f"{affichage_text} {memorization_time} secondes ",
+        end="",
+        flush=True,
+    )
+    while duree_restante_avant_lancement > 0:
         time.sleep(1)
-        print(".", end="", flush=True)
+        print(f"{duree_restante_avant_lancement} ", end="", flush=True)
         duree_restante_avant_lancement -= 1
 
 
