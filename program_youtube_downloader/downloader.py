@@ -116,25 +116,18 @@ class YoutubeDownloader:
         """Return the available streams for ``youtube_video``.
 
         Args:
-            download_sound_only: If ``True`` only audio streams are returned.
+            download_sound_only: Ignored, kept for backward compatibility.
             youtube_video: An instance of :class:`pytubefix.YouTube`.
 
         Returns:
             The list of available streams or ``None`` if retrieval failed.
         """
         try:
-            if download_sound_only:
-                streams = (
-                    youtube_video.streams.filter(progressive=True, file_extension="mp4")
-                    .order_by("resolution")
-                    .desc()
-                )
-            else:
-                streams = (
-                    youtube_video.streams.filter(progressive=True, file_extension="mp4")
-                    .order_by("resolution")
-                    .desc()
-                )
+            streams = (
+                youtube_video.streams.filter(progressive=True, file_extension="mp4")
+                .order_by("resolution")
+                .desc()
+            )
             return streams
         except HTTPError as e:
             logger.error(
