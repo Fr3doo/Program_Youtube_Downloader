@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional, Callable, Any
 
-from .progress import ProgressHandler, ProgressBarHandler
+from .progress import ProgressHandler
 
 
 @dataclass
