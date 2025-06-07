@@ -95,11 +95,11 @@ def create_download_options(audio_only: bool, output_dir: Path | None = None) ->
     if output_dir is not None:
         save_path = output_dir.expanduser().resolve()
     else:
-        save_path = cli_utils.demander_save_file_path()
+        save_path = cli_utils.ask_save_file_path()
     return DownloadOptions(
         save_path=save_path,
         download_sound_only=audio_only,
-        choice_callback=cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio,
+        choice_callback=cli_utils.ask_resolution_or_bitrate,
     )
 
 
@@ -123,7 +123,7 @@ def handle_video_option(yd: YoutubeDownloader, audio_only: bool) -> None:
 
 def handle_videos_option(yd: YoutubeDownloader, audio_only: bool) -> None:
     """Download multiple videos or their audio tracks from a file."""
-    urls = cli_utils.demander_youtube_link_file()
+    urls = cli_utils.ask_youtube_link_file()
     options = create_download_options(audio_only)
     yd.download_multiple_videos(urls, options)
 
@@ -161,7 +161,7 @@ def menu() -> None:  # pragma: no cover
     yd = YoutubeDownloader()
 
     while True:
-        choix_max_menu_accueil = cli_utils.afficher_menu_acceuil()
+        choix_max_menu_accueil = cli_utils.display_main_menu()
         choix = MenuOption(cli_utils.ask_numeric_value(1, choix_max_menu_accueil))
 
         match choix:

@@ -59,16 +59,16 @@ class DummyYT(YouTubeVideo):
 # ---------------------------------------------------------------------------
 
 
-def test_afficher_menu_acceuil_count(monkeypatch):
+def test_display_main_menu_count(monkeypatch):
     """The menu should display all choices and return their count."""
     printed = []
     monkeypatch.setattr(builtins, "print", lambda *a, **k: printed.append(a))
-    count = cli_utils.afficher_menu_acceuil()
+    count = cli_utils.display_main_menu()
     assert count == len(constants.MenuOption)
     assert any("1 -" in " ".join(map(str, args)) for args in printed)
 
 
-def test_demander_choice_resolution_audio(monkeypatch):
+def test_ask_resolution_or_bitrate_audio(monkeypatch):
     """Selection of audio bitrate should delegate range checking."""
     streams = [SimpleNamespace(abr="64k"), SimpleNamespace(abr="128k")]
     called = {}
@@ -78,17 +78,17 @@ def test_demander_choice_resolution_audio(monkeypatch):
         return 2
 
     monkeypatch.setattr(cli_utils, "ask_numeric_value", fake_numeric)
-    choice = cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio(True, streams)
+    choice = cli_utils.ask_resolution_or_bitrate(True, streams)
     assert choice == 2
     assert called["range"] == (1, len(streams))
 
 
-def test_demander_choice_resolution_video(monkeypatch):
+def test_ask_resolution_or_bitrate_video(monkeypatch):
     """Video resolution flow mirrors the audio version."""
     streams = [SimpleNamespace(resolution="360p"), SimpleNamespace(resolution="720p")]
     monkeypatch.setattr(cli_utils, "ask_numeric_value", lambda a, b: 1)
     assert (
-        cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio(False, streams) == 1
+        cli_utils.ask_resolution_or_bitrate(False, streams) == 1
     )
 
 

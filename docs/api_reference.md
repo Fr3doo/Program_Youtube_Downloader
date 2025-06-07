@@ -17,11 +17,11 @@ Cette section décrit brièvement les fonctions et classes disponibles dans le p
 Fonctions d'interaction utilisateur :
 - `print_separator()` : affiche un séparateur visuel.
 - `ask_numeric_value(min, max)` : demande une valeur numérique.
-- `afficher_menu_acceuil()` : affiche le menu principal et retourne le nombre de choix.
-- `demander_save_file_path()` : demande un dossier de destination et le crée au besoin.
+- `display_main_menu()` : affiche le menu principal et retourne le nombre de choix.
+- `ask_save_file_path()` : demande un dossier de destination et le crée au besoin.
 - `ask_youtube_url()` : invite l'utilisateur à saisir une URL YouTube et la valide.
-- `demander_youtube_link_file()` : lit un fichier contenant des URLs YouTube.
-- `demander_choice_resolution_vidéo_or_bitrate_audio(sound_only, streams)` : sélectionne la qualité désirée.
+- `ask_youtube_link_file()` : lit un fichier contenant des URLs YouTube.
+- `ask_resolution_or_bitrate(sound_only, streams)` : sélectionne la qualité désirée.
 - `print_end_download_message()` : indique la fin du téléchargement.
 - `pause_return_to_menu()` : attend une touche avant de revenir au menu.
 

@@ -39,33 +39,33 @@ def test_ask_youtube_url_invalid_then_valid(monkeypatch):
     assert url == "https://www.youtube.com/watch?v=good"
 
 
-def test_demander_save_file_path_existing(tmp_path, monkeypatch):
+def test_ask_save_file_path_existing(tmp_path, monkeypatch):
     inputs = iter([str(tmp_path)])
     monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
-    p = cli_utils.demander_save_file_path()
+    p = cli_utils.ask_save_file_path()
     assert p == tmp_path.resolve()
 
 
-def test_demander_save_file_path_create(tmp_path, monkeypatch):
+def test_ask_save_file_path_create(tmp_path, monkeypatch):
     new_dir = tmp_path / "newdir"
     inputs = iter([str(new_dir), "y"])
     monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
-    p = cli_utils.demander_save_file_path()
+    p = cli_utils.ask_save_file_path()
     assert p == new_dir.resolve()
     assert new_dir.exists()
 
 
-def test_demander_save_file_path_retry(monkeypatch, tmp_path):
+def test_ask_save_file_path_retry(monkeypatch, tmp_path):
     missing = tmp_path / "missing"
     existing = tmp_path / "exists"
     existing.mkdir()
     inputs = iter([str(missing), "n", str(existing)])
     monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
-    p = cli_utils.demander_save_file_path()
+    p = cli_utils.ask_save_file_path()
     assert p == existing.resolve()
 
 
-def test_demander_save_file_path_mkdir_failure(monkeypatch, tmp_path):
+def test_ask_save_file_path_mkdir_failure(monkeypatch, tmp_path):
     new_dir = tmp_path / "newdir"
     inputs = iter([str(new_dir), "y", str(tmp_path)])
     monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
@@ -77,18 +77,18 @@ def test_demander_save_file_path_mkdir_failure(monkeypatch, tmp_path):
     fail_once.calls = 0
     monkeypatch.setattr(Path, "mkdir", fail_once)
 
-    result = cli_utils.demander_save_file_path()
+    result = cli_utils.ask_save_file_path()
     assert result == tmp_path.resolve()
 
 
-def test_demander_youtube_link_file(monkeypatch, tmp_path):
+def test_ask_youtube_link_file(monkeypatch, tmp_path):
     links_file = tmp_path / "links.txt"
     links_file.write_text(
         "https://www.youtube.com/watch?v=ok\ninvalid\nhttps://youtu.be/abc\n"
     )
     inputs = iter([str(links_file)])
     monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
-    links = cli_utils.demander_youtube_link_file()
+    links = cli_utils.ask_youtube_link_file()
     assert links == [
         "https://www.youtube.com/watch?v=ok",
         "https://youtu.be/abc",
