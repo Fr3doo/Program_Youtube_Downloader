@@ -2,6 +2,8 @@
 
 from pathlib import Path
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Iterable, Any
 
 from .constants import (
@@ -28,14 +30,14 @@ def ask_numeric_value(valeur_min: int, valeur_max: int) -> int:
         try:
             v_int = int(v_str)
         except ValueError:
-            logging.warning("FAIL : Vous devez rentrer une valeur numérique.")
-            logging.info("")
+            logger.warning("FAIL : Vous devez rentrer une valeur numérique.")
+            logger.info("")
             continue
         if not (valeur_min <= v_int <= valeur_max):
-            logging.warning(
+            logger.warning(
                 f"FAIL : Vous devez rentrer un nombre (entre {valeur_min} et {valeur_max} )."
             )
-            logging.info("")
+            logger.info("")
             continue
 
         return v_int
@@ -83,11 +85,11 @@ def demander_save_file_path() -> Path:
             try:
                 path.mkdir(parents=True, exist_ok=True)
             except OSError:
-                logging.exception("Directory creation failed")
-                logging.error("[ERREUR] : Impossible de créer le dossier")
+                logger.exception("Directory creation failed")
+                logger.error("[ERREUR] : Impossible de créer le dossier")
                 return demander_save_file_path()
         else:
-            logging.error("[ERREUR] : Le dossier n'existe pas")
+            logger.error("[ERREUR] : Le dossier n'existe pas")
             return demander_save_file_path()
 
     return path
@@ -108,8 +110,8 @@ def ask_youtube_url() -> str:
         if validate_youtube_url(url):
             return url
 
-        logging.error("ERREUR : Vous devez renter une URL de vidéo youtube")
-        logging.error("le prefixe attendu est : https://www.youtube.com/")
+        logger.error("ERREUR : Vous devez renter une URL de vidéo youtube")
+        logger.error("le prefixe attendu est : https://www.youtube.com/")
 
 
 def demander_youtube_link_file() -> list[str]:
@@ -132,7 +134,7 @@ def demander_youtube_link_file() -> list[str]:
             number_links_file = len(lignes)
 
             if not number_links_file:
-                logging.error("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
+                logger.error("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
                 return demander_youtube_link_file()
 
             for i in range(0, len(lignes)):
@@ -142,18 +144,18 @@ def demander_youtube_link_file() -> list[str]:
                 if validate_youtube_url(url_video):
                     link_url_video_youtube_final.append(url_video)
                 else:
-                    logging.error("[ERREUR] : ")
-                    logging.error("le prefixe attendu est : https://www.youtube.com/")
-                    logging.error(f"  le lien sur la ligne n° {compteur_ligne} ne sera pas télécharger")
-                    logging.error("")
+                    logger.error("[ERREUR] : ")
+                    logger.error("le prefixe attendu est : https://www.youtube.com/")
+                    logger.error(f"  le lien sur la ligne n° {compteur_ligne} ne sera pas télécharger")
+                    logger.error("")
                     number_erreur += 1
 
             if number_erreur == number_links_file:
-                logging.error("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
+                logger.error("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
                 return demander_youtube_link_file()
     except OSError as e:
-        logging.exception("[ERREUR] : Le fichier n'est pas accessible")
-        logging.error("[ERREUR] : Le fichier n'est pas accessible")
+        logger.exception("[ERREUR] : Le fichier n'est pas accessible")
+        logger.error("[ERREUR] : Le fichier n'est pas accessible")
 
     return link_url_video_youtube_final
 
@@ -199,10 +201,10 @@ def demander_choice_resolution_vidéo_or_bitrate_audio(
 
 def print_end_download_message() -> None:
     """Display a message indicating the downloads are finished."""
-    logging.info("")
-    logging.info("Fin du téléchargement")
+    logger.info("")
+    logger.info("Fin du téléchargement")
     print_separator()
-    logging.info("")
+    logger.info("")
 
 
 def pause_return_to_menu() -> None:

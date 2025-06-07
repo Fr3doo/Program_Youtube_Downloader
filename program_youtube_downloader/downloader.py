@@ -3,6 +3,8 @@ from pathlib import Path
 from typing import Optional, Union, Iterable, Callable, Any
 import logging
 
+logger = logging.getLogger(__name__)
+
 from pytubefix import YouTube
 
 from . import cli_utils
@@ -40,15 +42,15 @@ class YoutubeDownloader:
                 )
             return streams
         except HTTPError as e:
-            logging.error(
+            logger.error(
                 "[ERREUR] : Impossible d'accéder aux flux pour la vidéo. Code HTTP : %s, Message : %s",
                 e.code,
                 e.reason,
             )
             return None
         except Exception as e:  # pragma: no cover - defensive
-            logging.exception("Unexpected error while retrieving streams")
-            logging.error(
+            logger.exception("Unexpected error while retrieving streams")
+            logger.error(
                 "[ERREUR] : Une erreur inattendue s'est produite lors de la récupération des flux : %s",
                 e,
             )
@@ -63,11 +65,11 @@ class YoutubeDownloader:
             if file_path.exists():
                 file_path.unlink()
         except OSError:
-            logging.exception("Error during MP4 to MP3 conversion")
-            logging.warning("[WARMING] un fichier MP3 portant le même nom, déjà existant!")
+            logger.exception("Error during MP4 to MP3 conversion")
+            logger.warning("[WARMING] un fichier MP3 portant le même nom, déjà existant!")
             if file_path.exists():
                 file_path.unlink()
-            logging.info("")
+            logger.info("")
 
     def download_multiple_videos(
         self,
@@ -85,7 +87,7 @@ class YoutubeDownloader:
 
         url_list = list(url_youtube_video_links)
         if not url_list:
-            logging.error("[ERREUR] : il y a aucune vidéo à télécharger")
+            logger.error("[ERREUR] : il y a aucune vidéo à télécharger")
             return url_list
 
         for url_video in url_list:
@@ -94,16 +96,16 @@ class YoutubeDownloader:
                 if progress_handler:
                     youtube_video.register_on_progress_callback(progress_handler.on_progress)
             except KeyError as e:
-                logging.error("[ERREUR] : Problème de clé dans les données : %s", e)
+                logger.error("[ERREUR] : Problème de clé dans les données : %s", e)
                 continue
             except Exception as e:  # pragma: no cover - defensive
-                logging.exception("Unexpected error while connecting to video")
-                logging.error("[ERREUR] : Connexion à la vidéo impossible : %s", e)
+                logger.exception("Unexpected error while connecting to video")
+                logger.error("[ERREUR] : Connexion à la vidéo impossible : %s", e)
                 continue
 
             streams = self.streams_video(download_sound_only, youtube_video)
             if not streams:
-                logging.error(
+                logger.error(
                     "[ERREUR] : Les flux pour la vidéo (%s) n'ont pas pu être récupérés.",
                     url_video,
                 )
@@ -112,15 +114,15 @@ class YoutubeDownloader:
             try:
                 video_title = youtube_video.title
             except KeyError as e:
-                logging.error(
+                logger.error(
                     "[ERREUR] : Impossible d'accéder au titre de la vidéo %s. Détail : %s",
                     url_video,
                     e,
                 )
                 continue
             except Exception as e:  # pragma: no cover - defensive
-                logging.exception("Unexpected error while accessing video title")
-                logging.error(
+                logger.exception("Unexpected error while accessing video title")
+                logger.error(
                     "[ERREUR] : Une erreur inattendue s'est produite lors de l'accès au titre : %s",
                     e,
                 )
@@ -132,33 +134,33 @@ class YoutubeDownloader:
                 else:
                     choice_user = 1
                 choice_once = False
-                logging.info("")
-                logging.info("")
+                logger.info("")
+                logger.info("")
                 cli_utils.print_separator()
-                logging.info("*             Stream vidéo selectionnée:                    *")
+                logger.info("*             Stream vidéo selectionnée:                    *")
                 cli_utils.print_separator()
-                logging.info("Number of link url video youtube in file: %s",
+                logger.info("Number of link url video youtube in file: %s",
                     len(url_list),
                 )
-                logging.info("")
+                logger.info("")
 
             itag = streams[choice_user - 1].itag  # type: ignore
             stream = youtube_video.streams.get_by_itag(itag)
 
-            logging.info("Titre: %s", video_title[0:53])
+            logger.info("Titre: %s", video_title[0:53])
 
             current_file = save_path / stream.default_filename  # type: ignore
             if current_file.exists():
-                logging.warning("[WARMING] un fichier MP4 portant le même nom, déjà existant!")
+                logger.warning("[WARMING] un fichier MP4 portant le même nom, déjà existant!")
 
             try:
                 out_file = Path(stream.download(output_path=str(save_path)))  # type: ignore
-                logging.info("")
+                logger.info("")
             except Exception as e:  # pragma: no cover - network/io issues
-                logging.exception("Download failed")
-                logging.info("")
-                logging.error("[ERREUR] : le téléchargement a échoué : %s", e)
-                logging.info("")
+                logger.exception("Download failed")
+                logger.info("")
+                logger.error("[ERREUR] : le téléchargement a échoué : %s", e)
+                logger.info("")
                 continue
 
             if out_file and download_sound_only:
