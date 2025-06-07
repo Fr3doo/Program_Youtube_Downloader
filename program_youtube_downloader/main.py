@@ -5,6 +5,7 @@ import sys
 import argparse
 import logging
 from pathlib import Path
+import os
 
 
 from . import youtube_downloader
@@ -27,8 +28,6 @@ def setup_logging(level: str) -> None:
         format="%(levelname)s:%(name)s:%(message)s",
         force=True,
     )
-
-
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """Parse command line arguments.

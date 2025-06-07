@@ -4,7 +4,6 @@ from typing import Optional, Union, Iterable, Callable, Any
 import logging
 
 from pytubefix import YouTube
-
 from .types import YouTubeVideo
 from .exceptions import DownloadError, StreamAccessError
 from . import cli_utils

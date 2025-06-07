@@ -10,7 +10,6 @@ from .constants import (
     TITLE_PROGRAM,
     TITLE_QUESTION_MENU_ACCUEIL,
     CHOICE_MENU_ACCUEIL,
-    BASE_YOUTUBE_URL,
 )
 from .youtube_downloader import program_break_time, clear_screen
 from .validators import validate_youtube_url
