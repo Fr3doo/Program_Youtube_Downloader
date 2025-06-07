@@ -54,6 +54,7 @@ def test_clear_screen_windows(monkeypatch):
     youtube_downloader.clear_screen()
     assert called["args"] == ["cls"]
     assert called.get("shell") is True
+    assert called.get("check") is True
 
 
 def test_demander_save_file_path_file(monkeypatch, tmp_path):

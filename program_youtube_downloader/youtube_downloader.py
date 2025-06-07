@@ -34,9 +34,9 @@ from .constants import (
 def clear_screen() -> None:
     """Clear the terminal screen on Windows or POSIX systems."""
     if os.name == 'posix':
-        subprocess.run(["clear"])
+        subprocess.run(["clear"], check=True)
     else:
-        subprocess.run(["cls"], shell=True)
+        subprocess.run(["cls"], shell=True, check=True)
 
 
 def program_break_time(memorization_time: int, affichage_text: str) -> None:
