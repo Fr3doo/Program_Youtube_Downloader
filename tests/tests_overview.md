@@ -50,6 +50,12 @@ Couvre des cas supplémentaires pour les utilitaires et le point d’entrée pri
 - cas limites supplémentaires pour la sélection de chemin et l’analyse de fichiers d’URLs
 - tests de type intégration pour les commandes vidéo, playlist, chaîne et menu
 
+## `test_menu_integration.py`
+
+Valide la fonction interactive `menu()` en simulant les entrées utilisateur avec
+`monkeypatch`. Les tests s’assurent qu’un téléchargement est lancé avec les
+bonnes options (vidéo ou audio uniquement) selon le choix fourni.
+
 ## `test_validators.py`
 
 Confirme que `validate_youtube_url` accepte les URLs valides de YouTube et rejette celles malformées.
