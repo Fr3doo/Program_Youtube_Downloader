@@ -7,6 +7,8 @@ logger = logging.getLogger(__name__)
 
 from pytubefix import YouTube
 
+from .types import YouTubeVideo
+
 from .exceptions import DownloadError
 
 from . import cli_utils
@@ -20,15 +22,16 @@ class YoutubeDownloader:
     def __init__(
         self,
         progress_handler: ProgressHandler | None = None,
-        youtube_cls: Callable[[str], YouTube] = YouTube,
+        youtube_cls: Callable[[str], YouTubeVideo] = YouTube,
     ) -> None:
         """Create the downloader.
 
         Args:
             progress_handler: Handler receiving progress events from
                 ``pytubefix``. If ``None`` a :class:`ProgressBarHandler` is used.
-            youtube_cls: Factory used to create :class:`pytubefix.YouTube`
-                objects. Tests may provide a mock implementation.
+            youtube_cls: Factory used to create objects following the
+                :class:`~program_youtube_downloader.types.YouTubeVideo` protocol.
+                Tests may provide a mock implementation.
         """
 
         self.progress_handler = progress_handler or ProgressBarHandler()
@@ -40,8 +43,8 @@ class YoutubeDownloader:
 
     def _create_youtube(
         self, url: str, progress_handler: ProgressHandler | None
-    ) -> YouTube | None:
-        """Instantiate ``YouTube`` and register the progress callback.
+    ) -> YouTubeVideo | None:
+        """Instantiate a video object and register the progress callback.
 
         This wrapper centralises error handling around the ``youtube_cls``
         factory provided at construction time.  It returns ``None`` if the
@@ -111,13 +114,13 @@ class YoutubeDownloader:
             self.conversion_mp4_in_mp3(out_file)
 
     def streams_video(
-        self, download_sound_only: bool, youtube_video: YouTube
+        self, download_sound_only: bool, youtube_video: YouTubeVideo
     ) -> Optional[Any]:
         """Return the available streams for ``youtube_video``.
 
         Args:
             download_sound_only: Ignored, kept for backward compatibility.
-            youtube_video: An instance of :class:`pytubefix.YouTube`.
+            youtube_video: An object implementing :class:`YouTubeVideo`.
 
         Returns:
             The list of available streams or ``None`` if retrieval failed.
