@@ -57,8 +57,8 @@ def test_clear_screen_windows(monkeypatch):
 
     monkeypatch.setattr(youtube_downloader.subprocess, "run", fake_run)
     youtube_downloader.clear_screen()
-    assert called["args"] == ["cls"]
-    assert called.get("shell") is True
+    assert called["args"] == ["cmd", "/c", "cls"]
+    assert "shell" not in called
     assert called.get("check") is True
 
 

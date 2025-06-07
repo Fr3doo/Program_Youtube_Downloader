@@ -149,11 +149,11 @@ def test_clear_screen(monkeypatch):
 
     monkeypatch.setattr(youtube_downloader.subprocess, "run", fake_run)
     youtube_downloader.clear_screen()
-    expected = ["clear"] if os.name == "posix" else ["cls"]
+    expected = ["clear"] if os.name == "posix" else ["cmd", "/c", "cls"]
     assert called["args"] == expected
     assert called.get("check") is True
     if os.name != "posix":
-        assert called.get("shell") is True
+        assert "shell" not in called
 
 
 # ---------------------------------------------------------------------------
