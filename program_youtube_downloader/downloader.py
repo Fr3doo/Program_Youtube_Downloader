@@ -88,7 +88,7 @@ class YoutubeDownloader:
         current_file = save_path / stream.default_filename  # type: ignore
         if current_file.exists():
             logger.warning(
-                "[WARMING] un fichier MP4 portant le même nom, déjà existant!"
+                "[WARNING] un fichier MP4 portant le même nom, déjà existant!"
             )
 
         out_file = None
@@ -158,7 +158,7 @@ class YoutubeDownloader:
                 file_path.unlink()
         except OSError:
             logger.exception("Error during MP4 to MP3 conversion")
-            logger.warning("[WARMING] un fichier MP3 portant le même nom, déjà existant!")
+            logger.warning("[WARNING] un fichier MP3 portant le même nom, déjà existant!")
             if file_path.exists():
                 file_path.unlink()
             logger.info("")
