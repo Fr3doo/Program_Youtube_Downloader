@@ -4,6 +4,7 @@ from typing import Optional, Union, Iterable, Callable, Any
 import logging
 
 from pytubefix import YouTube
+from pytube.exceptions import PytubeError
 from .types import YouTubeVideo
 from .exceptions import DownloadError, StreamAccessError
 from . import cli_utils
@@ -56,6 +57,10 @@ class YoutubeDownloader:
         except KeyError as e:
             logger.error("[ERREUR] : Problème de clé dans les données : %s", e)
             return None
+        except PytubeError as e:
+            logger.exception("Error while connecting to video")
+            logger.error("[ERREUR] : Connexion à la vidéo impossible : %s", e)
+            return None
         except Exception as e:  # pragma: no cover - defensive
             logger.exception("Unexpected error while connecting to video")
             logger.error("[ERREUR] : Connexion à la vidéo impossible : %s", e)
@@ -97,8 +102,17 @@ class YoutubeDownloader:
                 out_file = Path(stream.download(output_path=str(save_path)))
                 logger.info("")
                 break
-            except Exception as e:  # pragma: no cover - network/io issues
+            except (HTTPError, OSError, PytubeError) as e:  # pragma: no cover - network/io issues
                 logger.exception("Download failed")
+                logger.info("")
+                logger.error("[ERREUR] : le téléchargement a échoué : %s", e)
+                logger.info("")
+                if attempt == 2:
+                    raise DownloadError(
+                        f"Echec du téléchargement pour {url_video}"
+                    ) from e
+            except Exception as e:  # pragma: no cover - defensive
+                logger.exception("Unexpected error during download")
                 logger.info("")
                 logger.error("[ERREUR] : le téléchargement a échoué : %s", e)
                 logger.info("")
@@ -136,6 +150,13 @@ class YoutubeDownloader:
                 e.reason,
             )
             raise StreamAccessError(f"HTTP {e.code}: {e.reason}") from e
+        except PytubeError as e:
+            logger.exception("Error while retrieving streams")
+            logger.error(
+                "[ERREUR] : Une erreur est survenue lors de la récupération des flux : %s",
+                e,
+            )
+            raise StreamAccessError(str(e)) from e
         except Exception as e:  # pragma: no cover - defensive
             logger.exception("Unexpected error while retrieving streams")
             logger.error(
@@ -223,12 +244,15 @@ class YoutubeDownloader:
                     e,
                 )
                 continue
-            except Exception as e:  # pragma: no cover - defensive
-                logger.exception("Unexpected error while accessing video title")
+            except PytubeError as e:
+                logger.exception("Error while accessing video title")
                 logger.error(
-                    "[ERREUR] : Une erreur inattendue s'est produite lors de l'accès au titre : %s",
+                    "[ERREUR] : Une erreur est survenue lors de l'accès au titre : %s",
                     e,
                 )
+                continue
+            except Exception:  # pragma: no cover - defensive
+                logger.exception("Unexpected error while accessing video title")
                 continue
 
             if choice_once:
