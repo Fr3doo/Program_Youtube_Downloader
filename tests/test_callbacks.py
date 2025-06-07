@@ -151,7 +151,7 @@ def test_download_multiple_videos_no_streams(monkeypatch, tmp_path: Path) -> Non
     def fake_constructor(url: str) -> DummyYT:
         return DummyYT(url)
 
-    monkeypatch.setattr(YoutubeDownloader, "streams_video", lambda self, dso, yt: None)
+    monkeypatch.setattr(YoutubeDownloader, "streams_video", lambda self, dso, yt: [])
     monkeypatch.setattr("builtins.input", lambda *args, **kwargs: "")
     monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: None)
     monkeypatch.setattr(cli_utils, "pause_return_to_menu", lambda *a, **k: None)
