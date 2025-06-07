@@ -3,17 +3,15 @@ from pathlib import Path
 from typing import Optional, Union, Iterable, Callable, Any
 import logging
 
-logger = logging.getLogger(__name__)
-
 from pytubefix import YouTube
 
 from .types import YouTubeVideo
-
 from .exceptions import DownloadError, StreamAccessError
-
 from . import cli_utils
 from .config import DownloadOptions
 from .progress import ProgressHandler, ProgressBarHandler
+
+logger = logging.getLogger(__name__)
 
 
 class YoutubeDownloader:
