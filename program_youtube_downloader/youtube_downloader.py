@@ -30,7 +30,7 @@ def clear_screen() -> None:
     if os.name == 'posix':
         subprocess.run(["clear"], check=True)
     else:
-        subprocess.run(["cls"], shell=True, check=True)
+        subprocess.run(["cmd", "/c", "cls"], check=True)
 
 
 def program_break_time(memorization_time: int, affichage_text: str) -> None:
