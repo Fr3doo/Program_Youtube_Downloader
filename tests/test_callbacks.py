@@ -38,6 +38,49 @@ class DummyHandler:
         self.called = True
 
 
+def test_create_youtube_registers_progress(monkeypatch) -> None:
+    created = {}
+
+    def fake_constructor(url: str) -> DummyYT:
+        yt = DummyYT(url)
+        created['yt'] = yt
+        return yt
+
+    progress = DummyHandler()
+    yd = YoutubeDownloader(progress_handler=progress, youtube_cls=fake_constructor)
+
+    yt = yd._create_youtube("https://youtu.be/x", progress)
+
+    assert yt is created['yt']
+    assert created['yt'].progress.__self__ is progress
+
+
+def test_choose_stream_uses_callback() -> None:
+    called = {}
+
+    def cb(sound_only: bool, streams: list[int]) -> int:
+        called['args'] = (sound_only, streams)
+        return 2
+
+    yd = YoutubeDownloader()
+    result = yd._choose_stream(True, [1, 2], cb)
+
+    assert result == 2
+    assert called['args'] == (True, [1, 2])
+
+
+def test_download_stream_error(monkeypatch, tmp_path: Path) -> None:
+    class FailStream(DummyStream):
+        def download(self, output_path: str) -> str:
+            raise OSError("boom")
+
+    stream = FailStream()
+    yd = YoutubeDownloader()
+
+    with pytest.raises(DownloadError):
+        yd._download_stream(stream, tmp_path, "https://youtu.be/fail", False)
+
+
 def test_download_multiple_videos_custom_callbacks(monkeypatch, tmp_path: Path) -> None:
     created = {}
 
