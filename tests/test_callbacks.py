@@ -5,6 +5,7 @@ from program_youtube_downloader import cli_utils
 from program_youtube_downloader.downloader import YoutubeDownloader
 from program_youtube_downloader.config import DownloadOptions
 from program_youtube_downloader.exceptions import DownloadError
+from program_youtube_downloader.types import YouTubeVideo
 
 class DummyStream:
     itag = 1
@@ -21,12 +22,16 @@ class DummyStreams(list):
     def get_by_itag(self, itag: int) -> DummyStream:
         return self[0]
 
-class DummyYT:
+class DummyYT(YouTubeVideo):
     def __init__(self, url: str) -> None:
         self.url = url
-        self.title = "video"
+        self._title = "video"
         self.streams: DummyStreams = DummyStreams([DummyStream()])
         self.progress = None
+
+    @property
+    def title(self):
+        return self._title
 
     def register_on_progress_callback(self, cb) -> None:
         self.progress = cb

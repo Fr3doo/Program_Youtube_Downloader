@@ -12,6 +12,7 @@ from program_youtube_downloader.exceptions import DownloadError
 from program_youtube_downloader.config import DownloadOptions
 from program_youtube_downloader.progress import progress_bar, ProgressBarHandler
 from program_youtube_downloader import constants
+from program_youtube_downloader.types import YouTubeVideo
 
 
 # Helper dummy classes reused across tests
@@ -34,7 +35,7 @@ class DummyStreams(list):
         return self[0]
 
 
-class DummyYT:
+class DummyYT(YouTubeVideo):
     def __init__(self, url: str) -> None:
         self.url = url
         self._title = "video"
