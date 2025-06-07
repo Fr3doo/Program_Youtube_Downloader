@@ -1,4 +1,7 @@
+import pytest
+
 from program_youtube_downloader import cli_utils
+from program_youtube_downloader.exceptions import ValidationError
 
 
 def test_ask_numeric_value_retries(monkeypatch):
@@ -73,3 +76,17 @@ def test_demander_youtube_link_file(monkeypatch, tmp_path):
         "https://www.youtube.com/watch?v=ok",
         "https://youtu.be/abc",
     ]
+
+
+def test_ask_numeric_value_validation_error(monkeypatch):
+    inputs = iter(["x", "y", "z"])
+    monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
+    with pytest.raises(ValidationError):
+        cli_utils.ask_numeric_value(1, 2)
+
+
+def test_ask_youtube_url_validation_error(monkeypatch):
+    inputs = iter(["bad", "nope", "still"])
+    monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
+    with pytest.raises(ValidationError):
+        cli_utils.ask_youtube_url()

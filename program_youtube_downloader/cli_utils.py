@@ -6,6 +6,8 @@ import logging
 logger = logging.getLogger(__name__)
 from typing import Iterable, Any
 
+from .exceptions import ValidationError
+
 from .constants import (
     TITLE_PROGRAM,
     TITLE_QUESTION_MENU_ACCUEIL,
@@ -21,8 +23,15 @@ def print_separator() -> None:
     print("*************************************************************")
 
 
-def ask_numeric_value(valeur_min: int, valeur_max: int) -> int:
-    """Ask the user for a numeric value within a range."""
+def ask_numeric_value(valeur_min: int, valeur_max: int, max_attempts: int = 3) -> int:
+    """Ask the user for a numeric value within a range.
+
+    Raises
+    ------
+    ValidationError
+        If ``max_attempts`` invalid values are provided.
+    """
+    attempts = 0
     while True:
         v_str = input(
             f"Donnez une valeur entre {valeur_min} et {valeur_max} : \n --> "
@@ -32,12 +41,18 @@ def ask_numeric_value(valeur_min: int, valeur_max: int) -> int:
         except ValueError:
             logger.warning("FAIL : Vous devez rentrer une valeur numérique.")
             logger.info("")
+            attempts += 1
+            if attempts >= max_attempts:
+                raise ValidationError("Nombre de tentatives dépassé")
             continue
         if not (valeur_min <= v_int <= valeur_max):
             logger.warning(
                 f"FAIL : Vous devez rentrer un nombre (entre {valeur_min} et {valeur_max} )."
             )
             logger.info("")
+            attempts += 1
+            if attempts >= max_attempts:
+                raise ValidationError("Nombre de tentatives dépassé")
             continue
 
         return v_int
@@ -64,39 +79,60 @@ def afficher_menu_acceuil() -> int:
     return valeur_choix_maximale
 
 
-def demander_save_file_path() -> Path:
-    """Ask for a destination directory and ensure it exists."""
+def demander_save_file_path(max_attempts: int = 3) -> Path:
+    """Ask for a destination directory and ensure it exists.
 
-    print()
-    print()
-    print_separator()
-    print("*             Sauvegarde fichier                            *")
-    print_separator()
+    Raises
+    ------
+    ValidationError
+        If the user fails ``max_attempts`` times to provide a valid path.
+    """
 
-    save_path = input("Indiquez l'endroit où vous voulez stocker le fichier : \n --> ")
-    path = Path(save_path).expanduser().resolve()
+    attempts = 0
+    while True:
+        print()
+        print()
+        print_separator()
+        print("*             Sauvegarde fichier                            *")
+        print_separator()
 
-    if path.is_file():
-        path = path.parent
+        save_path = input("Indiquez l'endroit où vous voulez stocker le fichier : \n --> ")
+        path = Path(save_path).expanduser().resolve()
 
-    if not path.exists():
-        create = input("Le dossier n'existe pas. Voulez-vous le créer ? [y/N] : ")
-        if create.lower().startswith("y"):
-            try:
-                path.mkdir(parents=True, exist_ok=True)
-            except OSError:
-                logger.exception("Directory creation failed")
-                logger.error("[ERREUR] : Impossible de créer le dossier")
-                return demander_save_file_path()
-        else:
-            logger.error("[ERREUR] : Le dossier n'existe pas")
-            return demander_save_file_path()
+        if path.is_file():
+            path = path.parent
 
-    return path
+        if not path.exists():
+            create = input("Le dossier n'existe pas. Voulez-vous le créer ? [y/N] : ")
+            if create.lower().startswith("y"):
+                try:
+                    path.mkdir(parents=True, exist_ok=True)
+                except OSError:
+                    logger.exception("Directory creation failed")
+                    logger.error("[ERREUR] : Impossible de créer le dossier")
+                    attempts += 1
+                    if attempts >= max_attempts:
+                        raise ValidationError("Création du dossier impossible")
+                    continue
+            else:
+                logger.error("[ERREUR] : Le dossier n'existe pas")
+                attempts += 1
+                if attempts >= max_attempts:
+                    raise ValidationError("Dossier invalide")
+                continue
+
+        return path
 
 
-def ask_youtube_url() -> str:
-    """Prompt the user for a YouTube video URL."""
+def ask_youtube_url(max_attempts: int = 3) -> str:
+    """Prompt the user for a YouTube video URL.
+
+    Raises
+    ------
+    ValidationError
+        If ``max_attempts`` invalid URLs are entered.
+    """
+    attempts = 0
     while True:
         print()
         print()
@@ -112,52 +148,73 @@ def ask_youtube_url() -> str:
 
         logger.error("ERREUR : Vous devez renter une URL de vidéo youtube")
         logger.error("le prefixe attendu est : https://www.youtube.com/")
+        attempts += 1
+        if attempts >= max_attempts:
+            raise ValidationError("URL invalide")
 
 
-def demander_youtube_link_file() -> list[str]:
-    """Read a text file of YouTube URLs and return the valid entries."""
+def demander_youtube_link_file(max_attempts: int = 3) -> list[str]:
+    """Read a text file of YouTube URLs and return the valid entries.
 
-    link_url_video_youtube_final: list[str] = []
-    print()
-    print()
-    print_separator()
-    print("*             Fichier contenant les urls Youtube            *")
-    print_separator()
-    fichier_user = input("Indiquez le nom du fichier : \n --> ")
-    print()
-    try:
-        file_path = Path(fichier_user)
-        with file_path.open("r") as fichier:
-            lignes = fichier.readlines()
-            compteur_ligne = 0
-            number_erreur = 0
-            number_links_file = len(lignes)
+    Raises
+    ------
+    ValidationError
+        If ``max_attempts`` attempts yield no valid URLs or the file is inaccessible.
+    """
 
-            if not number_links_file:
-                logger.error("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
-                return demander_youtube_link_file()
+    attempts = 0
+    while True:
+        link_url_video_youtube_final: list[str] = []
+        print()
+        print()
+        print_separator()
+        print("*             Fichier contenant les urls Youtube            *")
+        print_separator()
+        fichier_user = input("Indiquez le nom du fichier : \n --> ")
+        print()
+        try:
+            file_path = Path(fichier_user)
+            with file_path.open("r") as fichier:
+                lignes = fichier.readlines()
+                compteur_ligne = 0
+                number_erreur = 0
+                number_links_file = len(lignes)
 
-            for i in range(0, len(lignes)):
-                url_video = lignes[i].strip()
-                compteur_ligne += 1
+                if not number_links_file:
+                    logger.error("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
+                    attempts += 1
+                    if attempts >= max_attempts:
+                        raise ValidationError("Aucune URL valide")
+                    continue
 
-                if validate_youtube_url(url_video):
-                    link_url_video_youtube_final.append(url_video)
-                else:
-                    logger.error("[ERREUR] : ")
-                    logger.error("le prefixe attendu est : https://www.youtube.com/")
-                    logger.error(f"  le lien sur la ligne n° {compteur_ligne} ne sera pas télécharger")
-                    logger.error("")
-                    number_erreur += 1
+                for i in range(0, len(lignes)):
+                    url_video = lignes[i].strip()
+                    compteur_ligne += 1
 
-            if number_erreur == number_links_file:
-                logger.error("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
-                return demander_youtube_link_file()
-    except OSError as e:
-        logger.exception("[ERREUR] : Le fichier n'est pas accessible")
-        logger.error("[ERREUR] : Le fichier n'est pas accessible")
+                    if validate_youtube_url(url_video):
+                        link_url_video_youtube_final.append(url_video)
+                    else:
+                        logger.error("[ERREUR] : ")
+                        logger.error("le prefixe attendu est : https://www.youtube.com/")
+                        logger.error(f"  le lien sur la ligne n° {compteur_ligne} ne sera pas télécharger")
+                        logger.error("")
+                        number_erreur += 1
 
-    return link_url_video_youtube_final
+                if number_erreur == number_links_file:
+                    logger.error("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
+                    attempts += 1
+                    if attempts >= max_attempts:
+                        raise ValidationError("Aucune URL valide")
+                    continue
+        except OSError:
+            logger.exception("[ERREUR] : Le fichier n'est pas accessible")
+            logger.error("[ERREUR] : Le fichier n'est pas accessible")
+            attempts += 1
+            if attempts >= max_attempts:
+                raise ValidationError("Fichier inaccessible")
+            continue
+
+        return link_url_video_youtube_final
 
 
 def demander_choice_resolution_vidéo_or_bitrate_audio(

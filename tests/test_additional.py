@@ -8,6 +8,7 @@ import pytest
 
 from program_youtube_downloader import cli_utils, youtube_downloader
 from program_youtube_downloader.downloader import YoutubeDownloader
+from program_youtube_downloader.exceptions import DownloadError
 from program_youtube_downloader.config import DownloadOptions
 from program_youtube_downloader.progress import progress_bar, ProgressBarHandler
 from program_youtube_downloader import constants
@@ -215,3 +216,24 @@ def test_download_multiple_videos_default_choice(monkeypatch, tmp_path):
     yd.download_multiple_videos(["https://youtu.be/x"], options)
 
     assert (tmp_path / "sample.mp4").exists()
+
+
+def test_download_multiple_videos_download_error(monkeypatch, tmp_path):
+    class FailingStream(DummyStream):
+        def download(self, output_path: str) -> str:
+            raise OSError("boom")
+
+    class FailYT(DummyYT):
+        def __init__(self, url: str) -> None:
+            super().__init__(url)
+            self.streams = DummyStreams([FailingStream()])
+
+    monkeypatch.setattr(YoutubeDownloader, "streams_video", lambda self, dso, yt: yt.streams)
+    monkeypatch.setattr(builtins, "input", lambda *a, **k: "")
+    monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: None)
+    monkeypatch.setattr(cli_utils, "pause_return_to_menu", lambda *a, **k: None)
+
+    yd = YoutubeDownloader(youtube_cls=lambda u: FailYT(u))
+    options = DownloadOptions(save_path=tmp_path)
+    with pytest.raises(DownloadError):
+        yd.download_multiple_videos(["https://youtu.be/fail"], options)
