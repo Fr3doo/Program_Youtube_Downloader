@@ -10,7 +10,11 @@ from program_youtube_downloader import cli_utils, youtube_downloader
 from program_youtube_downloader.downloader import YoutubeDownloader
 from program_youtube_downloader.exceptions import DownloadError, StreamAccessError
 from program_youtube_downloader.config import DownloadOptions
-from program_youtube_downloader.progress import progress_bar, ProgressBarHandler
+from program_youtube_downloader.progress import (
+    progress_bar,
+    ProgressBarHandler,
+    ProgressOptions,
+)
 from program_youtube_downloader import constants
 from program_youtube_downloader.types import YouTubeVideo
 
@@ -54,6 +58,7 @@ class DummyYT(YouTubeVideo):
 # CLI utility helpers
 # ---------------------------------------------------------------------------
 
+
 def test_afficher_menu_acceuil_count(monkeypatch):
     """The menu should display all choices and return their count."""
     printed = []
@@ -82,16 +87,30 @@ def test_demander_choice_resolution_video(monkeypatch):
     """Video resolution flow mirrors the audio version."""
     streams = [SimpleNamespace(resolution="360p"), SimpleNamespace(resolution="720p")]
     monkeypatch.setattr(cli_utils, "ask_numeric_value", lambda a, b: 1)
-    assert cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio(False, streams) == 1
+    assert (
+        cli_utils.demander_choice_resolution_vidéo_or_bitrate_audio(False, streams) == 1
+    )
 
 
 # ---------------------------------------------------------------------------
 # Progress handling
 # ---------------------------------------------------------------------------
 
+
 def test_progress_bar_outputs(capsys):
     """Ensure the textual progress bar displays expected markers."""
-    progress_bar(50, size=10, sides="[]", full="#", empty="-", prefix_start="", prefix_end="", color_text="", color_Downloading="", color_Download_OK="")
+    opts = ProgressOptions(
+        size=10,
+        sides="[]",
+        full="#",
+        empty="-",
+        prefix_start="",
+        prefix_end="",
+        color_text="",
+        color_Downloading="",
+        color_Download_OK="",
+    )
+    progress_bar(50, opts)
     out = capsys.readouterr().out
     assert "[#####-----]" in out
     assert "50.00%" in out
@@ -109,6 +128,7 @@ def test_progressbarhandler_on_progress(capsys):
 # ---------------------------------------------------------------------------
 # Small helpers from youtube_downloader module
 # ---------------------------------------------------------------------------
+
 
 def test_program_break_time(monkeypatch, capsys):
     """Countdown should print remaining seconds without sleeping when patched."""
@@ -139,6 +159,7 @@ def test_clear_screen(monkeypatch):
 # ---------------------------------------------------------------------------
 # YoutubeDownloader specific behaviour
 # ---------------------------------------------------------------------------
+
 
 def test_streams_video_http_error(monkeypatch):
     """HTTP errors when accessing streams should raise StreamAccessError."""
@@ -197,7 +218,9 @@ def test_download_multiple_videos_title_keyerror(monkeypatch, tmp_path):
         def title(self):
             raise KeyError("missing")
 
-    monkeypatch.setattr(YoutubeDownloader, "streams_video", lambda self, dso, yt: yt.streams)
+    monkeypatch.setattr(
+        YoutubeDownloader, "streams_video", lambda self, dso, yt: yt.streams
+    )
     monkeypatch.setattr(builtins, "input", lambda *a, **k: "")
     monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: None)
     monkeypatch.setattr(cli_utils, "pause_return_to_menu", lambda *a, **k: None)
@@ -210,7 +233,9 @@ def test_download_multiple_videos_title_keyerror(monkeypatch, tmp_path):
 
 def test_download_multiple_videos_default_choice(monkeypatch, tmp_path):
     """When no callback is provided, the first stream is used."""
-    monkeypatch.setattr(YoutubeDownloader, "streams_video", lambda self, dso, yt: yt.streams)
+    monkeypatch.setattr(
+        YoutubeDownloader, "streams_video", lambda self, dso, yt: yt.streams
+    )
     monkeypatch.setattr(builtins, "input", lambda *a, **k: "")
     monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: None)
     monkeypatch.setattr(cli_utils, "pause_return_to_menu", lambda *a, **k: None)
@@ -232,7 +257,9 @@ def test_download_multiple_videos_download_error(monkeypatch, tmp_path):
             super().__init__(url)
             self.streams = DummyStreams([FailingStream()])
 
-    monkeypatch.setattr(YoutubeDownloader, "streams_video", lambda self, dso, yt: yt.streams)
+    monkeypatch.setattr(
+        YoutubeDownloader, "streams_video", lambda self, dso, yt: yt.streams
+    )
     monkeypatch.setattr(builtins, "input", lambda *a, **k: "")
     monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: None)
     monkeypatch.setattr(cli_utils, "pause_return_to_menu", lambda *a, **k: None)
