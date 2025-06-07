@@ -167,7 +167,8 @@ def test_streams_video_success(monkeypatch):
 
     yt.streams = Chain()
     yd = YoutubeDownloader()
-    assert yd.streams_video(True, yt) is result
+    # download_sound_only parameter is ignored but kept for API compatibility
+    assert yd.streams_video(False, yt) is result
 
 
 def test_conversion_mp4_in_mp3_rename_error(monkeypatch, tmp_path):
