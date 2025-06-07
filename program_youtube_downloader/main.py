@@ -3,6 +3,8 @@
 import sys
 import argparse
 import logging
+
+logger = logging.getLogger(__name__)
 import os
 
 if '__annotations__' not in globals():
@@ -72,13 +74,13 @@ def menu() -> None:  # pragma: no cover
 
         match choix:
             case MenuOption.QUIT:
-                logging.info("")
-                logging.info("")
-                logging.info("*************************************************************")
-                logging.info("*                                                           *")
-                logging.info("*                    Fin du programme                       *")
-                logging.info("*                                                           *")
-                logging.info("*************************************************************")
+                logger.info("")
+                logger.info("")
+                logger.info("*************************************************************")
+                logger.info("*                                                           *")
+                logger.info("*                    Fin du programme                       *")
+                logger.info("*                                                           *")
+                logger.info("*************************************************************")
                 break
             case MenuOption.VIDEO | MenuOption.VIDEO_AUDIO_ONLY:
                 url_video_send_user_list: list[str] = []
@@ -107,8 +109,8 @@ def menu() -> None:  # pragma: no cover
                 try:
                     link_url_playlist_youtube = youtube_downloader.Playlist(url_playlist_send_user)
                 except Exception as exc:
-                    logging.exception("Error connecting to playlist")
-                    logging.error("[ERREUR] : Connexion à la Playlist impossible")
+                    logger.exception("Error connecting to playlist")
+                    logger.error("[ERREUR] : Connexion à la Playlist impossible")
                 else:
                     if choix is MenuOption.PLAYLIST_VIDEO:
                         download_sound_only = False
@@ -123,8 +125,8 @@ def menu() -> None:  # pragma: no cover
                 try:
                     link_url_channel_youtube = youtube_downloader.Channel(url_channel_send_user)
                 except Exception as exc:
-                    logging.exception("Error connecting to channel")
-                    logging.error("[ERREUR] : Connexion à la chaîne Youtube impossible")
+                    logger.exception("Error connecting to channel")
+                    logger.error("[ERREUR] : Connexion à la chaîne Youtube impossible")
                 else:
                     if choix is MenuOption.CHANNEL_VIDEOS:
                         download_sound_only = False
