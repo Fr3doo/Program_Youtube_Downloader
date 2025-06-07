@@ -42,3 +42,10 @@ Utilitaires généraux :
 - `program_break_time(seconds, text)` : petite minuterie textuelle.
 
 Ces éléments composent l'API interne du projet et sont utilisés par la CLI ainsi que par les tests unitaires.
+
+## Exceptions
+- `DownloadError` : échec répété lors du téléchargement d'un flux.
+- `ValidationError` : validation utilisateur impossible après plusieurs essais.
+- `PlaylistConnectionError` : connexion à une playlist YouTube impossible.
+- `ChannelConnectionError` : connexion à une chaîne YouTube impossible.
+- `StreamAccessError` : récupération des flux d'une vidéo impossible.

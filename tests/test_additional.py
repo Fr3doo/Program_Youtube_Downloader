@@ -8,7 +8,7 @@ import pytest
 
 from program_youtube_downloader import cli_utils, youtube_downloader
 from program_youtube_downloader.downloader import YoutubeDownloader
-from program_youtube_downloader.exceptions import DownloadError
+from program_youtube_downloader.exceptions import DownloadError, StreamAccessError
 from program_youtube_downloader.config import DownloadOptions
 from program_youtube_downloader.progress import progress_bar, ProgressBarHandler
 from program_youtube_downloader import constants
@@ -141,7 +141,7 @@ def test_clear_screen(monkeypatch):
 # ---------------------------------------------------------------------------
 
 def test_streams_video_http_error(monkeypatch):
-    """HTTP errors when accessing streams should return None."""
+    """HTTP errors when accessing streams should raise StreamAccessError."""
     yt = DummyYT("u")
 
     def filter_fail(*a, **k):
@@ -149,7 +149,8 @@ def test_streams_video_http_error(monkeypatch):
 
     yt.streams.filter = filter_fail
     yd = YoutubeDownloader()
-    assert yd.streams_video(False, yt) is None
+    with pytest.raises(StreamAccessError):
+        yd.streams_video(False, yt)
 
 
 def test_streams_video_success(monkeypatch):

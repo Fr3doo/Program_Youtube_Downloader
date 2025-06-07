@@ -14,6 +14,7 @@ if '__annotations__' not in globals():
 from . import youtube_downloader
 from . import cli_utils
 from .downloader import YoutubeDownloader
+from .exceptions import PlaylistConnectionError, ChannelConnectionError
 from .config import DownloadOptions
 from .constants import MenuOption
 
@@ -122,10 +123,9 @@ def handle_playlist_option(yd: YoutubeDownloader, audio_only: bool) -> None:
     url = cli_utils.ask_youtube_url()
     try:
         playlist = youtube_downloader.Playlist(url)
-    except Exception:
+    except Exception as e:
         logger.exception("Error connecting to playlist")
-        logger.error("[ERREUR] : Connexion à la Playlist impossible")
-        return
+        raise PlaylistConnectionError("Connexion à la Playlist impossible") from e
     options = create_download_options(audio_only)
     yd.download_multiple_videos(playlist, options)  # type: ignore
 
@@ -135,10 +135,9 @@ def handle_channel_option(yd: YoutubeDownloader, audio_only: bool) -> None:
     url = cli_utils.ask_youtube_url()
     try:
         channel = youtube_downloader.Channel(url)
-    except Exception:
+    except Exception as e:
         logger.exception("Error connecting to channel")
-        logger.error("[ERREUR] : Connexion à la chaîne Youtube impossible")
-        return
+        raise ChannelConnectionError("Connexion à la chaîne Youtube impossible") from e
     options = create_download_options(audio_only)
     yd.download_multiple_videos(channel, options)  # type: ignore
 
@@ -231,14 +230,20 @@ def main(argv: list[str] | None = None) -> None:
             options,
         )
     elif command == "playlist":
-        playlist = youtube_downloader.Playlist(args.url)
+        try:
+            playlist = youtube_downloader.Playlist(args.url)
+        except Exception as e:
+            raise PlaylistConnectionError("Connexion à la Playlist impossible") from e
         options = create_download_options(args.audio, args.output_dir)
         yd.download_multiple_videos(
             playlist,
             options,
         )  # type: ignore
     elif command == "channel":
-        channel = youtube_downloader.Channel(args.url)
+        try:
+            channel = youtube_downloader.Channel(args.url)
+        except Exception as e:
+            raise ChannelConnectionError("Connexion à la chaîne Youtube impossible") from e
         options = create_download_options(args.audio, args.output_dir)
         yd.download_multiple_videos(
             channel,

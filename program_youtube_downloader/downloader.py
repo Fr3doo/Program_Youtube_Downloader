@@ -9,7 +9,7 @@ from pytubefix import YouTube
 
 from .types import YouTubeVideo
 
-from .exceptions import DownloadError
+from .exceptions import DownloadError, StreamAccessError
 
 from . import cli_utils
 from .config import DownloadOptions
@@ -115,15 +115,15 @@ class YoutubeDownloader:
 
     def streams_video(
         self, download_sound_only: bool, youtube_video: YouTubeVideo
-    ) -> Optional[Any]:
+    ) -> Any:
         """Return the available streams for ``youtube_video``.
 
         Args:
             download_sound_only: Ignored, kept for backward compatibility.
             youtube_video: An object implementing :class:`YouTubeVideo`.
 
-        Returns:
-            The list of available streams or ``None`` if retrieval failed.
+        Raises:
+            StreamAccessError: If retrieving the streams fails.
         """
         try:
             streams = (
@@ -138,14 +138,14 @@ class YoutubeDownloader:
                 e.code,
                 e.reason,
             )
-            return None
+            raise StreamAccessError(f"HTTP {e.code}: {e.reason}") from e
         except Exception as e:  # pragma: no cover - defensive
             logger.exception("Unexpected error while retrieving streams")
             logger.error(
                 "[ERREUR] : Une erreur inattendue s'est produite lors de la récupération des flux : %s",
                 e,
             )
-            return None
+            raise StreamAccessError(str(e)) from e
 
     def conversion_mp4_in_mp3(self, file_downloaded: Union[str, Path]) -> None:
         """Rename the downloaded MP4 file to MP3 and remove the original file.
@@ -200,10 +200,19 @@ class YoutubeDownloader:
             if youtube_video is None:
                 continue
 
-            streams = self.streams_video(download_sound_only, youtube_video)
+            try:
+                streams = self.streams_video(download_sound_only, youtube_video)
+            except StreamAccessError as e:
+                logger.error(
+                    "[ERREUR] : Les flux pour la vidéo (%s) n'ont pas pu être récupérés. %s",
+                    url_video,
+                    e,
+                )
+                continue
+
             if not streams:
                 logger.error(
-                    "[ERREUR] : Les flux pour la vidéo (%s) n'ont pas pu être récupérés.",
+                    "[ERREUR] : Aucun flux disponible pour la vidéo (%s).",
                     url_video,
                 )
                 continue
