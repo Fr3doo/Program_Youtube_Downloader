@@ -1,6 +1,8 @@
 # from asyncio import streams
 # https://github.com/JuanBindez/pytubefix
 # https://pypi.org/project/pytubefix/
+"""Miscellaneous helpers used by the application."""
+
 from pytube import Playlist
 from pytube import Channel
 import time
@@ -38,7 +40,12 @@ def clear_screen() -> None:
 
 
 def program_break_time(memorization_time: int, affichage_text: str) -> None:
-    """Display a short countdown with ``affichage_text`` as prefix."""
+    """Display a short countdown.
+
+    Args:
+        memorization_time: Duration of the countdown in seconds.
+        affichage_text: Message displayed before the countdown number.
+    """
     duree_restante_avant_lancement = memorization_time
     print(f"{affichage_text} {memorization_time} secondes ", end="", flush=True)
     for i in range(memorization_time):

@@ -20,7 +20,15 @@ from .constants import MenuOption
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    """Return the parsed CLI arguments."""
+    """Parse command line arguments.
+
+    Args:
+        argv: Optional list of argument strings. If ``None`` ``sys.argv`` is
+            used.
+
+    Returns:
+        The populated :class:`argparse.Namespace`.
+    """
     parser = argparse.ArgumentParser(description="Program Youtube Downloader")
     parser.add_argument(
         "--log-level",
@@ -63,7 +71,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def create_download_options(audio_only: bool, output_dir: Path | None = None) -> DownloadOptions:
-    """Return configured options, prompting for the path if needed."""
+    """Build a :class:`DownloadOptions` instance.
+
+    Args:
+        audio_only: Whether to download only audio streams.
+        output_dir: Directory where files will be saved. If ``None`` the user is
+            prompted for a location.
+
+    Returns:
+        A fully configured :class:`DownloadOptions` object.
+    """
     if output_dir is not None:
         save_path = output_dir.expanduser().resolve()
     else:
@@ -76,7 +93,7 @@ def create_download_options(audio_only: bool, output_dir: Path | None = None) ->
 
 
 def menu() -> None:  # pragma: no cover
-    """Run the main menu loop."""
+    """Interactively ask the user what to download and start the process."""
 
     # --------------------------------------------------------------------------
     # ------------------------------- PROGRAMME PRINCIPAL ----------------------
@@ -190,7 +207,11 @@ def menu() -> None:  # pragma: no cover
 #             print(f"Échec avec le client : {client}, itag : {itag} avec l'erreur : {e}\n\n\n\n")
 
 def main(argv: list[str] | None = None) -> None:
-    """Parse arguments and dispatch to subcommands."""
+    """Entry point called by the ``program-youtube-downloader`` script.
+
+    Args:
+        argv: Optional list of command line arguments.
+    """
     args = parse_args(argv)
     logging.getLogger().setLevel(args.log_level)
     command = args.command

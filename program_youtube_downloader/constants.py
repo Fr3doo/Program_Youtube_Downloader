@@ -1,3 +1,5 @@
+"""Shared strings and enumeration used across the application."""
+
 from enum import Enum
 
 TITLE_PROGRAM = "Program Youtube Downloader"
@@ -18,7 +20,7 @@ CHOICE_MENU_ACCUEIL: tuple[str, ...] = (
 
 
 class MenuOption(Enum):
-    """Numeric values representing each main menu option."""
+    """Numeric values representing each entry in the main menu."""
 
     VIDEO = 1
     VIDEOS = 2
@@ -30,4 +32,5 @@ class MenuOption(Enum):
     CHANNEL_AUDIO_ONLY = 8
     QUIT = 9
 
+# Base URL used to validate YouTube links throughout the project.
 BASE_YOUTUBE_URL = "https://www.youtube.com"

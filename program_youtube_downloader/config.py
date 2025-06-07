@@ -7,7 +7,19 @@ from .progress import ProgressHandler, ProgressBarHandler
 
 @dataclass
 class DownloadOptions:
-    """Configuration for downloading YouTube content."""
+    """Options controlling the download workflow.
+
+    Attributes:
+        save_path: Destination directory for downloaded files. If ``None``
+            the current working directory is used.
+        download_sound_only: When ``True`` only the audio track is kept and the
+            resulting file is converted to MP3.
+        choice_callback: Callback invoked to let the user choose the quality of
+            a stream. It receives ``download_sound_only`` and the list of
+            available streams and must return the chosen index (starting at 1).
+        progress_handler: Object receiving progress events from ``pytubefix``.
+            Defaults to :class:`~program_youtube_downloader.progress.ProgressBarHandler`.
+    """
 
     save_path: Optional[Path] = None
     download_sound_only: bool = False

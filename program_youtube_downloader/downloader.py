@@ -15,20 +15,37 @@ from .progress import ProgressHandler, ProgressBarHandler
 
 
 class YoutubeDownloader:
-    """Responsible for fetching streams and saving downloaded files."""
+    """High level interface for downloading YouTube videos and audio."""
 
     def __init__(
         self,
         progress_handler: ProgressHandler | None = None,
         youtube_cls: Callable[[str], YouTube] = YouTube,
     ) -> None:
+        """Create the downloader.
+
+        Args:
+            progress_handler: Handler receiving progress events from
+                ``pytubefix``. If ``None`` a :class:`ProgressBarHandler` is used.
+            youtube_cls: Factory used to create :class:`pytubefix.YouTube`
+                objects. Tests may provide a mock implementation.
+        """
+
         self.progress_handler = progress_handler or ProgressBarHandler()
         self.youtube_cls = youtube_cls
 
     def streams_video(
         self, download_sound_only: bool, youtube_video: YouTube
     ) -> Optional[Any]:
-        """Return available streams for ``youtube_video``."""
+        """Return the available streams for ``youtube_video``.
+
+        Args:
+            download_sound_only: If ``True`` only audio streams are returned.
+            youtube_video: An instance of :class:`pytubefix.YouTube`.
+
+        Returns:
+            The list of available streams or ``None`` if retrieval failed.
+        """
         try:
             if download_sound_only:
                 streams = (
@@ -59,7 +76,11 @@ class YoutubeDownloader:
             return None
 
     def conversion_mp4_in_mp3(self, file_downloaded: Union[str, Path]) -> None:
-        """Rename the downloaded MP4 file to MP3 and remove the source."""
+        """Rename the downloaded MP4 file to MP3 and remove the original file.
+
+        Args:
+            file_downloaded: Path to the downloaded MP4 file.
+        """
         file_path = Path(file_downloaded)
         try:
             new_file = file_path.with_suffix(".mp3")
@@ -78,7 +99,16 @@ class YoutubeDownloader:
         url_youtube_video_links: Iterable[str],
         options: DownloadOptions,
     ) -> Optional[list[str]]:
-        """Download multiple YouTube videos or audio tracks."""
+        """Download one or more videos or audio tracks.
+
+        Args:
+            url_youtube_video_links: Iterable of YouTube URLs to download.
+            options: Download behaviour configuration.
+
+        Returns:
+            ``None`` if every download succeeds, otherwise a list of URLs that
+            failed to download (currently always returns ``None``).
+        """
 
         download_sound_only = options.download_sound_only
         save_path = options.save_path or Path.cwd()

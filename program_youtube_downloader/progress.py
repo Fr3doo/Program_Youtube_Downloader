@@ -32,7 +32,20 @@ def progress_bar(
     color_Downloading: str = colorama.Fore.LIGHTYELLOW_EX,
     color_Download_OK: str = colorama.Fore.GREEN,
 ) -> None:
-    """Print a textual progress bar to standard output."""
+    """Print a textual progress bar to standard output.
+
+    Args:
+        progress: Percentage of completion between 0 and 100.
+        size: Width of the bar in characters.
+        sides: Two characters used to wrap the bar (left then right).
+        full: Character representing completed segments.
+        empty: Character representing remaining segments.
+        prefix_start: Text displayed while downloading.
+        prefix_end: Text displayed when ``progress`` reaches 100.
+        color_text: Color for the text prefix.
+        color_Downloading: Color for the bar while downloading.
+        color_Download_OK: Color for the bar when finished.
+    """
     x = int(size * progress / 100)
     bar = sides[0] + full * x + empty * (size - x) + sides[1]
     sys.stdout.write(color_text + "\r" + prefix_start + color_Downloading + bar + f" {progress:.2f}% ")
@@ -48,6 +61,7 @@ class ProgressBarHandler:
     """Default progress handler displaying a textual bar."""
 
     def on_progress(self, stream, chunk, bytes_remaining) -> None:
+        """Compute percentage and forward it to :func:`progress_bar`."""
         total_bytes_download = stream.filesize
         bytes_downloaded = stream.filesize - bytes_remaining
         progress = (bytes_downloaded / total_bytes_download) * 100

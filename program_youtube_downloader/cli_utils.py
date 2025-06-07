@@ -19,17 +19,25 @@ from .validators import validate_youtube_url
 
 
 def print_separator() -> None:
-    """Display a visual separator used in menus."""
+    """Print a decorative separator line used in menus."""
     print("*************************************************************")
 
 
 def ask_numeric_value(valeur_min: int, valeur_max: int, max_attempts: int = 3) -> int:
-    """Ask the user for a numeric value within a range.
+    """Prompt the user to enter a number between ``valeur_min`` and ``valeur_max``.
 
-    Raises
-    ------
-    ValidationError
-        If ``max_attempts`` invalid values are provided.
+    Args:
+        valeur_min: Minimum acceptable value.
+        valeur_max: Maximum acceptable value.
+        max_attempts: Number of invalid attempts allowed before a
+            :class:`ValidationError` is raised.
+
+    Returns:
+        The validated integer entered by the user.
+
+    Raises:
+        ValidationError: If the user fails to provide a valid value within the
+            allowed number of attempts.
     """
     attempts = 0
     while True:
@@ -59,7 +67,11 @@ def ask_numeric_value(valeur_min: int, valeur_max: int, max_attempts: int = 3) -
 
 
 def afficher_menu_acceuil() -> int:
-    """Display the main menu and return the number of available choices."""
+    """Display the main menu.
+
+    Returns:
+        The number of available choices presented to the user.
+    """
     print()
     print()
     print_separator()
@@ -80,12 +92,18 @@ def afficher_menu_acceuil() -> int:
 
 
 def demander_save_file_path(max_attempts: int = 3) -> Path:
-    """Ask for a destination directory and ensure it exists.
+    """Prompt for a destination directory and create it if necessary.
 
-    Raises
-    ------
-    ValidationError
-        If the user fails ``max_attempts`` times to provide a valid path.
+    Args:
+        max_attempts: Number of invalid attempts permitted before raising a
+            :class:`ValidationError`.
+
+    Returns:
+        The resolved :class:`~pathlib.Path` chosen by the user.
+
+    Raises:
+        ValidationError: If ``max_attempts`` invalid paths are entered or the
+            directory cannot be created.
     """
 
     attempts = 0
@@ -125,12 +143,18 @@ def demander_save_file_path(max_attempts: int = 3) -> Path:
 
 
 def ask_youtube_url(max_attempts: int = 3) -> str:
-    """Prompt the user for a YouTube video URL.
+    """Ask the user to provide a single YouTube video URL.
 
-    Raises
-    ------
-    ValidationError
-        If ``max_attempts`` invalid URLs are entered.
+    Args:
+        max_attempts: Number of tries allowed before a
+            :class:`ValidationError` is raised.
+
+    Returns:
+        A validated URL string.
+
+    Raises:
+        ValidationError: If the provided URLs are invalid ``max_attempts``
+            times in a row.
     """
     attempts = 0
     while True:
@@ -154,12 +178,18 @@ def ask_youtube_url(max_attempts: int = 3) -> str:
 
 
 def demander_youtube_link_file(max_attempts: int = 3) -> list[str]:
-    """Read a text file of YouTube URLs and return the valid entries.
+    """Load a list of YouTube URLs from a text file.
 
-    Raises
-    ------
-    ValidationError
-        If ``max_attempts`` attempts yield no valid URLs or the file is inaccessible.
+    Args:
+        max_attempts: Number of times to retry reading a valid file before
+            raising :class:`ValidationError`.
+
+    Returns:
+        A list containing all valid URLs found in the file.
+
+    Raises:
+        ValidationError: If no valid URLs can be read after ``max_attempts``
+            attempts or the file is not accessible.
     """
 
     attempts = 0
@@ -220,7 +250,18 @@ def demander_youtube_link_file(max_attempts: int = 3) -> list[str]:
 def demander_choice_resolution_vidéo_or_bitrate_audio(
     download_sound_only: bool, list_available_streams: Iterable[Any]
 ) -> int:
-    """Prompt the user to choose a resolution or bitrate from ``list_available_streams``."""
+    """Prompt the user to choose a resolution or bitrate from ``list_available_streams``.
+
+    Args:
+        download_sound_only: If ``True`` ``list_available_streams`` contains
+            audio streams and the user selects a bitrate. Otherwise it contains
+            video streams and the user selects a resolution.
+        list_available_streams: Iterable of stream objects returned by
+            ``pytubefix``.
+
+    Returns:
+        The index (1-based) of the chosen stream in ``list_available_streams``.
+    """
     i = 0
     valeur_choix_maximale = i
 
@@ -257,7 +298,7 @@ def demander_choice_resolution_vidéo_or_bitrate_audio(
 
 
 def print_end_download_message() -> None:
-    """Display a message indicating the downloads are finished."""
+    """Print a short message indicating that all downloads completed."""
     logger.info("")
     logger.info("Fin du téléchargement")
     print_separator()
@@ -265,7 +306,7 @@ def print_end_download_message() -> None:
 
 
 def pause_return_to_menu() -> None:
-    """Pause execution until the user presses ENTER and clear the screen."""
+    """Wait for the user to press ENTER then clear the screen."""
     input("Appuyer sur ENTREE pour revenir au menu d'accueil")
     program_break_time(3, "Le menu d'accueil va revenir dans")
     clear_screen()
