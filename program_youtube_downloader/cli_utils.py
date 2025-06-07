@@ -2,8 +2,6 @@
 
 from pathlib import Path
 import logging
-
-logger = logging.getLogger(__name__)
 from typing import Iterable, Any
 
 from .exceptions import ValidationError
@@ -16,6 +14,8 @@ from .constants import (
 )
 from .youtube_downloader import program_break_time, clear_screen
 from .validators import validate_youtube_url
+
+logger = logging.getLogger(__name__)
 
 
 def print_separator() -> None:

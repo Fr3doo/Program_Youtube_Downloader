@@ -1,9 +1,23 @@
 # main.py
 # pyinstaller --onefile --add-data "mypy.ini;." --hidden-import "youtube_downloader" main.py
+import os
 import sys
 import argparse
 import logging
 from pathlib import Path
+
+
+from . import youtube_downloader
+from . import cli_utils
+from .downloader import YoutubeDownloader
+from .exceptions import PlaylistConnectionError, ChannelConnectionError
+from .config import DownloadOptions
+from .constants import MenuOption
+
+logger = logging.getLogger(__name__)
+
+if '__annotations__' not in globals():
+    __annotations__ = {}
 
 
 def setup_logging(level: str) -> None:
@@ -13,20 +27,6 @@ def setup_logging(level: str) -> None:
         format="%(levelname)s:%(name)s:%(message)s",
         force=True,
     )
-
-
-logger = logging.getLogger(__name__)
-import os
-
-if '__annotations__' not in globals():
-    __annotations__ = {}
-
-from . import youtube_downloader
-from . import cli_utils
-from .downloader import YoutubeDownloader
-from .exceptions import PlaylistConnectionError, ChannelConnectionError
-from .config import DownloadOptions
-from .constants import MenuOption
 
 
 
