@@ -5,6 +5,16 @@ import argparse
 import logging
 from pathlib import Path
 
+
+def setup_logging(level: str) -> None:
+    """Configure application-wide logging."""
+    logging.basicConfig(
+        level=getattr(logging, level.upper(), logging.ERROR),
+        format="%(levelname)s:%(name)s:%(message)s",
+        force=True,
+    )
+
+
 logger = logging.getLogger(__name__)
 import os
 
@@ -215,7 +225,7 @@ def main(argv: list[str] | None = None) -> None:
         argv: Optional list of command line arguments.
     """
     args = parse_args(argv)
-    logging.getLogger().setLevel(args.log_level)
+    setup_logging(args.log_level)
     command = args.command
     yd = YoutubeDownloader()
 
