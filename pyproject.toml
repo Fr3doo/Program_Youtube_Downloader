@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "CLI tool for downloading YouTube content"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "MIT"}
+license = "MIT"
 dependencies = [
     "pytubefix",
     "colorama",
@@ -16,3 +16,8 @@ dependencies = [
 
 [project.scripts]
 program-youtube-downloader = "program_youtube_downloader.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["program_youtube_downloader"]
+exclude = ["assets"]
