@@ -159,7 +159,6 @@ def test_create_download_options(monkeypatch, tmp_path):
 
 def test_main_video_command(monkeypatch, tmp_path):
     dd = DummyDownloader()
-    monkeypatch.setattr(main_module, "YoutubeDownloader", lambda: dd)
     monkeypatch.setattr(
         main_module.cli_utils, "ask_save_file_path", lambda: tmp_path
     )
@@ -168,7 +167,7 @@ def test_main_video_command(monkeypatch, tmp_path):
         "ask_resolution_or_bitrate",
         lambda *a, **k: 1,
     )
-    main_module.main(["video", "https://youtu.be/x"])
+    main_module.main(["video", "https://youtu.be/x"], dd)
     assert dd.called[0] == ["https://youtu.be/x"]
     assert dd.called[1].save_path == tmp_path
     assert dd.called[1].download_sound_only is False
@@ -176,7 +175,6 @@ def test_main_video_command(monkeypatch, tmp_path):
 
 def test_main_playlist_command(monkeypatch, tmp_path):
     dd = DummyDownloader()
-    monkeypatch.setattr(main_module, "YoutubeDownloader", lambda: dd)
     monkeypatch.setattr(
         main_module.youtube_downloader, "Playlist", lambda u: ["https://youtu.be/1"]
     )
@@ -188,14 +186,13 @@ def test_main_playlist_command(monkeypatch, tmp_path):
         "ask_resolution_or_bitrate",
         lambda *a, **k: 1,
     )
-    main_module.main(["playlist", "https://example.com/playlist"])
+    main_module.main(["playlist", "https://example.com/playlist"], dd)
     assert dd.called[0] == ["https://youtu.be/1"]
     assert dd.called[1].save_path == tmp_path
 
 
 def test_main_channel_command(monkeypatch, tmp_path):
     dd = DummyDownloader()
-    monkeypatch.setattr(main_module, "YoutubeDownloader", lambda: dd)
     monkeypatch.setattr(
         main_module.youtube_downloader, "Channel", lambda u: ["https://youtu.be/2"]
     )
@@ -207,7 +204,7 @@ def test_main_channel_command(monkeypatch, tmp_path):
         "ask_resolution_or_bitrate",
         lambda *a, **k: 1,
     )
-    main_module.main(["channel", "https://example.com/channel"])
+    main_module.main(["channel", "https://example.com/channel"], dd)
     assert dd.called[0] == ["https://youtu.be/2"]
 
 

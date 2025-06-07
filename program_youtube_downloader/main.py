@@ -218,20 +218,26 @@ def menu() -> None:  # pragma: no cover
 #             error_type, _, error_traceback = sys.exc_info()
 #             print(f"Échec avec le client : {client}, itag : {itag} avec l'erreur : {e}\n\n\n\n")
 
-def main(argv: list[str] | None = None) -> None:
+def main(
+    argv: list[str] | None = None,
+    downloader: YoutubeDownloader | None = None,
+) -> None:
     """Entry point called by the ``program-youtube-downloader`` script.
 
     Args:
         argv: Optional list of command line arguments.
+        downloader: Existing :class:`YoutubeDownloader` instance to use. If
+            ``None`` a new one is created when required.
     """
     args = parse_args(argv)
     setup_logging(args.log_level)
     command = args.command
-    yd = YoutubeDownloader()
 
     if command is None or command == "menu":
         menu()
         return
+
+    yd = downloader or YoutubeDownloader()
 
     if command == "video":
         options = create_download_options(args.audio, args.output_dir)
