@@ -199,7 +199,7 @@ def ask_youtube_link_file(max_attempts: int = 3) -> list[str]:
         print()
         try:
             file_path = Path(fichier_user)
-            with file_path.open("r") as fichier:
+            with file_path.open("r", encoding="utf-8") as fichier:
                 lignes = fichier.readlines()
                 compteur_ligne = 0
                 number_erreur = 0
