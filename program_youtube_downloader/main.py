@@ -17,9 +17,6 @@ from .constants import MenuOption
 
 logger = logging.getLogger(__name__)
 
-if '__annotations__' not in globals():
-    __annotations__ = {}
-
 
 def setup_logging(level: str) -> None:
     """Configure application-wide logging."""
