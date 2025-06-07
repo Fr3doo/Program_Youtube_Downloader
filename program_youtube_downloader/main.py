@@ -12,6 +12,7 @@ from . import youtube_downloader
 from . import cli_utils
 from .downloader import YoutubeDownloader
 from .config import DownloadOptions
+from .constants import MenuOption
 
 
 
@@ -54,13 +55,13 @@ def menu() -> None:  # pragma: no cover
 
     while True:
         choix_max_menu_accueil = cli_utils.afficher_menu_acceuil()
-        reponse_utilisateur_pour_choix_dans_menu = cli_utils.ask_numeric_value(
-            1, choix_max_menu_accueil
+        choix = MenuOption(
+            cli_utils.ask_numeric_value(1, choix_max_menu_accueil)
         )
         download_sound_only = True
 
-        match reponse_utilisateur_pour_choix_dans_menu:
-            case 9:
+        match choix:
+            case MenuOption.QUIT:
                 logging.info("")
                 logging.info("")
                 logging.info("*************************************************************")
@@ -69,11 +70,11 @@ def menu() -> None:  # pragma: no cover
                 logging.info("*                                                           *")
                 logging.info("*************************************************************")
                 break
-            case 1 | 5:
+            case MenuOption.VIDEO | MenuOption.VIDEO_AUDIO_ONLY:
                 url_video_send_user_list: list[str] = []
                 url_video_send_user: str = cli_utils.ask_youtube_url()
                 url_video_send_user_list.append(url_video_send_user)
-                if reponse_utilisateur_pour_choix_dans_menu == 1:
+                if choix is MenuOption.VIDEO:
                     download_sound_only = False
 
                 save_path = cli_utils.demander_save_file_path()
@@ -86,9 +87,9 @@ def menu() -> None:  # pragma: no cover
                     url_video_send_user_list,
                     options,
                 )
-            case 2 | 6:
+            case MenuOption.VIDEOS | MenuOption.VIDEOS_AUDIO_ONLY:
                 youtube_video_links: list[str] = cli_utils.demander_youtube_link_file()
-                if reponse_utilisateur_pour_choix_dans_menu == 2:
+                if choix is MenuOption.VIDEOS:
                     download_sound_only = False
 
                 save_path = cli_utils.demander_save_file_path()
@@ -101,7 +102,7 @@ def menu() -> None:  # pragma: no cover
                     youtube_video_links,
                     options,
                 )
-            case 3 | 7:
+            case MenuOption.PLAYLIST_VIDEO | MenuOption.PLAYLIST_AUDIO_ONLY:
                 url_playlist_send_user: str = cli_utils.ask_youtube_url()
                 try:
                     link_url_playlist_youtube = youtube_downloader.Playlist(url_playlist_send_user)
@@ -109,7 +110,7 @@ def menu() -> None:  # pragma: no cover
                     logging.exception("Error connecting to playlist")
                     logging.error("[ERREUR] : Connexion à la Playlist impossible")
                 else:
-                    if reponse_utilisateur_pour_choix_dans_menu == 3:
+                    if choix is MenuOption.PLAYLIST_VIDEO:
                         download_sound_only = False
 
                     save_path = cli_utils.demander_save_file_path()
@@ -122,7 +123,7 @@ def menu() -> None:  # pragma: no cover
                         link_url_playlist_youtube,
                         options,
                     )  # type: ignore
-            case 4 | 8:
+            case MenuOption.CHANNEL_VIDEOS | MenuOption.CHANNEL_AUDIO_ONLY:
                 url_channel_send_user: str = cli_utils.ask_youtube_url()
                 try:
                     link_url_channel_youtube = youtube_downloader.Channel(url_channel_send_user)
@@ -130,7 +131,7 @@ def menu() -> None:  # pragma: no cover
                     logging.exception("Error connecting to channel")
                     logging.error("[ERREUR] : Connexion à la chaîne Youtube impossible")
                 else:
-                    if reponse_utilisateur_pour_choix_dans_menu == 4:
+                    if choix is MenuOption.CHANNEL_VIDEOS:
                         download_sound_only = False
 
                     save_path = cli_utils.demander_save_file_path()

@@ -57,7 +57,7 @@ def test_afficher_menu_acceuil_count(monkeypatch):
     printed = []
     monkeypatch.setattr(builtins, "print", lambda *a, **k: printed.append(a))
     count = cli_utils.afficher_menu_acceuil()
-    assert count == len(constants.CHOICE_MENU_ACCUEIL)
+    assert count == len(constants.MenuOption)
     assert any("1 -" in " ".join(map(str, args)) for args in printed)
 
 
