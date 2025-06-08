@@ -6,7 +6,6 @@ import argparse
 import logging
 from pathlib import Path
 from pytube import Playlist, Channel
-import os
 
 
 from pytube.exceptions import PytubeError
@@ -15,6 +14,7 @@ from .downloader import YoutubeDownloader
 from .exceptions import PlaylistConnectionError, ChannelConnectionError
 from .config import DownloadOptions
 from .constants import MenuOption
+from .cli import CLI
 
 logger = logging.getLogger(__name__)
 
@@ -79,114 +79,40 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def create_download_options(audio_only: bool, output_dir: Path | None = None) -> DownloadOptions:
-    """Build a :class:`DownloadOptions` instance.
-
-    Args:
-        audio_only: Whether to download only audio streams.
-        output_dir: Directory where files will be saved. If ``None`` the user is
-            prompted for a location.
-
-    Returns:
-        A fully configured :class:`DownloadOptions` object.
-    """
-    if output_dir is not None:
-        save_path = output_dir.expanduser().resolve()
-    else:
-        save_path = cli_utils.ask_save_file_path()
-    return DownloadOptions(
-        save_path=save_path,
-        download_sound_only=audio_only,
-        choice_callback=cli_utils.ask_resolution_or_bitrate,
-    )
+    """Build and return a :class:`DownloadOptions` instance."""
+    cli = CLI()
+    return cli.create_download_options(audio_only, output_dir)
 
 
 def handle_quit_option() -> None:
     """Display the exit banner."""
-    logger.info("")
-    logger.info("")
-    logger.info("******************************************************")
-    logger.info("*                                                    *")
-    logger.info("*                    Fin du programme                *")
-    logger.info("*                                                    *")
-    logger.info("******************************************************")
+    CLI().handle_quit_option()
 
 
 def handle_video_option(yd: YoutubeDownloader, audio_only: bool) -> None:
     """Download a single video or its audio track."""
-    url = cli_utils.ask_youtube_url()
-    options = create_download_options(audio_only)
-    yd.download_multiple_videos([url], options)
+    CLI(yd).handle_video_option(audio_only)
 
 
 def handle_videos_option(yd: YoutubeDownloader, audio_only: bool) -> None:
     """Download multiple videos or their audio tracks from a file."""
-    urls = cli_utils.ask_youtube_link_file()
-    options = create_download_options(audio_only)
-    yd.download_multiple_videos(urls, options)
+    CLI(yd).handle_videos_option(audio_only)
 
 
 def handle_playlist_option(yd: YoutubeDownloader, audio_only: bool) -> None:
     """Download an entire playlist."""
-    url = cli_utils.ask_youtube_url()
-    try:
-        playlist = Playlist(url)
-    except (PytubeError, KeyError, ValueError) as e:
-        logger.exception("Error connecting to playlist")
-        raise PlaylistConnectionError("Connexion à la Playlist impossible") from e
-    except Exception:
-        logger.exception("Unexpected error while connecting to playlist")
-        raise
-    options = create_download_options(audio_only)
-    yd.download_multiple_videos(playlist, options)  # type: ignore
+    CLI(yd).handle_playlist_option(audio_only)
 
 
 def handle_channel_option(yd: YoutubeDownloader, audio_only: bool) -> None:
     """Download all videos from a channel."""
-    url = cli_utils.ask_youtube_url()
-    try:
-        channel = Channel(url)
-    except (PytubeError, KeyError, ValueError) as e:
-        logger.exception("Error connecting to channel")
-        raise ChannelConnectionError("Connexion à la chaîne Youtube impossible") from e
-    except Exception:
-        logger.exception("Unexpected error while connecting to channel")
-        raise
-    options = create_download_options(audio_only)
-    yd.download_multiple_videos(channel, options)  # type: ignore
+    CLI(yd).handle_channel_option(audio_only)
 
 
 def menu() -> None:  # pragma: no cover
     """Interactively ask the user what to download and start the process."""
 
-    # --------------------------------------------------------------------------
-    # ------------------------------- PROGRAMME PRINCIPAL ----------------------
-    # --------------------------------------------------------------------------
-    yd = YoutubeDownloader()
-
-    while True:
-        choix_max_menu_accueil = cli_utils.display_main_menu()
-        choix = MenuOption(cli_utils.ask_numeric_value(1, choix_max_menu_accueil))
-
-        match choix:
-            case MenuOption.QUIT:
-                handle_quit_option()
-                break
-            case MenuOption.VIDEO:
-                handle_video_option(yd, False)
-            case MenuOption.VIDEO_AUDIO_ONLY:
-                handle_video_option(yd, True)
-            case MenuOption.VIDEOS:
-                handle_videos_option(yd, False)
-            case MenuOption.VIDEOS_AUDIO_ONLY:
-                handle_videos_option(yd, True)
-            case MenuOption.PLAYLIST_VIDEO:
-                handle_playlist_option(yd, False)
-            case MenuOption.PLAYLIST_AUDIO_ONLY:
-                handle_playlist_option(yd, True)
-            case MenuOption.CHANNEL_VIDEOS:
-                handle_channel_option(yd, False)
-            case MenuOption.CHANNEL_AUDIO_ONLY:
-                handle_channel_option(yd, True)
+    CLI().menu()
 
     
 
@@ -205,14 +131,16 @@ def main(
     setup_logging(args.log_level)
     command = args.command
 
+    cli = CLI(downloader)
+
     if command is None or command == "menu":
         menu()
         return
 
-    yd = downloader or YoutubeDownloader()
+    yd = cli.downloader
 
     if command == "video":
-        options = create_download_options(args.audio, args.output_dir)
+        options = cli.create_download_options(args.audio, args.output_dir)
         yd.download_multiple_videos(
             args.urls,
             options,
@@ -225,7 +153,7 @@ def main(
         except Exception:
             logger.exception("Unexpected error while connecting to playlist")
             raise
-        options = create_download_options(args.audio, args.output_dir)
+        options = cli.create_download_options(args.audio, args.output_dir)
         yd.download_multiple_videos(
             playlist,
             options,
@@ -238,7 +166,7 @@ def main(
         except Exception:
             logger.exception("Unexpected error while connecting to channel")
             raise
-        options = create_download_options(args.audio, args.output_dir)
+        options = cli.create_download_options(args.audio, args.output_dir)
         yd.download_multiple_videos(
             channel,
             options,
