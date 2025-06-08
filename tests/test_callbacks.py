@@ -94,7 +94,7 @@ def test_download_multiple_videos_custom_callbacks(monkeypatch, tmp_path: Path) 
         created['yt'] = yt
         return yt
 
-    monkeypatch.setattr(YoutubeDownloader, "streams_video", lambda self, dso, yt: yt.streams)
+    monkeypatch.setattr(YoutubeDownloader, "get_video_streams", lambda self, dso, yt: yt.streams)
     monkeypatch.setattr("builtins.input", lambda *args, **kwargs: "")
     monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: None)
     monkeypatch.setattr(cli_utils, "pause_return_to_menu", lambda *a, **k: None)
@@ -151,7 +151,7 @@ def test_download_multiple_videos_no_streams(monkeypatch, tmp_path: Path) -> Non
     def fake_constructor(url: str) -> DummyYT:
         return DummyYT(url)
 
-    monkeypatch.setattr(YoutubeDownloader, "streams_video", lambda self, dso, yt: [])
+    monkeypatch.setattr(YoutubeDownloader, "get_video_streams", lambda self, dso, yt: [])
     monkeypatch.setattr("builtins.input", lambda *args, **kwargs: "")
     monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: None)
     monkeypatch.setattr(cli_utils, "pause_return_to_menu", lambda *a, **k: None)
@@ -237,7 +237,7 @@ def test_download_multiple_videos_download_error(monkeypatch, tmp_path: Path) ->
     def fake_constructor(url: str) -> DummyYT:
         return FailYT(url)
 
-    monkeypatch.setattr(YoutubeDownloader, "streams_video", lambda self, dso, yt: yt.streams)
+    monkeypatch.setattr(YoutubeDownloader, "get_video_streams", lambda self, dso, yt: yt.streams)
     monkeypatch.setattr("builtins.input", lambda *args, **kwargs: "")
     monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: None)
     monkeypatch.setattr(cli_utils, "pause_return_to_menu", lambda *a, **k: None)

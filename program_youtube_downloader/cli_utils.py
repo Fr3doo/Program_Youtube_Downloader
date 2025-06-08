@@ -22,12 +22,12 @@ def print_separator() -> None:
     print("*************************************************************")
 
 
-def ask_numeric_value(valeur_min: int, valeur_max: int, max_attempts: int = 3) -> int:
-    """Prompt the user to enter a number between ``valeur_min`` and ``valeur_max``.
+def ask_numeric_value(min_value: int, max_value: int, max_attempts: int = 3) -> int:
+    """Prompt the user to enter a number between ``min_value`` and ``max_value``.
 
     Args:
-        valeur_min: Minimum acceptable value.
-        valeur_max: Maximum acceptable value.
+        min_value: Minimum acceptable value.
+        max_value: Maximum acceptable value.
         max_attempts: Number of invalid attempts allowed before a
             :class:`ValidationError` is raised.
 
@@ -41,7 +41,7 @@ def ask_numeric_value(valeur_min: int, valeur_max: int, max_attempts: int = 3) -
     attempts = 0
     while True:
         v_str = input(
-            f"Donnez une valeur entre {valeur_min} et {valeur_max} : \n --> "
+            f"Donnez une valeur entre {min_value} et {max_value} : \n --> "
         )
         try:
             v_int = int(v_str)
@@ -52,9 +52,9 @@ def ask_numeric_value(valeur_min: int, valeur_max: int, max_attempts: int = 3) -
             if attempts >= max_attempts:
                 raise ValidationError("Nombre de tentatives dépassé")
             continue
-        if not (valeur_min <= v_int <= valeur_max):
+        if not (min_value <= v_int <= max_value):
             logger.warning(
-                f"FAIL : Vous devez rentrer un nombre (entre {valeur_min} et {valeur_max} )."
+                f"FAIL : Vous devez rentrer un nombre (entre {min_value} et {max_value} )."
             )
             logger.info("")
             attempts += 1
@@ -76,14 +76,14 @@ def display_main_menu() -> int:
     print()
     i = 0
     for items in CHOICE_MENU_ACCUEIL:
-        choix_menu = items
+        menu_choice = items
         i += 1
-        print(f"    {i} - {choix_menu}                              ")
+        print(f"    {i} - {menu_choice}                              ")
     print("                                                           ")
     print_separator()
-    valeur_choix_maximale = i
+    max_choice_value = i
 
-    return valeur_choix_maximale
+    return max_choice_value
 
 
 def ask_save_file_path(max_attempts: int = 3) -> Path:
@@ -189,43 +189,43 @@ def ask_youtube_link_file(max_attempts: int = 3) -> list[str]:
 
     attempts = 0
     while True:
-        link_url_video_youtube_final: list[str] = []
+        valid_urls: list[str] = []
         print()
         print()
         print_separator()
         print("*             Fichier contenant les urls Youtube            *")
         print_separator()
-        fichier_user = input("Indiquez le nom du fichier : \n --> ")
+        user_file = input("Indiquez le nom du fichier : \n --> ")
         print()
         try:
-            file_path = Path(fichier_user)
-            with file_path.open("r", encoding="utf-8") as fichier:
-                lignes = fichier.readlines()
-                compteur_ligne = 0
-                number_erreur = 0
-                number_links_file = len(lignes)
+            file_path = Path(user_file)
+            with file_path.open("r", encoding="utf-8") as f:
+                lines = f.readlines()
+                line_counter = 0
+                error_count = 0
+                total_links = len(lines)
 
-                if not number_links_file:
+                if not total_links:
                     logger.error("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
                     attempts += 1
                     if attempts >= max_attempts:
                         raise ValidationError("Aucune URL valide")
                     continue
 
-                for i in range(0, len(lignes)):
-                    url_video = lignes[i].strip()
-                    compteur_ligne += 1
+                for i in range(0, len(lines)):
+                    video_url = lines[i].strip()
+                    line_counter += 1
 
-                    if validate_youtube_url(url_video):
-                        link_url_video_youtube_final.append(url_video)
+                    if validate_youtube_url(video_url):
+                        valid_urls.append(video_url)
                     else:
                         logger.error("[ERREUR] : ")
                         logger.error("le prefixe attendu est : https://www.youtube.com/")
-                        logger.error(f"  le lien sur la ligne n° {compteur_ligne} ne sera pas télécharger")
+                        logger.error(f"  le lien sur la ligne n° {line_counter} ne sera pas télécharger")
                         logger.error("")
-                        number_erreur += 1
+                        error_count += 1
 
-                if number_erreur == number_links_file:
+                if error_count == total_links:
                     logger.error("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
                     attempts += 1
                     if attempts >= max_attempts:
@@ -239,7 +239,7 @@ def ask_youtube_link_file(max_attempts: int = 3) -> list[str]:
                 raise ValidationError("Fichier inaccessible")
             continue
 
-        return link_url_video_youtube_final
+        return valid_urls
 
 
 def ask_resolution_or_bitrate(
@@ -258,7 +258,7 @@ def ask_resolution_or_bitrate(
         The index (1-based) of the chosen stream in ``list_available_streams``.
     """
     i = 0
-    valeur_choix_maximale = i
+    max_choice_value = i
 
     if download_sound_only:
         print()
@@ -267,13 +267,13 @@ def ask_resolution_or_bitrate(
         print("*             Choississez la qualité audio                  *")
         print_separator()
         for stream in list_available_streams:
-            choix_menu = stream.abr  # Pour la qualité de l'audio
+            menu_choice = stream.abr  # Audio quality
             i += 1
-            print(f"      {i} - {choix_menu} ")
-            valeur_choix_maximale = i
+            print(f"      {i} - {menu_choice} ")
+            max_choice_value = i
 
         print_separator()
-        v_int = ask_numeric_value(1, valeur_choix_maximale)
+        v_int = ask_numeric_value(1, max_choice_value)
         return v_int
 
     print()
@@ -282,13 +282,13 @@ def ask_resolution_or_bitrate(
     print("*             Choississez la résolution vidéo               *")
     print_separator()
     for stream in list_available_streams:
-        choix_menu = stream.resolution  # pour la qualite de la vidéo
+        menu_choice = stream.resolution  # Video quality
         i += 1
-        print(f"      {i} - {choix_menu} ")
-        valeur_choix_maximale = i
+        print(f"      {i} - {menu_choice} ")
+        max_choice_value = i
 
     print_separator()
-    v_int = ask_numeric_value(1, valeur_choix_maximale)
+    v_int = ask_numeric_value(1, max_choice_value)
     return v_int
 
 

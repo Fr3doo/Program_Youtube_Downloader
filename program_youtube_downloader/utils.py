@@ -17,20 +17,20 @@ def clear_screen() -> None:
         subprocess.run(["cmd", "/c", "cls"], check=True)
 
 
-def program_break_time(memorization_time: int, affichage_text: str) -> None:
+def program_break_time(memorization_time: int, message: str) -> None:
     """Display a short countdown.
 
     Args:
         memorization_time: Duration of the countdown in seconds.
-        affichage_text: Message displayed before the countdown number.
+        message: Message displayed before the countdown number.
     """
-    duree_restante_avant_lancement = memorization_time
+    remaining_seconds = memorization_time
     print(
-        f"{affichage_text} {memorization_time} secondes ",
+        f"{message} {memorization_time} secondes ",
         end="",
         flush=True,
     )
-    while duree_restante_avant_lancement > 0:
+    while remaining_seconds > 0:
         time.sleep(1)
-        print(f"{duree_restante_avant_lancement} ", end="", flush=True)
-        duree_restante_avant_lancement -= 1
+        print(f"{remaining_seconds} ", end="", flush=True)
+        remaining_seconds -= 1

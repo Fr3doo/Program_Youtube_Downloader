@@ -82,7 +82,7 @@ class YoutubeDownloader:
         self,
         stream: Any,
         save_path: Path,
-        url_video: str,
+        video_url: str,
         download_sound_only: bool,
     ) -> None:
         """Download ``stream`` to ``save_path`` with retries.
@@ -109,7 +109,7 @@ class YoutubeDownloader:
                 logger.info("")
                 if attempt == 2:
                     raise DownloadError(
-                        f"Echec du téléchargement pour {url_video}"
+                        f"Echec du téléchargement pour {video_url}"
                     ) from e
             except Exception as e:  # pragma: no cover - defensive
                 logger.exception("Unexpected error during download")
@@ -118,13 +118,13 @@ class YoutubeDownloader:
                 logger.info("")
                 if attempt == 2:
                     raise DownloadError(
-                        f"Echec du téléchargement pour {url_video}"
+                        f"Echec du téléchargement pour {video_url}"
                     ) from e
 
         if out_file and download_sound_only:
             self.conversion_mp4_in_mp3(out_file)
 
-    def streams_video(
+    def get_video_streams(
         self, download_sound_only: bool, youtube_video: YouTubeVideo
     ) -> Any:
         """Return the available streams for ``youtube_video``.
@@ -186,13 +186,13 @@ class YoutubeDownloader:
 
     def download_multiple_videos(
         self,
-        url_youtube_video_links: Iterable[str],
+        youtube_video_urls: Iterable[str],
         options: DownloadOptions,
     ) -> None:
         """Download one or more videos or audio tracks.
 
         Args:
-            url_youtube_video_links: Iterable of YouTube URLs to download.
+            youtube_video_urls: Iterable of YouTube URLs to download.
             options: Download behaviour configuration.
 
         Returns:
@@ -208,22 +208,22 @@ class YoutubeDownloader:
         choice_once = True
         choice_user = 1
 
-        url_list = list(url_youtube_video_links)
+        url_list = list(youtube_video_urls)
         if not url_list:
             logger.error("[ERREUR] : il y a aucune vidéo à télécharger")
             return None
 
-        for url_video in url_list:
-            youtube_video = self._create_youtube(url_video, progress_handler)
+        for video_url in url_list:
+            youtube_video = self._create_youtube(video_url, progress_handler)
             if youtube_video is None:
                 continue
 
             try:
-                streams = self.streams_video(download_sound_only, youtube_video)
+                streams = self.get_video_streams(download_sound_only, youtube_video)
             except StreamAccessError as e:
                 logger.error(
                     "[ERREUR] : Les flux pour la vidéo (%s) n'ont pas pu être récupérés. %s",
-                    url_video,
+                    video_url,
                     e,
                 )
                 continue
@@ -231,7 +231,7 @@ class YoutubeDownloader:
             if not streams:
                 logger.error(
                     "[ERREUR] : Aucun flux disponible pour la vidéo (%s).",
-                    url_video,
+                    video_url,
                 )
                 continue
 
@@ -240,7 +240,7 @@ class YoutubeDownloader:
             except KeyError as e:
                 logger.error(
                     "[ERREUR] : Impossible d'accéder au titre de la vidéo %s. Détail : %s",
-                    url_video,
+                    video_url,
                     e,
                 )
                 continue
@@ -280,7 +280,7 @@ class YoutubeDownloader:
             self._download_stream(
                 stream,
                 save_path,
-                url_video,
+                video_url,
                 download_sound_only,
             )
 
