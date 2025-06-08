@@ -189,37 +189,6 @@ def menu() -> None:  # pragma: no cover
                 handle_channel_option(yd, True)
 
     
-# import sys
-# from pytubefix import YouTube
-
-# youtube_episode_id = '9LP71ypf2qg'
-
-# # list_of_clients = [
-# #     'WEB', 'WEB_EMBED', 'WEB_MUSIC', 'WEB_CREATOR', 'WEB_SAFARI',
-# #     'ANDROID', 'ANDROID_MUSIC', 'ANDROID_CREATOR', 'ANDROID_VR',
-# #     'ANDROID_PRODUCER', 'ANDROID_TESTSUITE', 'IOS', 'IOS_MUSIC',
-# #     'IOS_CREATOR', 'MWEB', 'TV', 'TV_EMBED', 'MEDIA_CONNECT'
-# # ]
-
-# list_of_clients = ['WEB']
-
-# # Liste des itags précis à tester
-# list_of_itag = [18, 137, 248, 399, 136, 247, 398, 135, 244, 397, 134, 
-#                 243, 396, 133, 242, 395, 160, 278, 394, 140, 249, 250, 251]
-
-# for client in list_of_clients:
-#     for itag in list_of_itag:
-#         try:
-#             yt = YouTube(f'https://www.youtube.com/watch?v={youtube_episode_id}', client=client)
-#             stream = yt.streams.get_by_itag(itag)
-#             if stream:
-#                 stream.download(filename=f'{youtube_episode_id}___{client}___itag{itag}.m4a')
-#                 print(f"Succès avec le client {client} et l'itag {itag}\n\n\n\n")
-#             else:
-#                 print(f"Aucun flux trouvé pour le client {client} et l'itag {itag}\n\n\n\n")
-#         except Exception as e:
-#             error_type, _, error_traceback = sys.exc_info()
-#             print(f"Échec avec le client : {client}, itag : {itag} avec l'erreur : {e}\n\n\n\n")
 
 def main(
     argv: list[str] | None = None,
