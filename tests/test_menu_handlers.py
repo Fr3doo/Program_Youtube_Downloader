@@ -1,7 +1,7 @@
 import logging
 import pytest
 
-import program_youtube_downloader.main as main_module
+import program_youtube_downloader.cli as cli_module
 from program_youtube_downloader.config import DownloadOptions
 
 
@@ -15,43 +15,46 @@ class DummyDownloader:
 
 def test_handle_video_option(monkeypatch, tmp_path):
     dd = DummyDownloader()
-    monkeypatch.setattr(main_module.cli_utils, "ask_youtube_url", lambda: "https://youtu.be/x")
-    monkeypatch.setattr(main_module, "create_download_options", lambda ao: DownloadOptions(save_path=tmp_path, download_sound_only=ao))
-    main_module.handle_video_option(dd, True)
+    monkeypatch.setattr(cli_module.cli_utils, "ask_youtube_url", lambda: "https://youtu.be/x")
+    monkeypatch.setattr(cli_module.CLI, "create_download_options", lambda self, ao: DownloadOptions(save_path=tmp_path, download_sound_only=ao))
+    cli = cli_module.CLI(dd)
+    cli.handle_video_option(True)
     assert dd.called[0] == ["https://youtu.be/x"]
     assert dd.called[1].download_sound_only is True
 
 
 def test_handle_videos_option(monkeypatch, tmp_path):
     dd = DummyDownloader()
-    monkeypatch.setattr(main_module.cli_utils, "ask_youtube_link_file", lambda: ["https://youtu.be/a", "https://youtu.be/b"])
-    monkeypatch.setattr(main_module, "create_download_options", lambda ao: DownloadOptions(save_path=tmp_path, download_sound_only=ao))
-    main_module.handle_videos_option(dd, False)
+    monkeypatch.setattr(cli_module.cli_utils, "ask_youtube_link_file", lambda: ["https://youtu.be/a", "https://youtu.be/b"])
+    monkeypatch.setattr(cli_module.CLI, "create_download_options", lambda self, ao: DownloadOptions(save_path=tmp_path, download_sound_only=ao))
+    cli = cli_module.CLI(dd)
+    cli.handle_videos_option(False)
     assert dd.called[0] == ["https://youtu.be/a", "https://youtu.be/b"]
     assert dd.called[1].download_sound_only is False
 
 
 def test_handle_playlist_option(monkeypatch, tmp_path):
     dd = DummyDownloader()
-    monkeypatch.setattr(main_module.cli_utils, "ask_youtube_url", lambda: "https://youtube.com/playlist")
-    monkeypatch.setattr(main_module, "Playlist", lambda url: ["v1"])
-    monkeypatch.setattr(main_module, "create_download_options", lambda ao: DownloadOptions(save_path=tmp_path, download_sound_only=ao))
-    main_module.handle_playlist_option(dd, True)
+    monkeypatch.setattr(cli_module.cli_utils, "ask_youtube_url", lambda: "https://youtube.com/playlist")
+    monkeypatch.setattr(cli_module, "Playlist", lambda url: ["v1"])
+    monkeypatch.setattr(cli_module.CLI, "create_download_options", lambda self, ao: DownloadOptions(save_path=tmp_path, download_sound_only=ao))
+    cli = cli_module.CLI(dd)
+    cli.handle_playlist_option(True)
     assert dd.called[0] == ["v1"]
     assert dd.called[1].download_sound_only is True
 
 
 def test_handle_playlist_option_error(monkeypatch):
     dd = DummyDownloader()
-    monkeypatch.setattr(main_module.cli_utils, "ask_youtube_url", lambda: "https://youtube.com/playlist")
-    monkeypatch.setattr(main_module, "Playlist", lambda url: (_ for _ in ()).throw(ValueError()))
-    with pytest.raises(main_module.PlaylistConnectionError):
-        main_module.handle_playlist_option(dd, False)
+    monkeypatch.setattr(cli_module.cli_utils, "ask_youtube_url", lambda: "https://youtube.com/playlist")
+    monkeypatch.setattr(cli_module, "Playlist", lambda url: (_ for _ in ()).throw(ValueError()))
+    with pytest.raises(cli_module.PlaylistConnectionError):
+        cli_module.CLI(dd).handle_playlist_option(False)
 
 
 def test_handle_channel_option_error(monkeypatch):
     dd = DummyDownloader()
-    monkeypatch.setattr(main_module.cli_utils, "ask_youtube_url", lambda: "https://youtube.com/channel")
-    monkeypatch.setattr(main_module, "Channel", lambda url: (_ for _ in ()).throw(ValueError()))
-    with pytest.raises(main_module.ChannelConnectionError):
-        main_module.handle_channel_option(dd, False)
+    monkeypatch.setattr(cli_module.cli_utils, "ask_youtube_url", lambda: "https://youtube.com/channel")
+    monkeypatch.setattr(cli_module, "Channel", lambda url: (_ for _ in ()).throw(ValueError()))
+    with pytest.raises(cli_module.ChannelConnectionError):
+        cli_module.CLI(dd).handle_channel_option(False)
