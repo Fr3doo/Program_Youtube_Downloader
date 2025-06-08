@@ -7,7 +7,7 @@ Chaque agent regroupe des fonctions et responsabilités associées.
 ## Agent CLI
 **Rôle** : Fournir l'interface en ligne de commande et dispatcher les choix de l'utilisateur.
 
-**Point d'entrée** : `main()` dans [main.py](main.py) lignes 128-150.
+**Point d'entrée** : `main()` dans [main.py](main.py).
 
 **Entrées** : arguments de la ligne de commande ou sélections depuis le menu.
 
@@ -25,7 +25,7 @@ main()
 ## Agent de téléchargement
 **Rôle** : Récupérer des vidéos ou des pistes audio depuis YouTube et gérer les flux de téléchargement.**
 
-**Point d'entrée** : `download_multiple_videos()` dans [downloader.py](downloader.py) lignes 62-153.
+**Point d'entrée** : `download_multiple_videos()` dans [downloader.py](downloader.py).
 
 **Entrées** : liste d'URLs YouTube (ou Playlist/Chaîne), booléen `download_sound_only`.
 
@@ -48,7 +48,7 @@ yd.download_multiple_videos(urls, False)
 ## Agent de conversion
 **Rôle** : Convertir un fichier mp4 téléchargé en mp3.**
 
-**Point d'entrée** : `conversion_mp4_in_mp3()` dans [downloader.py](downloader.py) lignes 57-67.
+**Point d'entrée** : `conversion_mp4_in_mp3()` dans [downloader.py](downloader.py).
 
 **Entrées** : chemin vers le fichier mp4 téléchargé.
 
@@ -65,8 +65,8 @@ yd.conversion_mp4_in_mp3("video.mp4")
 **Rôle** : Afficher les informations d'avancement pendant les téléchargements.**
 
 **Points d'entrée** :
-- `on_download_progress()` dans [program_youtube_downloader/progress.py](program_youtube_downloader/progress.py) lignes 8-13.
-- `progress_bar()` dans [program_youtube_downloader/progress.py](program_youtube_downloader/progress.py) lignes 16-37.
+- `on_download_progress()` dans [program_youtube_downloader/progress.py](program_youtube_downloader/progress.py).
+- `progress_bar()` dans [program_youtube_downloader/progress.py](program_youtube_downloader/progress.py).
 
 **Entrées** : rappels de flux provenant de `pytubefix`, pourcentages d'avancement.
 
@@ -81,10 +81,10 @@ Utilisation :
 **Rôle** : Valider les entrées utilisateur et les nettoyer.**
 
 **Points d'entrée** :
-- `ask_numeric_value()` dans [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py) lignes 22-39.
-- `ask_youtube_url()` dans [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py) lignes 96-113.
-- `ask_youtube_link_file()` dans [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py) lignes 115-159.
-- `validate_youtube_url()` dans [program_youtube_downloader/validators.py](program_youtube_downloader/validators.py) lignes 4-18.
+- `ask_numeric_value()` dans [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py).
+- `ask_youtube_url()` dans [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py).
+- `ask_youtube_link_file()` dans [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py).
+- `validate_youtube_url()` dans [program_youtube_downloader/validators.py](program_youtube_downloader/validators.py).
 
 **Entrées** : valeurs saisies par l'utilisateur.
 
