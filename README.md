@@ -128,6 +128,17 @@ options = DownloadOptions(download_sound_only=True)
 yd.download_multiple_videos(["https://youtu.be/dQw4w9WgXcQ"], options)
 ```
 
+Vous pouvez fournir votre propre gestionnaire de progression en implémentant
+`ProgressHandler` et en le passant au constructeur ou via
+`DownloadOptions` :
+
+```python
+from program_youtube_downloader.progress import VerboseProgressHandler
+
+handler = VerboseProgressHandler()
+yd = YoutubeDownloader(progress_handler=handler)
+```
+
 Pour une description détaillée des agents internes et de leurs responsabilités,
 consultez [AGENTS.md](AGENTS.md) à la racine du dépôt.
 

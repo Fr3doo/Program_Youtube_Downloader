@@ -34,6 +34,7 @@ Fonctions d'interaction utilisateur :
 - `ProgressOptions` : configuration de l'affichage de la barre.
 - `progress_bar(progress, options=None)` : affiche une barre de progression dans le terminal.
 - `ProgressBarHandler` : implémente `on_progress` pour `pytubefix`.
+- `VerboseProgressHandler` : affiche uniquement le pourcentage sans barre.
 
 ## `config.py`
 - `DownloadOptions` : dataclass regroupant les options de téléchargement (dossier, audio seul, callback de choix, gestionnaire de progression).

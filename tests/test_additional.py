@@ -14,6 +14,7 @@ from program_youtube_downloader.progress import (
     progress_bar,
     ProgressBarHandler,
     ProgressOptions,
+    VerboseProgressHandler,
 )
 from program_youtube_downloader import constants
 from program_youtube_downloader.types import YouTubeVideo
@@ -123,6 +124,15 @@ def test_progressbarhandler_on_progress(capsys):
     handler.on_progress(stream, b"", bytes_remaining=500)
     out = capsys.readouterr().out
     assert "50.00%" in out
+
+
+def test_verboseprogresshandler_on_progress(capsys):
+    """Verbose handler should print only the percentage."""
+    handler = VerboseProgressHandler()
+    stream = DummyStream()
+    handler.on_progress(stream, b"", bytes_remaining=750)
+    out = capsys.readouterr().out.strip()
+    assert out.endswith("25.00%")
 
 
 # ---------------------------------------------------------------------------

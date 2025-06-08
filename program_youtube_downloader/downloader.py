@@ -25,8 +25,9 @@ class YoutubeDownloader:
         """Create the downloader.
 
         Args:
-            progress_handler: Handler receiving progress events from
-                ``pytubefix``. If ``None`` a :class:`ProgressBarHandler` is used.
+            progress_handler: Any object implementing
+                :class:`~program_youtube_downloader.progress.ProgressHandler`.
+                If ``None`` a :class:`ProgressBarHandler` is used.
             youtube_cls: Factory used to create objects following the
                 :class:`~program_youtube_downloader.types.YouTubeVideo` protocol.
                 Tests may provide a mock implementation.

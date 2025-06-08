@@ -92,3 +92,14 @@ class ProgressBarHandler:
         bytes_downloaded = stream.filesize - bytes_remaining
         progress = (bytes_downloaded / total_bytes_download) * 100
         progress_bar(progress, self.options)
+
+
+class VerboseProgressHandler:
+    """Progress handler printing only the percentage."""
+
+    def on_progress(self, stream, chunk, bytes_remaining) -> None:
+        """Display the download percentage without a bar."""
+        total = stream.filesize
+        downloaded = total - bytes_remaining
+        percent = (downloaded / total) * 100
+        print(f"{percent:.2f}%")
