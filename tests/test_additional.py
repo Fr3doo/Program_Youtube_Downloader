@@ -3,6 +3,7 @@ import builtins
 from pathlib import Path
 from types import SimpleNamespace
 from urllib.error import HTTPError
+import logging
 
 import pytest
 
@@ -257,7 +258,7 @@ def test_download_multiple_videos_default_choice(monkeypatch, tmp_path):
     assert (tmp_path / "sample.mp4").exists()
 
 
-def test_download_multiple_videos_download_error(monkeypatch, tmp_path):
+def test_download_multiple_videos_download_error(monkeypatch, tmp_path, caplog):
     class FailingStream(DummyStream):
         def download(self, output_path: str) -> str:
             raise OSError("boom")
@@ -276,5 +277,7 @@ def test_download_multiple_videos_download_error(monkeypatch, tmp_path):
 
     yd = YoutubeDownloader(youtube_cls=lambda u: FailYT(u))
     options = DownloadOptions(save_path=tmp_path)
-    with pytest.raises(DownloadError):
+    with caplog.at_level(logging.ERROR):
         yd.download_multiple_videos(["https://youtu.be/fail"], options)
+    assert "https://youtu.be/fail" in caplog.text
+    assert not any(tmp_path.iterdir())
