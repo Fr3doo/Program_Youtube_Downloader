@@ -247,3 +247,36 @@ def test_download_multiple_videos_download_error(monkeypatch, tmp_path: Path) ->
 
     with pytest.raises(DownloadError):
         yd.download_multiple_videos(["https://youtu.be/fail"], options)
+
+
+def test_download_multiple_videos_custom_progress(monkeypatch, tmp_path: Path) -> None:
+    """A custom progress handler can be injected via DownloadOptions."""
+
+    created = {}
+
+    def fake_constructor(url: str) -> DummyYT:
+        yt = DummyYT(url)
+        created["yt"] = yt
+        return yt
+
+    class SimpleHandler:
+        def __init__(self) -> None:
+            self.called = False
+
+        def on_progress(self, stream, chunk, bytes_remaining) -> None:
+            self.called = True
+
+    handler = SimpleHandler()
+
+    monkeypatch.setattr(YoutubeDownloader, "get_video_streams", lambda self, dso, yt: yt.streams)
+    monkeypatch.setattr("builtins.input", lambda *a, **k: "")
+    monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: None)
+    monkeypatch.setattr(cli_utils, "pause_return_to_menu", lambda *a, **k: None)
+
+    yd = YoutubeDownloader(youtube_cls=fake_constructor)
+    options = DownloadOptions(save_path=tmp_path, progress_handler=handler)
+
+    yd.download_multiple_videos(["https://youtu.be/x"], options)
+
+    assert (tmp_path / "sample.mp4").exists()
+    assert created["yt"].progress.__self__ is handler
