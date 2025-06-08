@@ -8,6 +8,11 @@ Le dépôt contient un outil en ligne de commande permettant de télécharger de
 
 Le README précise les fichiers clés et leur rôle : `main.py` pour la boucle de menu, `downloader.py` pour les téléchargements et conversions, `cli_utils.py` pour les interactions utilisateur, `constants.py` pour les messages du menu, `progress.py` pour la barre de progression, `validators.py` pour vérifier les URL, `config.py` pour l'objet `DownloadOptions`, et `youtube_downloader.py` pour des utilitaires divers.
 
+## Nouveautés
+
+- **Classe `CLI`** : la gestion du menu interactif a été déplacée dans une classe dédiée (`program_youtube_downloader/cli.py`) afin de simplifier les tests et la réutilisation.
+- **Exécution parallèle** : lorsqu'une liste de liens est fournie, les téléchargements peuvent être lancés simultanément pour gagner du temps.
+
 ## Organisation en « agents »
 
 Le fichier `AGENTS.md` décrit chaque *agent* (groupe de responsabilités) en indiquant son point d'entrée principal :

@@ -103,6 +103,11 @@ Image :
 
 ![Menu](assets/menu_options.png)
 
+## Nouveautés
+
+- **Classe `CLI`** : le menu interactif et les sous-commandes sont désormais gérés par une classe dédiée dans `program_youtube_downloader/cli.py` pour faciliter les tests et la réutilisation.
+- **Exécution parallèle** : lors de la récupération de plusieurs liens, les téléchargements peuvent être lancés simultanément pour accélérer le processus.
+
 ## Structure du projet
 
 - `main.py` : point d’entrée du programme contenant la boucle de menu.
