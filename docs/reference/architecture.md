@@ -26,6 +26,8 @@ Le cœur de l’application se trouve dans le package `program_youtube_downloade
 - **`validators.py`** : vérification des URLs YouTube fournies.
 - **`config.py`** : dataclass `DownloadOptions` pour paramétrer les opérations.
 - **`constants.py`** : chaînes affichées dans le menu et URL de base.
+- **`exceptions.py`** : classes d’erreur utilisées lors des validations et téléchargements.
+- **`types.py`** : protocoles employés pour typer les objets YouTube.
 - **`youtube_downloader.py`** : utilitaires généraux (compte à rebours, nettoyage de l’écran).
 
 ## Schéma de fonctionnement
