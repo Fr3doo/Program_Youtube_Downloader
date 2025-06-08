@@ -124,9 +124,19 @@ yd.download_multiple_videos(["https://youtu.be/dQw4w9WgXcQ"], options)
 Pour une description détaillée des agents internes et de leurs responsabilités,
 consultez [AGENTS.md](AGENTS.md).
 Un aperçu complet de la base de code en français est disponible dans
-[docs/overview_fr.md](docs/overview_fr.md).
+[docs/overview-fr.md](docs/overview-fr.md).
 L'historique des versions est disponible dans
 [docs/changelog.md](docs/changelog.md).
+
+## Documentation
+
+- [docs/README.md](docs/README.md)
+- [docs/contributing.md](docs/contributing.md)
+- [docs/changelog.md](docs/changelog.md)
+- [docs/guides/tutorial-download-video.md](docs/guides/tutorial-download-video.md)
+- [docs/reference/api-reference.md](docs/reference/api-reference.md)
+- [docs/reference/architecture.md](docs/reference/architecture.md)
+- [docs/reference/tests-overview.md](docs/reference/tests-overview.md)
 
 Ce projet est destiné à un usage personnel pour faciliter la récupération de contenu YouTube.
 
