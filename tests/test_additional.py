@@ -171,7 +171,7 @@ def test_streams_video_http_error(monkeypatch):
     yt.streams.filter = filter_fail
     yd = YoutubeDownloader()
     with pytest.raises(StreamAccessError):
-        yd.streams_video(False, yt)
+        yd.get_video_streams(False, yt)
 
 
 def test_streams_video_success(monkeypatch):
@@ -192,7 +192,7 @@ def test_streams_video_success(monkeypatch):
     yt.streams = Chain()
     yd = YoutubeDownloader()
     # download_sound_only parameter is ignored but kept for API compatibility
-    assert yd.streams_video(False, yt) is result
+    assert yd.get_video_streams(False, yt) is result
 
 
 def test_conversion_mp4_in_mp3_rename_error(monkeypatch, tmp_path):
@@ -219,7 +219,7 @@ def test_download_multiple_videos_title_keyerror(monkeypatch, tmp_path):
             raise KeyError("missing")
 
     monkeypatch.setattr(
-        YoutubeDownloader, "streams_video", lambda self, dso, yt: yt.streams
+        YoutubeDownloader, "get_video_streams", lambda self, dso, yt: yt.streams
     )
     monkeypatch.setattr(builtins, "input", lambda *a, **k: "")
     monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: None)
@@ -234,7 +234,7 @@ def test_download_multiple_videos_title_keyerror(monkeypatch, tmp_path):
 def test_download_multiple_videos_default_choice(monkeypatch, tmp_path):
     """When no callback is provided, the first stream is used."""
     monkeypatch.setattr(
-        YoutubeDownloader, "streams_video", lambda self, dso, yt: yt.streams
+        YoutubeDownloader, "get_video_streams", lambda self, dso, yt: yt.streams
     )
     monkeypatch.setattr(builtins, "input", lambda *a, **k: "")
     monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: None)
@@ -258,7 +258,7 @@ def test_download_multiple_videos_download_error(monkeypatch, tmp_path):
             self.streams = DummyStreams([FailingStream()])
 
     monkeypatch.setattr(
-        YoutubeDownloader, "streams_video", lambda self, dso, yt: yt.streams
+        YoutubeDownloader, "get_video_streams", lambda self, dso, yt: yt.streams
     )
     monkeypatch.setattr(builtins, "input", lambda *a, **k: "")
     monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: None)
