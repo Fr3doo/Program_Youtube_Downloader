@@ -13,10 +13,13 @@ def test_ask_numeric_value_retries(monkeypatch):
 
 
 def test_ask_youtube_url_normalizes_channel(monkeypatch):
-    inputs = iter(["https://www.youtube.com/@MyChannel"])
+    inputs = iter([
+        "https://www.youtube.com/@MyChannel",
+        "https://www.youtube.com/watch?v=good",
+    ])
     monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
     url = cli_utils.ask_youtube_url()
-    assert url == "https://www.youtube.com/c/MyChannel"
+    assert url == "https://www.youtube.com/watch?v=good"
 
 
 def test_ask_youtube_url_invalid_prefix(monkeypatch):

@@ -1,8 +1,20 @@
-from urllib.parse import urlparse
+import re
+
+
+_VIDEO_RE = re.compile(
+    r"^https?://(?:www\.)?"
+    r"(?:(?:[\w-]+\.)?youtube\.com/watch\?(?:[^\s]*\bv=[\w-]+)(?:[^\s]*\blist=[\w-]+)?"
+    r"|youtu\.be/[\w-]+(?:\?list=[\w-]+)?)",
+    re.IGNORECASE,
+)
 
 
 def validate_youtube_url(url: str) -> bool:
-    """Check whether ``url`` is a valid YouTube address.
+    """Check whether ``url`` points to a YouTube video.
+
+    The link must use HTTP(S) and either contain a ``v=`` parameter or use the
+    short ``youtu.be/<id>`` form. A ``list`` query parameter is also accepted
+    when present.
 
     Args:
         url: URL provided by the user.
@@ -12,15 +24,6 @@ def validate_youtube_url(url: str) -> bool:
     """
     if not url:
         return False
-    url = url.strip()
 
-    parsed = urlparse(url)
-    if parsed.scheme not in {"http", "https"}:
-        return False
-    host = parsed.netloc.lower()
-    if host == "youtu.be":
-        return True
-    if host.endswith("youtube.com"):
-        return True
-    return False
+    return bool(_VIDEO_RE.match(url.strip()))
 
