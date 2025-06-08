@@ -7,19 +7,19 @@ Bienvenue dans la documentation technique du projet. Ce sommaire vous guide vers
 ## 📌 Sommaire
 
 ### 🧾 Vue générale du projet
-- [`overview_fr.md`](overview_fr.md)  
+- [`overview-fr.md`](overview-fr.md)
   > Ce document résume le fonctionnement global du projet **Program Youtube Downloader** en français. Il est basé sur une explication destinée à un néophyte.
 
 ### 🧾 Vue d'ensemble des tests
-- [`tests_overview.md`](tests_overview.md)  
+- [`reference/tests-overview.md`](reference/tests-overview.md)
   > Présentation des fichiers de test, des outils utilisés et des instructions pour lancer les tests.
 
 ### 🧱 Architecture du projet
-- [`architecture.md`](architecture.md)  
+- [`reference/architecture.md`](reference/architecture.md)
   > Description de la structure des dossiers, des composants techniques et du schéma de fonctionnement.
 
 ### 📘 Référence API interne
-- [`api_reference.md`](api_reference.md)  
+- [`reference/api-reference.md`](reference/api-reference.md)
   > Documentation des fonctions clés et modules internes du projet.
 
 ### 🤝 Guide de contribution
@@ -31,7 +31,7 @@ Bienvenue dans la documentation technique du projet. Ce sommaire vous guide vers
   > Historique des évolutions du projet, version par version.
 
 ### 🧪 Tutoriels & Guides avancés
-- [`tutorial_download_video.md`](tutorial_download_video.md)  
+- [`guides/tutorial-download-video.md`](guides/tutorial-download-video.md)
   > Guide pas à pas pour utiliser la CLI et télécharger une vidéo.
 
 ---
