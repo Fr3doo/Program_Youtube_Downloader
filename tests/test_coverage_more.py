@@ -9,7 +9,7 @@ from program_youtube_downloader import (
     cli_utils,
     progress,
     validators,
-    youtube_downloader,
+    utils,
 )
 import program_youtube_downloader.main as main_module
 
@@ -49,14 +49,14 @@ def test_validate_youtube_url_empty():
 
 def test_clear_screen_windows(monkeypatch):
     called = {}
-    monkeypatch.setattr(youtube_downloader.os, "name", "nt", raising=False)
+    monkeypatch.setattr(utils.os, "name", "nt", raising=False)
 
     def fake_run(args, **kwargs):
         called["args"] = list(args)
         called.update(kwargs)
 
-    monkeypatch.setattr(youtube_downloader.subprocess, "run", fake_run)
-    youtube_downloader.clear_screen()
+    monkeypatch.setattr(utils.subprocess, "run", fake_run)
+    utils.clear_screen()
     assert called["args"] == ["cmd", "/c", "cls"]
     assert "shell" not in called
     assert called.get("check") is True

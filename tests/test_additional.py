@@ -6,7 +6,7 @@ from urllib.error import HTTPError
 
 import pytest
 
-from program_youtube_downloader import cli_utils, youtube_downloader
+from program_youtube_downloader import cli_utils, utils
 from program_youtube_downloader.downloader import YoutubeDownloader
 from program_youtube_downloader.exceptions import DownloadError, StreamAccessError
 from program_youtube_downloader.config import DownloadOptions
@@ -126,14 +126,14 @@ def test_progressbarhandler_on_progress(capsys):
 
 
 # ---------------------------------------------------------------------------
-# Small helpers from youtube_downloader module
+# Small helpers from utils module
 # ---------------------------------------------------------------------------
 
 
 def test_program_break_time(monkeypatch, capsys):
     """Countdown should print remaining seconds without sleeping when patched."""
-    monkeypatch.setattr(youtube_downloader.time, "sleep", lambda x: None)
-    youtube_downloader.program_break_time(3, "Wait")
+    monkeypatch.setattr(utils.time, "sleep", lambda x: None)
+    utils.program_break_time(3, "Wait")
     out = capsys.readouterr().out
     assert "Wait 3 secondes" in out
     assert "3 2 1" in out
@@ -147,8 +147,8 @@ def test_clear_screen(monkeypatch):
         called["args"] = list(args)
         called.update(kwargs)
 
-    monkeypatch.setattr(youtube_downloader.subprocess, "run", fake_run)
-    youtube_downloader.clear_screen()
+    monkeypatch.setattr(utils.subprocess, "run", fake_run)
+    utils.clear_screen()
     expected = ["clear"] if os.name == "posix" else ["cmd", "/c", "cls"]
     assert called["args"] == expected
     assert called.get("check") is True
