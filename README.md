@@ -123,10 +123,6 @@ yd.download_multiple_videos(["https://youtu.be/dQw4w9WgXcQ"], options)
 
 Pour une description détaillée des agents internes et de leurs responsabilités,
 consultez [AGENTS.md](AGENTS.md).
-Un aperçu complet de la base de code en français est disponible dans
-[docs/overview-fr.md](docs/overview-fr.md).
-L'historique des versions est disponible dans
-[docs/changelog.md](docs/changelog.md).
 
 ## Documentation
 
