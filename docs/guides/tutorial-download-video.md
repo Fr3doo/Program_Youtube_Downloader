@@ -26,4 +26,6 @@ Ce guide explique comment utiliser rapidement la CLI pour récupérer une vidéo
 6. **Téléchargement**
    La barre de progression s'affiche. Une fois terminé, un message signale la fin du téléchargement et vous pouvez revenir au menu principal.
 
-Ce tutoriel couvre le scénario le plus simple. Les mêmes étapes s'appliquent pour les playlists ou les chaînes en utilisant les sous-commandes `playlist` ou `channel`.
+Pour aller plus vite, la CLI accepte également les sous-commandes `video`, `playlist` et `channel`. Chacune dispose des options `--audio` pour ne récupérer que la piste son et `--output-dir` pour choisir un dossier de sortie.
+
+Ce tutoriel reste centré sur le menu interactif, mais ces commandes sont utiles aux utilisateurs avancés qui préfèrent tout passer en arguments.
