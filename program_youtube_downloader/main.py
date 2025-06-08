@@ -5,10 +5,10 @@ import sys
 import argparse
 import logging
 from pathlib import Path
+from pytube import Playlist, Channel
 import os
 
 
-from . import youtube_downloader
 from pytube.exceptions import PytubeError
 from . import cli_utils
 from .downloader import YoutubeDownloader
@@ -129,7 +129,7 @@ def handle_playlist_option(yd: YoutubeDownloader, audio_only: bool) -> None:
     """Download an entire playlist."""
     url = cli_utils.ask_youtube_url()
     try:
-        playlist = youtube_downloader.Playlist(url)
+        playlist = Playlist(url)
     except (PytubeError, KeyError, ValueError) as e:
         logger.exception("Error connecting to playlist")
         raise PlaylistConnectionError("Connexion à la Playlist impossible") from e
@@ -144,7 +144,7 @@ def handle_channel_option(yd: YoutubeDownloader, audio_only: bool) -> None:
     """Download all videos from a channel."""
     url = cli_utils.ask_youtube_url()
     try:
-        channel = youtube_downloader.Channel(url)
+        channel = Channel(url)
     except (PytubeError, KeyError, ValueError) as e:
         logger.exception("Error connecting to channel")
         raise ChannelConnectionError("Connexion à la chaîne Youtube impossible") from e
@@ -250,7 +250,7 @@ def main(
         )
     elif command == "playlist":
         try:
-            playlist = youtube_downloader.Playlist(args.url)
+            playlist = Playlist(args.url)
         except (PytubeError, KeyError, ValueError) as e:
             raise PlaylistConnectionError("Connexion à la Playlist impossible") from e
         except Exception:
@@ -263,7 +263,7 @@ def main(
         )  # type: ignore
     elif command == "channel":
         try:
-            channel = youtube_downloader.Channel(args.url)
+            channel = Channel(args.url)
         except (PytubeError, KeyError, ValueError) as e:
             raise ChannelConnectionError("Connexion à la chaîne Youtube impossible") from e
         except Exception:

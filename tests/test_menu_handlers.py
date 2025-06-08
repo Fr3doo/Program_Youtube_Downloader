@@ -1,5 +1,4 @@
 import logging
-from pathlib import Path
 import pytest
 
 import program_youtube_downloader.main as main_module
@@ -35,7 +34,7 @@ def test_handle_videos_option(monkeypatch, tmp_path):
 def test_handle_playlist_option(monkeypatch, tmp_path):
     dd = DummyDownloader()
     monkeypatch.setattr(main_module.cli_utils, "ask_youtube_url", lambda: "https://youtube.com/playlist")
-    monkeypatch.setattr(main_module.youtube_downloader, "Playlist", lambda url: ["v1"])
+    monkeypatch.setattr(main_module, "Playlist", lambda url: ["v1"])
     monkeypatch.setattr(main_module, "create_download_options", lambda ao: DownloadOptions(save_path=tmp_path, download_sound_only=ao))
     main_module.handle_playlist_option(dd, True)
     assert dd.called[0] == ["v1"]
@@ -45,7 +44,7 @@ def test_handle_playlist_option(monkeypatch, tmp_path):
 def test_handle_playlist_option_error(monkeypatch):
     dd = DummyDownloader()
     monkeypatch.setattr(main_module.cli_utils, "ask_youtube_url", lambda: "https://youtube.com/playlist")
-    monkeypatch.setattr(main_module.youtube_downloader, "Playlist", lambda url: (_ for _ in ()).throw(ValueError()))
+    monkeypatch.setattr(main_module, "Playlist", lambda url: (_ for _ in ()).throw(ValueError()))
     with pytest.raises(main_module.PlaylistConnectionError):
         main_module.handle_playlist_option(dd, False)
 
@@ -53,6 +52,6 @@ def test_handle_playlist_option_error(monkeypatch):
 def test_handle_channel_option_error(monkeypatch):
     dd = DummyDownloader()
     monkeypatch.setattr(main_module.cli_utils, "ask_youtube_url", lambda: "https://youtube.com/channel")
-    monkeypatch.setattr(main_module.youtube_downloader, "Channel", lambda url: (_ for _ in ()).throw(ValueError()))
+    monkeypatch.setattr(main_module, "Channel", lambda url: (_ for _ in ()).throw(ValueError()))
     with pytest.raises(main_module.ChannelConnectionError):
         main_module.handle_channel_option(dd, False)
