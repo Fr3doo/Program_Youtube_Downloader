@@ -42,3 +42,5 @@ Le dossier `tests/` contient des scripts `pytest` couvrant l'analyse des argumen
 - Pour développer de nouvelles fonctionnalités, créer un nouvel agent ou étendre un agent existant, en documentant son rôle et en écrivant les tests associés.
 
 En résumé, la base de code se compose d'un ensemble de modules Python organisés par responsabilités (*agents*) autour d'un outil CLI. Les fichiers principaux sont simples : un `main` qui traite les arguments ou affiche le menu, un téléchargeur basé sur `pytubefix`, des utilitaires de validation et d'affichage, le tout accompagné d'une suite de tests.
+
+Pour un descriptif détaillé des agents, consultez [AGENTS.md](../AGENTS.md) à la racine du dépôt.
