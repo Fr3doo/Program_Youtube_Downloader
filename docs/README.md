@@ -2,6 +2,8 @@
 
 Bienvenue dans la documentation technique du projet. Ce sommaire vous guide vers les différentes sections disponibles pour comprendre, utiliser et contribuer efficacement.
 
+Pour l'installation et l'utilisation de base, reportez-vous au [README.md](../README.md) situé à la racine du dépôt. Les contributeurs sont également invités à consulter [AGENTS.md](../AGENTS.md).
+
 ---
 
 ## 📌 Sommaire
