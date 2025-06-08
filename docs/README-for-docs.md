@@ -6,6 +6,10 @@ Bienvenue dans la documentation technique du projet. Ce sommaire vous guide vers
 
 ## 📌 Sommaire
 
+### 🧾 Vue générale du projet
+- [`overview_fr.md`](overview_fr.md)  
+  > Ce document résume le fonctionnement global du projet **Program Youtube Downloader** en français. Il est basé sur une explication destinée à un néophyte.
+
 ### 🧾 Vue d'ensemble des tests
 - [`tests_overview.md`](tests_overview.md)  
   > Présentation des fichiers de test, des outils utilisés et des instructions pour lancer les tests.
