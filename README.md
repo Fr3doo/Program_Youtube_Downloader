@@ -60,6 +60,13 @@ Une fois le paquet installé, lancez le programme avec :
 program-youtube-downloader
 ```
 
+Vous pouvez également lancer directement une sous-commande pour cibler une
+vidéo particulière. Par exemple :
+
+```bash
+program-youtube-downloader video https://youtu.be/dQw4w9WgXcQ --audio
+```
+
 Un menu s’affichera pour choisir le type de téléchargement (vidéo ou audio, playlist, chaîne, etc.). Les fichiers récupérés sont enregistrés dans le dossier spécifié par l’utilisateur.
 
 Pour générer une version autonome du programme vous pouvez utiliser `pyinstaller` :
@@ -122,7 +129,7 @@ yd.download_multiple_videos(["https://youtu.be/dQw4w9WgXcQ"], options)
 ```
 
 Pour une description détaillée des agents internes et de leurs responsabilités,
-consultez [AGENTS.md](AGENTS.md).
+consultez [AGENTS.md](AGENTS.md) à la racine du dépôt.
 
 ## Documentation
 
