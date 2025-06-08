@@ -17,3 +17,11 @@ class ChannelConnectionError(Exception):
 class StreamAccessError(Exception):
     """Raised when accessing the streams of a video fails."""
 
+
+class DirectoryCreationError(Exception):
+    """Raised when a destination directory cannot be created."""
+
+
+class InvalidURLError(Exception):
+    """Raised when a provided URL does not match expected YouTube patterns."""
+

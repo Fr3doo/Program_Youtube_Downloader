@@ -4,7 +4,7 @@ from pathlib import Path
 import logging
 from typing import Iterable, Any
 
-from .exceptions import ValidationError
+from .exceptions import ValidationError, DirectoryCreationError, InvalidURLError
 
 from .constants import (
     TITLE_PROGRAM,
@@ -97,8 +97,9 @@ def ask_save_file_path(max_attempts: int = 3) -> Path:
         The resolved :class:`~pathlib.Path` chosen by the user.
 
     Raises:
-        ValidationError: If ``max_attempts`` invalid paths are entered or the
-            directory cannot be created.
+        ValidationError: If ``max_attempts`` invalid paths are entered.
+        DirectoryCreationError: If the directory cannot be created after
+            ``max_attempts`` retries.
     """
 
     attempts = 0
@@ -125,7 +126,7 @@ def ask_save_file_path(max_attempts: int = 3) -> Path:
                     logger.error("[ERREUR] : Impossible de créer le dossier")
                     attempts += 1
                     if attempts >= max_attempts:
-                        raise ValidationError("Création du dossier impossible")
+                        raise DirectoryCreationError("Création du dossier impossible")
                     continue
             else:
                 logger.error("[ERREUR] : Le dossier n'existe pas")
@@ -162,14 +163,15 @@ def ask_youtube_url(max_attempts: int = 3) -> str:
         url = url.replace(
             "https://www.youtube.com/@", "https://www.youtube.com/c/"
         )
-        if validate_youtube_url(url):
+        try:
+            validate_youtube_url(url)
             return url
-
-        logger.error("ERREUR : Vous devez renter une URL de vidéo youtube")
-        logger.error("le prefixe attendu est : https://www.youtube.com/")
-        attempts += 1
-        if attempts >= max_attempts:
-            raise ValidationError("URL invalide")
+        except InvalidURLError:
+            logger.error("ERREUR : Vous devez renter une URL de vidéo youtube")
+            logger.error("le prefixe attendu est : https://www.youtube.com/")
+            attempts += 1
+            if attempts >= max_attempts:
+                raise ValidationError("URL invalide")
 
 
 def ask_youtube_link_file(max_attempts: int = 3) -> list[str]:
@@ -216,12 +218,15 @@ def ask_youtube_link_file(max_attempts: int = 3) -> list[str]:
                     video_url = lines[i].strip()
                     line_counter += 1
 
-                    if validate_youtube_url(video_url):
+                    try:
+                        validate_youtube_url(video_url)
                         valid_urls.append(video_url)
-                    else:
+                    except InvalidURLError:
                         logger.error("[ERREUR] : ")
                         logger.error("le prefixe attendu est : https://www.youtube.com/")
-                        logger.error(f"  le lien sur la ligne n° {line_counter} ne sera pas télécharger")
+                        logger.error(
+                            f"  le lien sur la ligne n° {line_counter} ne sera pas télécharger"
+                        )
                         logger.error("")
                         error_count += 1
 

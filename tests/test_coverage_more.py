@@ -44,7 +44,8 @@ def test_on_download_progress_wrapper(monkeypatch):
 
 
 def test_validate_youtube_url_empty():
-    assert validators.validate_youtube_url("") is False
+    with pytest.raises(validators.InvalidURLError):
+        validators.validate_youtube_url("")
 
 
 def test_clear_screen_windows(monkeypatch):
