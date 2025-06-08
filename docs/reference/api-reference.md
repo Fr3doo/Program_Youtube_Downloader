@@ -6,6 +6,7 @@ Cette section décrit brièvement les fonctions et classes disponibles dans le p
 - **`parse_args(argv=None)`** : analyse les arguments de la ligne de commande et retourne un objet `argparse.Namespace`.
 - **`menu()`** : lance le menu interactif (non couvert par les tests).
 - **`main(argv=None)`** : point d'entrée principal qui redirige vers les sous-commandes ou le menu.
+- **`create_download_options(audio_only, output_dir=None)`** : construit un objet `DownloadOptions` prêt à l'emploi.
 
 ## `downloader.py`
 - **`YoutubeDownloader`** : classe principale gérant le téléchargement.
@@ -44,7 +45,10 @@ Utilitaires généraux :
 
 Ces éléments composent l'API interne du projet et sont utilisés par la CLI ainsi que par les tests unitaires.
 
-## Exceptions
+## `types.py`
+- `YouTubeVideo` : protocole minimal pour représenter un objet `YouTube`.
+
+## `exceptions.py`
 - `DownloadError` : échec répété lors du téléchargement d'un flux.
 - `ValidationError` : validation utilisateur impossible après plusieurs essais.
 - `PlaylistConnectionError` : connexion à une playlist YouTube impossible.
