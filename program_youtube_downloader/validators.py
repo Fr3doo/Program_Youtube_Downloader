@@ -1,5 +1,7 @@
 import re
 
+from .exceptions import InvalidURLError
+
 
 _VIDEO_RE = re.compile(
     r"^https?://(?:www\.)?"
@@ -20,10 +22,13 @@ def validate_youtube_url(url: str) -> bool:
         url: URL provided by the user.
 
     Returns:
-        ``True`` if the URL looks like a YouTube link, ``False`` otherwise.
-    """
-    if not url:
-        return False
+        ``True`` if the URL looks like a YouTube link.
 
-    return bool(_VIDEO_RE.match(url.strip()))
+    Raises:
+        InvalidURLError: If the URL does not look like a YouTube link.
+    """
+    if not url or not _VIDEO_RE.match(url.strip()):
+        raise InvalidURLError("URL invalide")
+
+    return True
 
