@@ -30,7 +30,7 @@ Un tableau récapitulatif liste chaque agent avec son fichier et ses fonctions p
 
 ## Tests et bonnes pratiques
 
-Le dossier `tests/` contient des scripts `pytest` couvrant l'analyse des arguments, les fonctions d'aide, la validation des URL et différents scénarios de `YoutubeDownloader`. Le fichier `tests_overview.md` résume cette couverture et montre l'utilisation d'objets factices pour simuler les téléchargements sans accès réseau.
+Le dossier `tests/` contient des scripts `pytest` couvrant l'analyse des arguments, les fonctions d'aide, la validation des URL et différents scénarios de `YoutubeDownloader`. Le fichier `reference/tests-overview.md` résume cette couverture et montre l'utilisation d'objets factices pour simuler les téléchargements sans accès réseau.
 
 `AGENTS.md` fournit également des conseils pour ajouter de nouveaux agents : maintenir des responsabilités séparées et écrire des tests unitaires pour toute nouvelle fonctionnalité.
 
