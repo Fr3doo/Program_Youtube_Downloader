@@ -188,7 +188,7 @@ class YoutubeDownloader:
         self,
         url_youtube_video_links: Iterable[str],
         options: DownloadOptions,
-    ) -> Optional[list[str]]:
+    ) -> None:
         """Download one or more videos or audio tracks.
 
         Args:
@@ -196,8 +196,8 @@ class YoutubeDownloader:
             options: Download behaviour configuration.
 
         Returns:
-            ``None`` if every download succeeds, otherwise a list of URLs that
-            failed to download (currently always returns ``None``).
+            ``None``. The method does not report which URLs failed to
+            download.
         """
 
         download_sound_only = options.download_sound_only
@@ -211,7 +211,7 @@ class YoutubeDownloader:
         url_list = list(url_youtube_video_links)
         if not url_list:
             logger.error("[ERREUR] : il y a aucune vidéo à télécharger")
-            return url_list
+            return None
 
         for url_video in url_list:
             youtube_video = self._create_youtube(url_video, progress_handler)
