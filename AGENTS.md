@@ -7,7 +7,9 @@ Chaque agent regroupe des fonctions et responsabilités associées.
 ## Agent CLI
 **Rôle** : Fournir l'interface en ligne de commande et dispatcher les choix de l'utilisateur.
 
-**Point d'entrée** : `main()` dans [main.py](main.py).
+**Points d'entrée** :
+- `main()` dans [main.py](main.py) pour le lancement général.
+- Classe `CLI` dans [program_youtube_downloader/cli.py](program_youtube_downloader/cli.py) pour la gestion du menu et des sous-commandes.
 
 **Entrées** : arguments de la ligne de commande ou sélections depuis le menu.
 
@@ -23,7 +25,7 @@ main()
 ```
 
 ## Agent de téléchargement
-**Rôle** : Récupérer des vidéos ou des pistes audio depuis YouTube et gérer les flux de téléchargement.**
+**Rôle** : Récupérer des vidéos ou des pistes audio depuis YouTube et gérer les flux de téléchargement.
 
 **Point d'entrée** : `download_multiple_videos()` dans [downloader.py](downloader.py).
 
@@ -46,7 +48,7 @@ yd.download_multiple_videos(urls, False)
 ```
 
 ## Agent de conversion
-**Rôle** : Convertir un fichier mp4 téléchargé en mp3.**
+**Rôle** : Convertir un fichier mp4 téléchargé en mp3.
 
 **Point d'entrée** : `conversion_mp4_in_mp3()` dans [downloader.py](downloader.py).
 
@@ -62,7 +64,7 @@ yd.conversion_mp4_in_mp3("video.mp4")
 ```
 
 ## Agent de progression
-**Rôle** : Afficher les informations d'avancement pendant les téléchargements.**
+**Rôle** : Afficher les informations d'avancement pendant les téléchargements.
 
 **Points d'entrée** :
 - `on_download_progress()` dans [program_youtube_downloader/progress.py](program_youtube_downloader/progress.py).
@@ -78,7 +80,7 @@ Utilisation :
 ```
 
 ## Agent de validation
-**Rôle** : Valider les entrées utilisateur et les nettoyer.**
+**Rôle** : Valider les entrées utilisateur et les nettoyer.
 
 **Points d'entrée** :
 - `ask_numeric_value()` dans [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py).
@@ -96,17 +98,38 @@ from program_youtube_downloader.cli_utils import ask_numeric_value
 value = ask_numeric_value(1, 3)
 ```
 
+## Agent utilitaires
+**Rôle** : Fournir des fonctions d'affichage diverses utilisées dans la CLI et les tests.
+
+**Point d'entrée** : [program_youtube_downloader/utils.py](program_youtube_downloader/utils.py)
+
+**Fonctions** :
+- `clear_screen()` pour effacer la console selon le système.
+- `program_break_time()` pour afficher un compte à rebours textuel.
+
+## Agent des exceptions
+**Rôle** : Centraliser les classes d'erreur spécifiques au projet.
+
+**Point d'entrée** : [program_youtube_downloader/exceptions.py](program_youtube_downloader/exceptions.py)
+
+**Exceptions principales** :
+- `DownloadError`, `ValidationError` pour les erreurs génériques.
+- `PlaylistConnectionError`, `ChannelConnectionError` pour les problèmes d'accès.
+- `StreamAccessError`, `DirectoryCreationError`, `InvalidURLError` pour les cas particuliers.
+
 ## Résumé
 
 | Agent | Fichier(s) | Fonctions principales |
 |-------|------------|----------------------|
-| Agent CLI | `main.py` | `main()` |
+| Agent CLI | `main.py`, `program_youtube_downloader/cli.py` | `main()`, classe `CLI` |
 | Agent de téléchargement | `downloader.py` | `download_multiple_videos` |
 | Agent de conversion | `downloader.py` | `conversion_mp4_in_mp3` |
 | Agent de progression | `program_youtube_downloader/progress.py` | `on_download_progress`, `progress_bar` |
 | Agent de validation | `program_youtube_downloader/cli_utils.py` | `ask_numeric_value`, `ask_youtube_url`, `ask_youtube_link_file` |
 | Agent des constantes | `program_youtube_downloader/constants.py` | libellés du menu, `BASE_YOUTUBE_URL` |
 | Agent de configuration | `program_youtube_downloader/config.py` | dataclass `DownloadOptions` |
+| Agent utilitaires | `program_youtube_downloader/utils.py` | `clear_screen`, `program_break_time` |
+| Agent des exceptions | `program_youtube_downloader/exceptions.py` | classes d'erreurs |
 
 ## Diagramme d'interaction
 ```mermaid
@@ -117,6 +140,10 @@ graph TD
     Download --> Progress
     Download --> Conversion
     Download --> Config
+    CLI --> Utils
+    Download --> Utils
+    CLI --> Exceptions
+    Download --> Exceptions
 ```
 ## Séquence des opérations
 1. **Agent CLI** affiche le menu grâce aux chaînes de l'**Agent des constantes** et récupère le choix de l'utilisateur.
