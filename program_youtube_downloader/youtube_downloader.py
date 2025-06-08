@@ -3,12 +3,9 @@
 # https://pypi.org/project/pytubefix/
 """Miscellaneous helpers used by the application."""
 
-from pytube import Playlist
-from pytube import Channel
 import time
 import os
 import subprocess
-from pathlib import Path
 import logging
 
 logger = logging.getLogger(__name__)
