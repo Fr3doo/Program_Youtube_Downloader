@@ -50,6 +50,23 @@ Couvre des cas supplémentaires pour les utilitaires et le point d’entrée pri
 - cas limites supplémentaires pour la sélection de chemin et l’analyse de fichiers d’URLs
 - tests de type intégration pour les commandes vidéo, playlist, chaîne et menu
 
+## `test_install_launch.py`
+
+Vérifie que le script console est bien déclaré dans `pyproject.toml` et que son
+exécution fonctionne après installation dans un environnement temporaire.
+
+## `test_logging_setup.py`
+
+Teste que `setup_logging` définit correctement le niveau de log et qu'aucun
+message en dessous de ce niveau n'est émis.
+
+## `test_menu_handlers.py`
+
+Couvre les fonctions de traitement des choix de menu (`handle_*_option`). Les
+tests simulent les entrées utilisateur et vérifient la création des options de
+téléchargement ainsi que la gestion des erreurs pour les playlists et les
+chaînes.
+
 ## `test_menu_integration.py`
 
 Valide la fonction interactive `menu()` en simulant les entrées utilisateur avec
@@ -74,6 +91,8 @@ La suite de tests couvre collectivement :
 - Les parcours menu et ligne de commande.
 - Le cœur du téléchargement : callbacks de progression, conversion de fichiers.
 - Les fonctions utilitaires pour l’affichage terminal (`clear_screen`, `progress_bar`) et les minuteries.
+- Les scripts d’installation et l’exécution de la CLI.
+- La configuration du niveau de log.
 - La gestion des erreurs : URLs invalides, erreurs de chemin système, échecs HTTP, exceptions au moment de l’instanciation.
 
 Ces tests utilisent des objets factices et le `monkeypatching` pour simuler les téléchargements, ce qui permet de garantir que l’interface en ligne de commande et la logique du téléchargeur se comportent comme prévu, sans effectuer de véritables opérations réseau.
