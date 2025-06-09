@@ -149,7 +149,8 @@ def test_create_download_options(monkeypatch, tmp_path):
         "ask_resolution_or_bitrate",
         lambda *a, **k: 99,
     )
-    opt = main_module.create_download_options(True)
+    cli = main_module.CLI()
+    opt = main_module.create_download_options(cli, True)
     assert opt.save_path == tmp_path
     assert opt.download_sound_only is True
     assert (
