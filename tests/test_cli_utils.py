@@ -2,7 +2,10 @@ import pytest
 from pathlib import Path
 
 from program_youtube_downloader import cli_utils
-from program_youtube_downloader.exceptions import ValidationError
+from program_youtube_downloader.exceptions import (
+    ValidationError,
+    DirectoryCreationError,
+)
 
 
 def test_ask_numeric_value_retries(monkeypatch):
@@ -82,6 +85,20 @@ def test_ask_save_file_path_mkdir_failure(monkeypatch, tmp_path):
 
     result = cli_utils.ask_save_file_path()
     assert result == tmp_path.resolve()
+
+
+def test_ask_save_file_path_dircreation_error(monkeypatch, tmp_path):
+    missing = tmp_path / "missing"
+    inputs = iter([str(missing), "y", str(missing), "y"])
+    monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
+
+    def always_fail(self, *a, **k):
+        raise OSError()
+
+    monkeypatch.setattr(Path, "mkdir", always_fail)
+
+    with pytest.raises(DirectoryCreationError):
+        cli_utils.ask_save_file_path(max_attempts=2)
 
 
 def test_ask_youtube_link_file(monkeypatch, tmp_path):
