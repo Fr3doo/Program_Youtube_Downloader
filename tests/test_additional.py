@@ -143,7 +143,8 @@ def test_progressbarhandler_no_total(caplog, capsys, size):
         handler.on_progress(stream, b"", bytes_remaining=50)
     out = capsys.readouterr().out
     assert "100.00%" in out
-    assert "filesize" in caplog.text.lower()
+    text = caplog.text.lower()
+    assert "filesize" in text or "taille totale" in text
 
 
 def test_verboseprogresshandler_on_progress(capsys):
@@ -195,7 +196,8 @@ def test_clear_screen_error(monkeypatch, caplog):
     monkeypatch.setattr(utils.subprocess, "run", fail_run)
     with caplog.at_level(logging.WARNING):
         utils.clear_screen()
-    assert "Failed to clear screen" in caplog.text
+    text = caplog.text
+    assert "Failed to clear screen" in text or "Échec de l'effacement" in text
 
 
 # ---------------------------------------------------------------------------
