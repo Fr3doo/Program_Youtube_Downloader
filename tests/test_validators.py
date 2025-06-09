@@ -25,3 +25,10 @@ def test_validate_youtube_url_invalid() -> None:
         validate_youtube_url("https://youtu.be/")
     with pytest.raises(InvalidURLError):
         validate_youtube_url("https://www.youtube.com/playlist?list=abc")
+
+
+def test_validate_youtube_url_rejects_extra_chars() -> None:
+    with pytest.raises(InvalidURLError):
+        validate_youtube_url("https://www.youtube.com/watch?v=ok extra")
+    with pytest.raises(InvalidURLError):
+        validate_youtube_url("https://youtu.be/abc extra")

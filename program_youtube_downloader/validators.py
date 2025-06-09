@@ -6,7 +6,7 @@ from .exceptions import InvalidURLError
 _VIDEO_RE = re.compile(
     r"^https?://(?:www\.)?"
     r"(?:(?:[\w-]+\.)?youtube\.com/watch\?(?:[^\s]*\bv=[\w-]+)(?:[^\s]*\blist=[\w-]+)?"
-    r"|youtu\.be/[\w-]+(?:\?list=[\w-]+)?)",
+    r"|youtu\.be/[\w-]+(?:\?list=[\w-]+)?)$",
     re.IGNORECASE,
 )
 
