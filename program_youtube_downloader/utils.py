@@ -5,16 +5,23 @@ from __future__ import annotations
 import os
 import subprocess
 import time
+import logging
 
 __all__ = ["clear_screen", "program_break_time"]
+
+logger = logging.getLogger(__name__)
 
 
 def clear_screen() -> None:
     """Clear the terminal screen on Windows or POSIX systems."""
-    if os.name == "posix":
-        subprocess.run(["clear"], check=True)
-    else:
-        subprocess.run(["cmd", "/c", "cls"], check=True)
+    try:
+        if os.name == "posix":
+            subprocess.run(["clear"], check=True)
+        else:
+            subprocess.run(["cmd", "/c", "cls"], check=True)
+    except subprocess.CalledProcessError as exc:  # pragma: no cover - failure path
+        logger.warning("Failed to clear screen: %s", exc)
+        return
 
 
 def program_break_time(memorization_time: int, message: str) -> None:

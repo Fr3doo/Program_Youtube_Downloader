@@ -4,6 +4,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from urllib.error import HTTPError
 import logging
+import subprocess
 
 import pytest
 
@@ -165,6 +166,18 @@ def test_clear_screen(monkeypatch):
     assert called.get("check") is True
     if os.name != "posix":
         assert "shell" not in called
+
+
+def test_clear_screen_error(monkeypatch, caplog):
+    """Failure of subprocess.run should be caught and logged."""
+
+    def fail_run(*args, **kwargs):
+        raise subprocess.CalledProcessError(returncode=1, cmd=args[0])
+
+    monkeypatch.setattr(utils.subprocess, "run", fail_run)
+    with caplog.at_level(logging.WARNING):
+        utils.clear_screen()
+    assert "Failed to clear screen" in caplog.text
 
 
 # ---------------------------------------------------------------------------
