@@ -1,8 +1,19 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional, Callable, Any
+import os
 
 from .progress import ProgressHandler
+
+
+def _max_workers_from_env() -> int:
+    value = os.getenv("PYDL_MAX_WORKERS")
+    if value is None:
+        return 1
+    try:
+        return int(value)
+    except ValueError:
+        return 1
 
 
 @dataclass
@@ -20,11 +31,12 @@ class DownloadOptions:
         progress_handler: Object receiving progress events from ``pytubefix``.
             Defaults to :class:`~program_youtube_downloader.progress.ProgressBarHandler`.
         max_workers: Number of simultaneous downloads. ``1`` disables
-            threading.
+            threading. If not provided, the value is read from the
+            ``PYDL_MAX_WORKERS`` environment variable, defaulting to ``1``.
     """
 
     save_path: Optional[Path] = None
     download_sound_only: bool = False
     choice_callback: Optional[Callable[[bool, Any], int]] = None
     progress_handler: Optional[ProgressHandler] = None
-    max_workers: int = 1
+    max_workers: int = field(default_factory=_max_workers_from_env)

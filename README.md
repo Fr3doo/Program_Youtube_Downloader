@@ -192,6 +192,13 @@ Vous pouvez également passer le dossier de destination directement avec
 program-youtube-downloader video https://youtu.be/example --output-dir /chemin/de/sortie
 ```
 
+Vous pouvez également contrôler le nombre de téléchargements parallèles
+en définissant la variable d'environnement `PYDL_MAX_WORKERS` :
+
+```bash
+PYDL_MAX_WORKERS=4 program-youtube-downloader video https://youtu.be/example
+```
+
 ## Tests
 
 Les tests unitaires sont écrits avec `pytest`. Après l’installation des dépendances, exécutez :
