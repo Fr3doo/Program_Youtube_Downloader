@@ -65,15 +65,15 @@ class YoutubeDownloader:
                 yt.register_on_progress_callback(_wrapper)
             return yt
         except KeyError as e:
-            logger.error("[ERREUR] : Problème de clé dans les données : %s", e)
+            logger.error(f"Problème de clé dans les données : {e}")
             return None
         except PytubeError as e:
             logger.exception("Error while connecting to video")
-            logger.error("[ERREUR] : Connexion à la vidéo impossible : %s", e)
+            logger.error(f"Connexion à la vidéo impossible : {e}")
             return None
         except Exception as e:  # pragma: no cover - defensive
             logger.exception("Unexpected error while connecting to video")
-            logger.error("[ERREUR] : Connexion à la vidéo impossible : %s", e)
+            logger.error(f"Connexion à la vidéo impossible : {e}")
             return None
 
     def _select_stream(
@@ -103,7 +103,7 @@ class YoutubeDownloader:
         current_file = save_path / stream.default_filename  # type: ignore
         if current_file.exists():
             logger.warning(
-                "[WARNING] un fichier MP4 portant le même nom, déjà existant!"
+                "Un fichier MP4 portant le même nom existe déjà"
             )
 
         out_file = None
@@ -115,7 +115,7 @@ class YoutubeDownloader:
             except (HTTPError, OSError, PytubeError) as e:  # pragma: no cover - network/io issues
                 logger.exception("Download failed")
                 logger.info("")
-                logger.error("[ERREUR] : le téléchargement a échoué : %s", e)
+                logger.error(f"Le téléchargement a échoué : {e}")
                 logger.info("")
                 if attempt == 2:
                     raise DownloadError(
@@ -124,7 +124,7 @@ class YoutubeDownloader:
             except Exception as e:  # pragma: no cover - defensive
                 logger.exception("Unexpected error during download")
                 logger.info("")
-                logger.error("[ERREUR] : le téléchargement a échoué : %s", e)
+                logger.error(f"Le téléchargement a échoué : {e}")
                 logger.info("")
                 if attempt == 2:
                     raise DownloadError(
@@ -155,23 +155,17 @@ class YoutubeDownloader:
             return streams
         except HTTPError as e:
             logger.error(
-                "[ERREUR] : Impossible d'accéder aux flux pour la vidéo. Code HTTP : %s, Message : %s",
-                e.code,
-                e.reason,
+                f"Impossible d'accéder aux flux pour la vidéo. HTTP {e.code} : {e.reason}"
             )
             raise StreamAccessError(f"HTTP {e.code}: {e.reason}") from e
         except PytubeError as e:
             logger.exception("Error while retrieving streams")
-            logger.error(
-                "[ERREUR] : Une erreur est survenue lors de la récupération des flux : %s",
-                e,
-            )
+            logger.error(f"Une erreur est survenue lors de la récupération des flux : {e}")
             raise StreamAccessError(str(e)) from e
         except Exception as e:  # pragma: no cover - defensive
             logger.exception("Unexpected error while retrieving streams")
             logger.error(
-                "[ERREUR] : Une erreur inattendue s'est produite lors de la récupération des flux : %s",
-                e,
+                f"Une erreur inattendue s'est produite lors de la récupération des flux : {e}"
             )
             raise StreamAccessError(str(e)) from e
 
@@ -200,7 +194,7 @@ class YoutubeDownloader:
                 file_path.unlink()
         except OSError:
             logger.exception("Error during MP4 to MP3 conversion")
-            logger.warning("[WARNING] un fichier MP3 portant le même nom, déjà existant!")
+            logger.warning("Un fichier MP3 portant le même nom existe déjà")
             if file_path.exists():
                 file_path.unlink()
             logger.info("")
@@ -221,16 +215,13 @@ class YoutubeDownloader:
             streams = self.get_video_streams(download_sound_only, youtube_video)
         except StreamAccessError as e:
             logger.error(
-                "[ERREUR] : Les flux pour la vidéo (%s) n'ont pas pu être récupérés. %s",
-                video_url,
-                e,
+                f"Les flux pour la vidéo {video_url} n'ont pas pu être récupérés : {e}"
             )
             return None
 
         if not streams:
             logger.error(
-                "[ERREUR] : Aucun flux disponible pour la vidéo (%s).",
-                video_url,
+                f"Aucun flux disponible pour la vidéo {video_url}."
             )
             return None
 
@@ -238,16 +229,13 @@ class YoutubeDownloader:
             video_title = youtube_video.title
         except KeyError as e:
             logger.error(
-                "[ERREUR] : Impossible d'accéder au titre de la vidéo %s. Détail : %s",
-                video_url,
-                e,
+                f"Impossible d'accéder au titre de la vidéo {video_url}. Détail : {e}"
             )
             return None
         except PytubeError as e:
             logger.exception("Error while accessing video title")
             logger.error(
-                "[ERREUR] : Une erreur est survenue lors de l'accès au titre : %s",
-                e,
+                f"Une erreur est survenue lors de l'accès au titre : {e}"
             )
             return None
         except Exception:  # pragma: no cover - defensive
@@ -294,8 +282,7 @@ class YoutubeDownloader:
             cli_utils.print_end_download_message()
         else:
             logger.error(
-                "[ERREUR] : Les téléchargements suivants ont échoué : %s",
-                ", ".join(errors),
+                f"Les téléchargements suivants ont échoué : {', '.join(errors)}"
             )
         cli_utils.pause_return_to_menu()
 
@@ -328,7 +315,7 @@ class YoutubeDownloader:
 
         url_list = list(youtube_video_urls)
         if not url_list:
-            logger.error("[ERREUR] : il y a aucune vidéo à télécharger")
+            logger.error("Il n'y a aucune vidéo à télécharger")
             return None
 
         if options.max_workers < 1:
@@ -357,18 +344,17 @@ class YoutubeDownloader:
                     logger.info("")
                     logger.info("")
                     cli_utils.print_separator()
-                    logger.info("*             Stream vidéo selectionnée:         *")
+                    logger.info("*             Stream vidéo sélectionné :          *")
                     cli_utils.print_separator()
                     logger.info(
-                        "Number of link url video youtube in file: %s",
-                        len(url_list),
+                        f"Nombre de liens vidéo YouTube dans le fichier : {len(url_list)}"
                     )
                     logger.info("")
 
                 itag = streams[choice_user - 1].itag  # type: ignore
                 stream = youtube_video.streams.get_by_itag(itag)
 
-                logger.info("Titre: %s", video_title[0:53])
+                logger.info(f"Titre : {video_title[0:53]}")
 
                 self._submit_download(
                     executor,

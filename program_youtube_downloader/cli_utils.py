@@ -46,7 +46,7 @@ def ask_numeric_value(min_value: int, max_value: int, max_attempts: int = 3) -> 
         try:
             v_int = int(v_str)
         except ValueError:
-            logger.warning("FAIL : Vous devez rentrer une valeur numérique.")
+            logger.warning("Entrée invalide : saisissez une valeur numérique.")
             logger.info("")
             attempts += 1
             if attempts >= max_attempts:
@@ -54,7 +54,7 @@ def ask_numeric_value(min_value: int, max_value: int, max_attempts: int = 3) -> 
             continue
         if not (min_value <= v_int <= max_value):
             logger.warning(
-                f"FAIL : Vous devez rentrer un nombre (entre {min_value} et {max_value} )."
+                f"Entrée invalide : saisissez un nombre entre {min_value} et {max_value}."
             )
             logger.info("")
             attempts += 1
@@ -123,13 +123,13 @@ def ask_save_file_path(max_attempts: int = 3) -> Path:
                     path.mkdir(parents=True, exist_ok=True)
                 except OSError:
                     logger.exception("Directory creation failed")
-                    logger.error("[ERREUR] : Impossible de créer le dossier")
+                    logger.error("Impossible de créer le dossier")
                     attempts += 1
                     if attempts >= max_attempts:
                         raise DirectoryCreationError("Création du dossier impossible")
                     continue
             else:
-                logger.error("[ERREUR] : Le dossier n'existe pas")
+                logger.error("Le dossier n'existe pas")
                 attempts += 1
                 if attempts >= max_attempts:
                     raise ValidationError("Dossier invalide")
@@ -167,8 +167,8 @@ def ask_youtube_url(max_attempts: int = 3) -> str:
             validate_youtube_url(url)
             return url
         except InvalidURLError:
-            logger.error("ERREUR : Vous devez renter une URL de vidéo youtube")
-            logger.error("le prefixe attendu est : https://www.youtube.com/")
+            logger.error("URL invalide : vous devez saisir le lien d'une vidéo YouTube")
+            logger.error("Préfixe attendu : https://www.youtube.com/")
             attempts += 1
             if attempts >= max_attempts:
                 raise ValidationError("URL invalide")
@@ -207,7 +207,9 @@ def ask_youtube_link_file(max_attempts: int = 3) -> list[str]:
                 total_links = len(lines)
 
                 if not total_links:
-                    logger.error("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
+                    logger.error(
+                        "Vous devez fournir un fichier contenant au moins une URL de vidéo YouTube"
+                    )
                     attempts += 1
                     if attempts >= max_attempts:
                         raise ValidationError("Aucune URL valide")
@@ -220,23 +222,23 @@ def ask_youtube_link_file(max_attempts: int = 3) -> list[str]:
                         validate_youtube_url(video_url)
                         valid_urls.append(video_url)
                     except InvalidURLError:
-                        logger.error("[ERREUR] : ")
-                        logger.error("le prefixe attendu est : https://www.youtube.com/")
                         logger.error(
-                            f"  le lien sur la ligne n° {line_counter} ne sera pas télécharger"
+                            f"URL invalide à la ligne {line_counter} ; le préfixe attendu est : https://www.youtube.com/"
                         )
                         logger.error("")
                         error_count += 1
 
                 if error_count == total_links:
-                    logger.error("[ERREUR] : Vous devez fournir un fichier avec au minimum une URL de vidéo youtube")
+                    logger.error(
+                        "Vous devez fournir un fichier contenant au moins une URL de vidéo YouTube"
+                    )
                     attempts += 1
                     if attempts >= max_attempts:
                         raise ValidationError("Aucune URL valide")
                     continue
         except OSError:
-            logger.exception("[ERREUR] : Le fichier n'est pas accessible")
-            logger.error("[ERREUR] : Le fichier n'est pas accessible")
+            logger.exception("Le fichier n'est pas accessible")
+            logger.error("Le fichier n'est pas accessible")
             attempts += 1
             if attempts >= max_attempts:
                 raise ValidationError("Fichier inaccessible")

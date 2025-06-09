@@ -20,7 +20,7 @@ def clear_screen() -> None:
         else:
             subprocess.run(["cmd", "/c", "cls"], check=True)
     except subprocess.CalledProcessError as exc:  # pragma: no cover - failure path
-        logger.warning("Failed to clear screen: %s", exc)
+        logger.warning(f"Échec de l'effacement de l'écran : {exc}")
         return
 
 

@@ -111,11 +111,12 @@ class ProgressBarHandler:
     def __init__(self, options: ProgressOptions | None = None) -> None:
         self.options = options
 
+
     def on_progress(self, event: ProgressEvent) -> None:
         """Display ``event`` using :func:`progress_bar`."""
         progress_bar(event.percent, self.options)
 
-
+       
 class VerboseProgressHandler:
     """Progress handler printing only the percentage."""
 
