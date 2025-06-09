@@ -149,13 +149,18 @@ consultez [AGENTS.md](AGENTS.md) à la racine du dépôt.
 
 ## Documentation
 
-- [docs/README.md](docs/README.md)
-- [docs/guides/contributing.md](docs/guides/contributing.md)
-- [docs/releases/changelog.md](docs/releases/changelog.md)
-- [docs/guides/download-video-guide.md](docs/guides/download-video-guide.md)
+- [docs/index.md](docs/index.md)
+- [docs/guides/](docs/guides/)
+- [docs/releases/](docs/releases/)
 - [docs/reference/api-reference.md](docs/reference/api-reference.md)
 - [docs/reference/architecture.md](docs/reference/architecture.md)
 - [docs/reference/tests-overview.md](docs/reference/tests-overview.md)
+
+La documentation est organisée sous le dossier `docs/`. Le fichier `docs/index.md`
+agit comme page d'accueil et répertorie les différents liens utiles. Les tutoriels
+et guides pratiques sont stockés dans `docs/guides/`, tandis que `docs/releases/`
+contient le journal des versions. La sous-arborescence `docs/reference/` regroupe
+les informations sur l'API interne et l'architecture.
 
 Ce projet est destiné à un usage personnel pour faciliter la récupération de contenu YouTube.
 
