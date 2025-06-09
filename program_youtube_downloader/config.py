@@ -19,9 +19,12 @@ class DownloadOptions:
             available streams and must return the chosen index (starting at 1).
         progress_handler: Object receiving progress events from ``pytubefix``.
             Defaults to :class:`~program_youtube_downloader.progress.ProgressBarHandler`.
+        max_workers: Number of simultaneous downloads. ``1`` disables
+            threading.
     """
 
     save_path: Optional[Path] = None
     download_sound_only: bool = False
     choice_callback: Optional[Callable[[bool, Any], int]] = None
     progress_handler: Optional[ProgressHandler] = None
+    max_workers: int = 1

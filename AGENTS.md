@@ -5,7 +5,7 @@ Ce document décrit les principaux agents qui composent **Program Youtube Downlo
 Chaque agent regroupe des fonctions et responsabilités associées.
 
 ## Agent CLI
-**Rôle** : Fournir l'interface en ligne de commande et dispatcher les choix de l'utilisateur.
+**Rôle** : Fournir l'interface en ligne de commande et dispatcher les choix de l'utilisateur.**
 
 **Points d'entrée** :
 - `main()` dans [main.py](main.py) pour le lancement général.

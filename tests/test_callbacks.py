@@ -1,4 +1,5 @@
 from pathlib import Path
+import logging
 import pytest
 from program_youtube_downloader import downloader as downloader_module
 from program_youtube_downloader import cli_utils
@@ -224,7 +225,7 @@ def test_download_multiple_videos_streams_error(monkeypatch, tmp_path: Path) -> 
     assert not progress.called
 
 
-def test_download_multiple_videos_download_error(monkeypatch, tmp_path: Path) -> None:
+def test_download_multiple_videos_download_error(monkeypatch, tmp_path: Path, caplog) -> None:
     class FailingStream(DummyStream):
         def download(self, output_path: str) -> str:
             raise OSError("boom")
@@ -244,9 +245,10 @@ def test_download_multiple_videos_download_error(monkeypatch, tmp_path: Path) ->
 
     yd = YoutubeDownloader(youtube_cls=fake_constructor)
     options = DownloadOptions(save_path=tmp_path)
-
-    with pytest.raises(DownloadError):
+    with caplog.at_level(logging.ERROR):
         yd.download_multiple_videos(["https://youtu.be/fail"], options)
+    assert "https://youtu.be/fail" in caplog.text
+    assert not any(tmp_path.iterdir())
 
 
 def test_download_multiple_videos_custom_progress(monkeypatch, tmp_path: Path) -> None:

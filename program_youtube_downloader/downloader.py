@@ -1,6 +1,7 @@
 from urllib.error import HTTPError
 from pathlib import Path
 from typing import Optional, Union, Iterable, Callable, Any
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import logging
 
 from pytubefix import YouTube
@@ -214,79 +215,99 @@ class YoutubeDownloader:
             logger.error("[ERREUR] : il y a aucune vidéo à télécharger")
             return None
 
-        for video_url in url_list:
-            youtube_video = self._create_youtube(video_url, progress_handler)
-            if youtube_video is None:
-                continue
+        futures: dict[Any, str] = {}
+        with ThreadPoolExecutor(max_workers=options.max_workers) as executor:
+            for video_url in url_list:
+                youtube_video = self._create_youtube(video_url, progress_handler)
+                if youtube_video is None:
+                    continue
 
-            try:
-                streams = self.get_video_streams(download_sound_only, youtube_video)
-            except StreamAccessError as e:
-                logger.error(
-                    "[ERREUR] : Les flux pour la vidéo (%s) n'ont pas pu être récupérés. %s",
+                try:
+                    streams = self.get_video_streams(download_sound_only, youtube_video)
+                except StreamAccessError as e:
+                    logger.error(
+                        "[ERREUR] : Les flux pour la vidéo (%s) n'ont pas pu être récupérés. %s",
+                        video_url,
+                        e,
+                    )
+                    continue
+
+                if not streams:
+                    logger.error(
+                        "[ERREUR] : Aucun flux disponible pour la vidéo (%s).",
+                        video_url,
+                    )
+                    continue
+
+                try:
+                    video_title = youtube_video.title
+                except KeyError as e:
+                    logger.error(
+                        "[ERREUR] : Impossible d'accéder au titre de la vidéo %s. Détail : %s",
+                        video_url,
+                        e,
+                    )
+                    continue
+                except PytubeError as e:
+                    logger.exception("Error while accessing video title")
+                    logger.error(
+                        "[ERREUR] : Une erreur est survenue lors de l'accès au titre : %s",
+                        e,
+                    )
+                    continue
+                except Exception:  # pragma: no cover - defensive
+                    logger.exception("Unexpected error while accessing video title")
+                    continue
+
+                if choice_once:
+                    choice_user = self._choose_stream(
+                        download_sound_only,
+                        streams,
+                        choice_callback,
+                    )
+                    choice_once = False
+                    logger.info("")
+                    logger.info("")
+                    cli_utils.print_separator()
+                    logger.info("*             Stream vidéo selectionnée:         *")
+                    cli_utils.print_separator()
+                    logger.info(
+                        "Number of link url video youtube in file: %s",
+                        len(url_list),
+                    )
+                    logger.info("")
+
+                itag = streams[choice_user - 1].itag  # type: ignore
+                stream = youtube_video.streams.get_by_itag(itag)
+
+                logger.info("Titre: %s", video_title[0:53])
+
+                future = executor.submit(
+                    self._download_stream,
+                    stream,
+                    save_path,
                     video_url,
-                    e,
-                )
-                continue
-
-            if not streams:
-                logger.error(
-                    "[ERREUR] : Aucun flux disponible pour la vidéo (%s).",
-                    video_url,
-                )
-                continue
-
-            try:
-                video_title = youtube_video.title
-            except KeyError as e:
-                logger.error(
-                    "[ERREUR] : Impossible d'accéder au titre de la vidéo %s. Détail : %s",
-                    video_url,
-                    e,
-                )
-                continue
-            except PytubeError as e:
-                logger.exception("Error while accessing video title")
-                logger.error(
-                    "[ERREUR] : Une erreur est survenue lors de l'accès au titre : %s",
-                    e,
-                )
-                continue
-            except Exception:  # pragma: no cover - defensive
-                logger.exception("Unexpected error while accessing video title")
-                continue
-
-            if choice_once:
-                choice_user = self._choose_stream(
                     download_sound_only,
-                    streams,
-                    choice_callback,
                 )
-                choice_once = False
-                logger.info("")
-                logger.info("")
-                cli_utils.print_separator()
-                logger.info("*             Stream vidéo selectionnée:                    *")
-                cli_utils.print_separator()
-                logger.info("Number of link url video youtube in file: %s",
-                    len(url_list),
-                )
-                logger.info("")
+                futures[future] = video_url
 
-            itag = streams[choice_user - 1].itag  # type: ignore
-            stream = youtube_video.streams.get_by_itag(itag)
-
-            logger.info("Titre: %s", video_title[0:53])
-
-            self._download_stream(
-                stream,
-                save_path,
-                video_url,
-                download_sound_only,
-            )
+        errors: list[str] = []
+        for future in as_completed(futures):
+            url = futures[future]
+            try:
+                future.result()
+            except DownloadError:
+                errors.append(url)
+            except Exception:  # pragma: no cover - defensive
+                logger.exception("Unexpected error in downloader thread")
+                errors.append(url)
 
         cli_utils.print_end_download_message()
+        if errors:
+            logger.error(
+                "[ERREUR] : Les téléchargements suivants ont échoué : %s",
+                ", ".join(errors),
+            )
         cli_utils.pause_return_to_menu()
-
         return None
 

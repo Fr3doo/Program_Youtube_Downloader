@@ -37,7 +37,7 @@ Fonctions d'interaction utilisateur :
 - `VerboseProgressHandler` : affiche uniquement le pourcentage sans barre.
 
 ## `config.py`
-- `DownloadOptions` : dataclass regroupant les options de téléchargement (dossier, audio seul, callback de choix, gestionnaire de progression).
+- `DownloadOptions` : dataclass regroupant les options de téléchargement (dossier, audio seul, callback de choix, gestionnaire de progression, nombre de threads).
 
 ## `youtube_downloader.py`
 Utilitaires généraux :
