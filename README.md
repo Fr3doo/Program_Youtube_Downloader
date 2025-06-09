@@ -149,10 +149,10 @@ consultez [AGENTS.md](AGENTS.md) à la racine du dépôt.
 
 ## Documentation
 
-- [docs/README.md](docs/README.md)
-- [docs/contributing.md](docs/contributing.md)
-- [docs/changelog.md](docs/changelog.md)
-- [docs/guides/tutorial-download-video.md](docs/guides/tutorial-download-video.md)
+- [docs/index.md](docs/index.md)
+- [docs/guides/contributing.md](docs/guides/contributing.md)
+- [docs/releases/changelog.md](docs/releases/changelog.md)
+- [docs/guides/download-video-guide.md](docs/guides/download-video-guide.md)
 - [docs/reference/api-reference.md](docs/reference/api-reference.md)
 - [docs/reference/architecture.md](docs/reference/architecture.md)
 - [docs/reference/tests-overview.md](docs/reference/tests-overview.md)

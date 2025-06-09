@@ -9,7 +9,7 @@ Pour l'installation et l'utilisation de base, reportez-vous au [README.md](../RE
 ## 📌 Sommaire
 
 ### 🧾 Vue générale du projet
-- [`overview-fr.md`](overview-fr.md)
+- [`project-overview.md`](project-overview.md)
   > Ce document résume le fonctionnement global du projet **Program Youtube Downloader** en français. Il est basé sur une explication destinée à un néophyte.
 
 ### 🧾 Vue d'ensemble des tests
@@ -25,15 +25,15 @@ Pour l'installation et l'utilisation de base, reportez-vous au [README.md](../RE
   > Documentation des fonctions clés et modules internes du projet.
 
 ### 🤝 Guide de contribution
-- [`contributing.md`](contributing.md)  
+- [`guides/contributing.md`](guides/contributing.md)
   > Instructions pour les développeurs souhaitant proposer des modifications au projet.
 
 ### 📝 Journal des modifications
-- [`changelog.md`](changelog.md)  
+- [`releases/changelog.md`](releases/changelog.md)
   > Historique des évolutions du projet, version par version.
 
 ### 🧪 Tutoriels & Guides avancés
-- [`guides/tutorial-download-video.md`](guides/tutorial-download-video.md)
+- [`guides/download-video-guide.md`](guides/download-video-guide.md)
   > Guide pas à pas pour utiliser la CLI et télécharger une vidéo.
 
 ---
