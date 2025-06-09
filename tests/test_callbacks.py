@@ -1,5 +1,7 @@
 from pathlib import Path
 import logging
+from concurrent.futures import Future
+from typing import Any
 import pytest
 from program_youtube_downloader import downloader as downloader_module
 from program_youtube_downloader import cli_utils
@@ -85,6 +87,76 @@ def test_download_stream_error(monkeypatch, tmp_path: Path) -> None:
 
     with pytest.raises(DownloadError):
         yd._download_stream(stream, tmp_path, "https://youtu.be/fail", False)
+
+
+def test_process_url_success(monkeypatch) -> None:
+    monkeypatch.setattr(
+        YoutubeDownloader, "get_video_streams", lambda self, dso, yt: yt.streams
+    )
+    progress = DummyHandler()
+    yd = YoutubeDownloader(progress_handler=progress, youtube_cls=lambda u: DummyYT(u))
+
+    result = yd._process_url("https://youtu.be/x", False, progress)
+
+    assert result is not None
+    streams, yt, title = result
+    assert streams is yt.streams
+    assert title == "video"
+    assert yt.progress.__self__ is progress
+
+
+def test_submit_download(monkeypatch, tmp_path: Path) -> None:
+    called = {}
+
+    def fake_download(stream, path, url, sound_only):
+        called["args"] = (stream, path, url, sound_only)
+
+    yd = YoutubeDownloader()
+    monkeypatch.setattr(yd, "_download_stream", fake_download)
+
+    class DummyExecutor:
+        def __init__(self) -> None:
+            self.submitted = None
+
+        def submit(self, func, *args):
+            self.submitted = (func, args)
+            fut = Future()
+            try:
+                result = func(*args)
+                fut.set_result(result)
+            except Exception as e:  # pragma: no cover - defensive
+                fut.set_exception(e)
+            return fut
+
+    exec = DummyExecutor()
+    futures: dict[Any, str] = {}
+    stream = DummyStream()
+    yd._submit_download(exec, stream, tmp_path, "https://youtu.be/x", True, futures)
+
+    func, args = exec.submitted
+    assert func is fake_download
+    assert futures and list(futures.values()) == ["https://youtu.be/x"]
+    assert called["args"] == (stream, tmp_path, "https://youtu.be/x", True)
+
+
+def test_report_errors(monkeypatch, caplog) -> None:
+    f_ok = Future()
+    f_ok.set_result(None)
+    f_err = Future()
+    f_err.set_exception(DownloadError("boom"))
+    futures = {f_ok: "https://youtu.be/a", f_err: "https://youtu.be/b"}
+
+    called = {}
+    monkeypatch.setattr(cli_utils, "print_end_download_message", lambda *a, **k: called.setdefault("end", True))
+    monkeypatch.setattr(cli_utils, "pause_return_to_menu", lambda *a, **k: called.setdefault("pause", True))
+
+    yd = YoutubeDownloader()
+    with caplog.at_level(logging.ERROR):
+        yd._report_errors(futures)
+
+    assert "https://youtu.be/b" in caplog.text
+    assert "end" not in called
+    assert "pause" in called
 
 
 def test_download_multiple_videos_custom_callbacks(monkeypatch, tmp_path: Path) -> None:
