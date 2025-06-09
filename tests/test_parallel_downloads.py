@@ -80,3 +80,31 @@ def test_parallel_error_collection(monkeypatch, tmp_path: Path, caplog):
     assert "https://youtu.be/b" in caplog.text
     assert (tmp_path / "a.mp4").exists()
     assert not (tmp_path / "b.mp4").exists()
+
+
+def test_end_message_skipped_on_error(monkeypatch, tmp_path: Path):
+    """The end download message should not be printed when errors occur."""
+
+    monkeypatch.setattr(YoutubeDownloader, "get_video_streams", lambda self, dso, yt: yt.streams)
+
+    def failing(self, stream, path, url, sound_only):
+        if url.endswith("b"):
+            raise DownloadError("boom")
+        Path(path / stream.default_filename).write_text("ok")
+
+    monkeypatch.setattr(YoutubeDownloader, "_download_stream", failing)
+
+    called = {}
+
+    def end_message() -> None:
+        called["printed"] = True
+
+    monkeypatch.setattr(cli_utils, "print_end_download_message", end_message)
+    monkeypatch.setattr(cli_utils, "pause_return_to_menu", lambda *a, **k: None)
+
+    yd = YoutubeDownloader(youtube_cls=fake_constructor)
+    options = DownloadOptions(save_path=tmp_path, max_workers=2)
+    urls = ["https://youtu.be/a", "https://youtu.be/b"]
+    yd.download_multiple_videos(urls, options)
+
+    assert "printed" not in called
