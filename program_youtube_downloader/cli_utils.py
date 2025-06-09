@@ -203,7 +203,6 @@ def ask_youtube_link_file(max_attempts: int = 3) -> list[str]:
             file_path = Path(user_file)
             with file_path.open("r", encoding="utf-8") as f:
                 lines = f.readlines()
-                line_counter = 0
                 error_count = 0
                 total_links = len(lines)
 
@@ -214,9 +213,8 @@ def ask_youtube_link_file(max_attempts: int = 3) -> list[str]:
                         raise ValidationError("Aucune URL valide")
                     continue
 
-                for i in range(0, len(lines)):
-                    video_url = lines[i].strip()
-                    line_counter += 1
+                for line_counter, line in enumerate(lines, 1):
+                    video_url = line.strip()
 
                     try:
                         validate_youtube_url(video_url)
