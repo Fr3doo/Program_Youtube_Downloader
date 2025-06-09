@@ -178,7 +178,7 @@ def test_main_video_command(monkeypatch, tmp_path):
 def test_main_playlist_command(monkeypatch, tmp_path):
     dd = DummyDownloader()
     monkeypatch.setattr(
-        main_module, "Playlist", lambda u: ["https://youtu.be/1"]
+        main_module.CLI, "load_playlist", lambda self, u: ["https://youtu.be/1"]
     )
     monkeypatch.setattr(
         main_module.cli_utils, "ask_save_file_path", lambda: tmp_path
@@ -196,7 +196,7 @@ def test_main_playlist_command(monkeypatch, tmp_path):
 def test_main_channel_command(monkeypatch, tmp_path):
     dd = DummyDownloader()
     monkeypatch.setattr(
-        main_module, "Channel", lambda u: ["https://youtu.be/2"]
+        main_module.CLI, "load_channel", lambda self, u: ["https://youtu.be/2"]
     )
     monkeypatch.setattr(
         main_module.cli_utils, "ask_save_file_path", lambda: tmp_path
