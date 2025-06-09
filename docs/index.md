@@ -4,6 +4,11 @@ Bienvenue dans la documentation technique du projet. Ce sommaire vous guide vers
 
 Pour l'installation et l'utilisation de base, reportez-vous au [README.md](../README.md) situé à la racine du dépôt. Les contributeurs sont également invités à consulter [AGENTS.md](../AGENTS.md).
 
+Les différents dossiers de `docs/` sont organisés ainsi :
+- `guides/` contient les tutoriels et conseils pour contribuer ou utiliser l'outil ;
+- `reference/` regroupe la description de l'API interne et l'architecture ;
+- `releases/` archive le journal des versions.
+
 ---
 
 ## 📌 Sommaire
