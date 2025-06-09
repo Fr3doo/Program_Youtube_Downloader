@@ -1,27 +1,31 @@
-class DownloadError(Exception):
+class PydlError(Exception):
+    """Base class for all custom errors."""
+
+
+class DownloadError(PydlError):
     """Raised when a download fails after several retries."""
 
 
-class ValidationError(Exception):
+class ValidationError(PydlError):
     """Raised when user input validation repeatedly fails."""
 
 
-class PlaylistConnectionError(Exception):
+class PlaylistConnectionError(PydlError):
     """Raised when connecting to a playlist fails."""
 
 
-class ChannelConnectionError(Exception):
+class ChannelConnectionError(PydlError):
     """Raised when connecting to a channel fails."""
 
 
-class StreamAccessError(Exception):
+class StreamAccessError(PydlError):
     """Raised when accessing the streams of a video fails."""
 
 
-class DirectoryCreationError(Exception):
+class DirectoryCreationError(PydlError):
     """Raised when a destination directory cannot be created."""
 
 
-class InvalidURLError(Exception):
+class InvalidURLError(PydlError):
     """Raised when a provided URL does not match expected YouTube patterns."""
 

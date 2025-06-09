@@ -112,6 +112,7 @@ value = ask_numeric_value(1, 3)
 **Point d'entrée** : [program_youtube_downloader/exceptions.py](program_youtube_downloader/exceptions.py)
 
 **Exceptions principales** :
+- `PydlError` comme classe de base commune.
 - `DownloadError`, `ValidationError` pour les erreurs génériques.
 - `PlaylistConnectionError`, `ChannelConnectionError` pour les problèmes d'accès.
 - `StreamAccessError`, `DirectoryCreationError`, `InvalidURLError` pour les cas particuliers.

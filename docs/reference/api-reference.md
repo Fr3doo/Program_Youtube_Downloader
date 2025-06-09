@@ -50,6 +50,7 @@ Ces éléments composent l'API interne du projet et sont utilisés par la CLI ai
 - `YouTubeVideo` : protocole minimal pour représenter un objet `YouTube`.
 
 ## `exceptions.py`
+- `PydlError` : classe de base pour toutes les erreurs personnalisées.
 - `DownloadError` : échec répété lors du téléchargement d'un flux.
 - `ValidationError` : validation utilisateur impossible après plusieurs essais.
 - `PlaylistConnectionError` : connexion à une playlist YouTube impossible.
