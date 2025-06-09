@@ -28,7 +28,7 @@ Ce projet utilise le module `logging` de Python pour signaler l'état et les err
 - Utiliser des f-strings pour interpoler les variables.
 - Rester concis et éviter les préfixes tels que `[ERREUR]`.
 
-Example:
+Exemple:
 ```python
 logger.error(f"Echec du téléchargement : {exc}")
 ```
