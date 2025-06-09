@@ -93,7 +93,7 @@ class ProgressBarHandler:
         """Compute percentage and forward it to :func:`progress_bar`."""
         total_bytes_download = getattr(stream, "filesize", None)
         if not total_bytes_download:
-            logger.warning("Missing total filesize. Assuming complete")
+            logger.warning("Taille totale manquante, téléchargement supposé terminé")
             progress = 100.0
         else:
             bytes_downloaded = total_bytes_download - bytes_remaining
