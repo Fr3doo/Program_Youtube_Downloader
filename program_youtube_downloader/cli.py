@@ -65,31 +65,42 @@ class CLI:
         options = self.create_download_options(audio_only)
         self.downloader.download_multiple_videos(urls, options)
 
-    def handle_playlist_option(self, audio_only: bool) -> None:
-        """Download an entire playlist."""
-        url = cli_utils.ask_youtube_url()
+    # ------------------------------------------------------------------
+    # Loader helpers
+    # ------------------------------------------------------------------
+    def load_playlist(self, url: str) -> Playlist:
+        """Return a :class:`Playlist` instance for ``url`` or raise an error."""
         try:
-            playlist = Playlist(url)
+            return Playlist(url)
         except (PytubeError, KeyError, ValueError) as e:
             logger.exception("Error connecting to playlist")
             raise PlaylistConnectionError("Connexion à la Playlist impossible") from e
         except Exception:
             logger.exception("Unexpected error while connecting to playlist")
             raise
-        options = self.create_download_options(audio_only)
-        self.downloader.download_multiple_videos(playlist, options)  # type: ignore
 
-    def handle_channel_option(self, audio_only: bool) -> None:
-        """Download all videos from a channel."""
-        url = cli_utils.ask_youtube_url()
+    def load_channel(self, url: str) -> Channel:
+        """Return a :class:`Channel` instance for ``url`` or raise an error."""
         try:
-            channel = Channel(url)
+            return Channel(url)
         except (PytubeError, KeyError, ValueError) as e:
             logger.exception("Error connecting to channel")
             raise ChannelConnectionError("Connexion à la chaîne Youtube impossible") from e
         except Exception:
             logger.exception("Unexpected error while connecting to channel")
             raise
+
+    def handle_playlist_option(self, audio_only: bool) -> None:
+        """Download an entire playlist."""
+        url = cli_utils.ask_youtube_url()
+        playlist = self.load_playlist(url)
+        options = self.create_download_options(audio_only)
+        self.downloader.download_multiple_videos(playlist, options)  # type: ignore
+
+    def handle_channel_option(self, audio_only: bool) -> None:
+        """Download all videos from a channel."""
+        url = cli_utils.ask_youtube_url()
+        channel = self.load_channel(url)
         options = self.create_download_options(audio_only)
         self.downloader.download_multiple_videos(channel, options)  # type: ignore
 

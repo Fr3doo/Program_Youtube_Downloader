@@ -5,16 +5,11 @@ import sys
 import argparse
 import logging
 from pathlib import Path
-from pytube import Playlist, Channel
 
-
-from pytube.exceptions import PytubeError
 from . import cli_utils
 from .downloader import YoutubeDownloader
-from .exceptions import PlaylistConnectionError, ChannelConnectionError
-from .config import DownloadOptions
-from .constants import MenuOption
 from .cli import CLI
+from .config import DownloadOptions
 
 logger = logging.getLogger(__name__)
 
@@ -145,26 +140,14 @@ def main(
             options,
         )
     elif command == "playlist":
-        try:
-            playlist = Playlist(args.url)
-        except (PytubeError, KeyError, ValueError) as e:
-            raise PlaylistConnectionError("Connexion à la Playlist impossible") from e
-        except Exception:
-            logger.exception("Unexpected error while connecting to playlist")
-            raise
+        playlist = cli.load_playlist(args.url)
         options = create_download_options(cli, args.audio, args.output_dir)
         yd.download_multiple_videos(
             playlist,
             options,
         )  # type: ignore
     elif command == "channel":
-        try:
-            channel = Channel(args.url)
-        except (PytubeError, KeyError, ValueError) as e:
-            raise ChannelConnectionError("Connexion à la chaîne Youtube impossible") from e
-        except Exception:
-            logger.exception("Unexpected error while connecting to channel")
-            raise
+        channel = cli.load_channel(args.url)
         options = create_download_options(cli, args.audio, args.output_dir)
         yd.download_multiple_videos(
             channel,

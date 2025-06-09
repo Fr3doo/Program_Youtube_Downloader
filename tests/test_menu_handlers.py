@@ -36,7 +36,7 @@ def test_handle_videos_option(monkeypatch, tmp_path):
 def test_handle_playlist_option(monkeypatch, tmp_path):
     dd = DummyDownloader()
     monkeypatch.setattr(cli_module.cli_utils, "ask_youtube_url", lambda: "https://youtube.com/playlist")
-    monkeypatch.setattr(cli_module, "Playlist", lambda url: ["v1"])
+    monkeypatch.setattr(cli_module.CLI, "load_playlist", lambda self, url: ["v1"])
     monkeypatch.setattr(cli_module.CLI, "create_download_options", lambda self, ao: DownloadOptions(save_path=tmp_path, download_sound_only=ao))
     cli = cli_module.CLI(dd)
     cli.handle_playlist_option(True)
@@ -47,7 +47,7 @@ def test_handle_playlist_option(monkeypatch, tmp_path):
 def test_handle_playlist_option_error(monkeypatch):
     dd = DummyDownloader()
     monkeypatch.setattr(cli_module.cli_utils, "ask_youtube_url", lambda: "https://youtube.com/playlist")
-    monkeypatch.setattr(cli_module, "Playlist", lambda url: (_ for _ in ()).throw(ValueError()))
+    monkeypatch.setattr(cli_module.CLI, "load_playlist", lambda self, url: (_ for _ in ()).throw(cli_module.PlaylistConnectionError()))
     with pytest.raises(cli_module.PlaylistConnectionError):
         cli_module.CLI(dd).handle_playlist_option(False)
 
@@ -55,6 +55,6 @@ def test_handle_playlist_option_error(monkeypatch):
 def test_handle_channel_option_error(monkeypatch):
     dd = DummyDownloader()
     monkeypatch.setattr(cli_module.cli_utils, "ask_youtube_url", lambda: "https://youtube.com/channel")
-    monkeypatch.setattr(cli_module, "Channel", lambda url: (_ for _ in ()).throw(ValueError()))
+    monkeypatch.setattr(cli_module.CLI, "load_channel", lambda self, url: (_ for _ in ()).throw(cli_module.ChannelConnectionError()))
     with pytest.raises(cli_module.ChannelConnectionError):
         cli_module.CLI(dd).handle_channel_option(False)
