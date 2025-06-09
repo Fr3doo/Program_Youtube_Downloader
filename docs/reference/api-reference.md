@@ -33,6 +33,7 @@ Fonctions d'interaction utilisateur :
 ## `progress.py`
 - `on_download_progress(stream, chunk, remaining)` : gestionnaire simple de progression.
 - `ProgressOptions` : dataclass de configuration de la barre.
+- `ProgressEvent` : informations structurées sur l'avancement d'un téléchargement.
 - `progress_bar(progress, options=None)` : affiche une barre de progression dans le terminal.
 - `ProgressBarHandler` : implémente `on_progress` pour `pytubefix`.
 - `VerboseProgressHandler` : affiche uniquement le pourcentage sans barre.

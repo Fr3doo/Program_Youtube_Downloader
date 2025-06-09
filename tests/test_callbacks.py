@@ -6,6 +6,7 @@ import pytest
 from program_youtube_downloader import downloader as downloader_module
 from program_youtube_downloader import cli_utils
 from program_youtube_downloader.downloader import YoutubeDownloader
+from program_youtube_downloader import progress
 from program_youtube_downloader.config import DownloadOptions
 from program_youtube_downloader.exceptions import DownloadError
 from program_youtube_downloader.types import YouTubeVideo
@@ -41,9 +42,11 @@ class DummyYT(YouTubeVideo):
 
 class DummyHandler:
     called = False
+    last_event = None
 
-    def on_progress(self, stream, chunk, bytes_remaining) -> None:
+    def on_progress(self, event) -> None:
         self.called = True
+        self.last_event = event
 
 
 def test_create_youtube_registers_progress(monkeypatch) -> None:
@@ -60,7 +63,10 @@ def test_create_youtube_registers_progress(monkeypatch) -> None:
     yt = yd._create_youtube("https://youtu.be/x", progress)
 
     assert yt is created['yt']
-    assert created['yt'].progress.__self__ is progress
+    assert callable(created['yt'].progress)
+    created['yt'].progress(None, None, 0)
+    assert progress.called
+    assert progress.last_event.percent == 100.0
 
 
 def test_select_stream_uses_callback() -> None:
@@ -102,7 +108,9 @@ def test_prepare_video_success(monkeypatch) -> None:
     streams, yt, title = result
     assert streams is yt.streams
     assert title == "video"
-    assert yt.progress.__self__ is progress
+    assert callable(yt.progress)
+    yt.progress(None, None, 0)
+    assert progress.called
 
 
 def test_submit_download(monkeypatch, tmp_path: Path) -> None:
@@ -190,7 +198,9 @@ def test_download_multiple_videos_custom_callbacks(monkeypatch, tmp_path: Path) 
     ], options)
 
     assert (tmp_path / "sample.mp4").exists()
-    assert created['yt'].progress.__self__ is progress
+    assert callable(created['yt'].progress)
+    created['yt'].progress(None, None, 0)
+    assert progress.called
     assert called['choice']
 
 
@@ -337,7 +347,7 @@ def test_download_multiple_videos_custom_progress(monkeypatch, tmp_path: Path) -
         def __init__(self) -> None:
             self.called = False
 
-        def on_progress(self, stream, chunk, bytes_remaining) -> None:
+        def on_progress(self, event) -> None:
             self.called = True
 
     handler = SimpleHandler()
@@ -353,4 +363,6 @@ def test_download_multiple_videos_custom_progress(monkeypatch, tmp_path: Path) -
     yd.download_multiple_videos(["https://youtu.be/x"], options)
 
     assert (tmp_path / "sample.mp4").exists()
-    assert created["yt"].progress.__self__ is handler
+    assert callable(created["yt"].progress)
+    created["yt"].progress(None, None, 0)
+    assert handler.called

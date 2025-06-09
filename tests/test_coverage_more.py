@@ -35,8 +35,8 @@ def test_progress_bar_complete(capsys):
 def test_on_download_progress_wrapper(monkeypatch):
     called = {}
 
-    def fake(self, stream, chunk, remaining):
-        called["ok"] = True
+    def fake(self, event):
+        called["ok"] = isinstance(event, progress.ProgressEvent)
 
     monkeypatch.setattr(progress.ProgressBarHandler, "on_progress", fake)
     progress.on_download_progress(None, None, 0)
