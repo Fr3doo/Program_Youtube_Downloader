@@ -176,6 +176,17 @@ class YoutubeDownloader:
         file_path = Path(file_downloaded)
         try:
             new_file = file_path.with_suffix(".mp3")
+            if new_file.exists():
+                counter = 1
+                candidate = new_file.with_name(
+                    f"{new_file.stem}_{counter}{new_file.suffix}"
+                )
+                while candidate.exists():
+                    counter += 1
+                    candidate = new_file.with_name(
+                        f"{new_file.stem}_{counter}{new_file.suffix}"
+                    )
+                new_file = candidate
             file_path.rename(new_file)
             if file_path.exists():
                 file_path.unlink()
