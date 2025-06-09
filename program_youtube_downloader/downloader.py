@@ -294,6 +294,9 @@ class YoutubeDownloader:
         Returns:
             ``None``. The method does not report which URLs failed to
             download.
+
+        Raises:
+            ValueError: If ``options.max_workers`` is less than 1.
         """
 
         download_sound_only = options.download_sound_only
@@ -308,6 +311,9 @@ class YoutubeDownloader:
         if not url_list:
             logger.error("[ERREUR] : il y a aucune vidéo à télécharger")
             return None
+
+        if options.max_workers < 1:
+            raise ValueError("max_workers must be >= 1")
 
         futures: dict[Any, str] = {}
         with ThreadPoolExecutor(max_workers=options.max_workers) as executor:

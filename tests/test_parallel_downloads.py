@@ -108,3 +108,11 @@ def test_end_message_skipped_on_error(monkeypatch, tmp_path: Path):
     yd.download_multiple_videos(urls, options)
 
     assert "printed" not in called
+
+
+def test_invalid_max_workers(tmp_path: Path) -> None:
+    """max_workers < 1 should raise an error."""
+    yd = YoutubeDownloader(youtube_cls=fake_constructor)
+    options = DownloadOptions(save_path=tmp_path, max_workers=0)
+    with pytest.raises(ValueError):
+        yd.download_multiple_videos(["https://youtu.be/a"], options)
