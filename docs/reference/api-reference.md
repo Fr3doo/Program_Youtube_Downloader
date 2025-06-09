@@ -10,7 +10,7 @@ Cette section décrit brièvement les fonctions et classes disponibles dans le p
 
 ## `downloader.py`
 - **`YoutubeDownloader`** : classe principale gérant le téléchargement.
-  - `streams_video(download_sound_only, youtube_video)` : retourne les flux disponibles pour une vidéo.
+  - `get_video_streams(download_sound_only, youtube_video)` : retourne les flux disponibles pour une vidéo.
   - `conversion_mp4_in_mp3(path)` : convertit un fichier MP4 en MP3 et supprime l'original.
   - `download_multiple_videos(urls, options)` : télécharge une liste d'URL ou de ressources YouTube.
 

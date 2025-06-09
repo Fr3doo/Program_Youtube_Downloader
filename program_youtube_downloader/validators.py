@@ -51,3 +51,6 @@ def validate_youtube_url(url: str) -> bool:
 
     return True
 
+
+__all__ = ["validate_youtube_url"]
+

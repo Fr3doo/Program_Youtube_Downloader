@@ -40,3 +40,6 @@ class DownloadOptions:
     choice_callback: Optional[Callable[[bool, Any], int]] = None
     progress_handler: Optional[ProgressHandler] = None
     max_workers: int = field(default_factory=_max_workers_from_env)
+
+
+__all__ = ["DownloadOptions"]

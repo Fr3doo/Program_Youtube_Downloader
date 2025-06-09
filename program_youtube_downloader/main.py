@@ -157,6 +157,20 @@ def main(
         raise SystemExit(f"Unknown command: {command}")
 
 
+__all__ = [
+    "setup_logging",
+    "parse_args",
+    "create_download_options",
+    "handle_quit_option",
+    "handle_video_option",
+    "handle_videos_option",
+    "handle_playlist_option",
+    "handle_channel_option",
+    "menu",
+    "main",
+]
+
+
 if __name__ == "__main__":  # pragma: no cover
     main()
 
