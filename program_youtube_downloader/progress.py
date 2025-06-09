@@ -14,18 +14,40 @@ logger = logging.getLogger(__name__)
 class ProgressHandler(Protocol):
     """Interface for receiving progress events from pytube."""
 
-    def on_progress(
-        self, stream, chunk, bytes_remaining
-    ) -> None:  # pragma: no cover - typing
+    def on_progress(self, event: "ProgressEvent") -> None:  # pragma: no cover - typing
         """Handle a download progress event."""
         raise NotImplementedError
+
+
+@dataclass
+class ProgressEvent:
+    """Structured information about a download progress update."""
+
+    bytes_total: int
+    bytes_downloaded: int
+    percent: float
+
+
+def create_progress_event(stream, bytes_remaining) -> ProgressEvent:
+    """Return a :class:`ProgressEvent` from pytube callback arguments."""
+    total = getattr(stream, "filesize", None)
+    if not total:
+        logger.warning("Missing total filesize. Assuming complete")
+        percent = 100.0
+        downloaded = total or 0
+        total = total or 0
+    else:
+        downloaded = total - bytes_remaining
+        percent = (downloaded / total) * 100
+    return ProgressEvent(bytes_total=total, bytes_downloaded=downloaded, percent=percent)
 
 
 def on_download_progress(
     stream, chunk, bytes_remaining
 ) -> None:  # pragma: no cover - legacy
     """Backward compatible wrapper around :class:`ProgressBarHandler`."""
-    ProgressBarHandler().on_progress(stream, chunk, bytes_remaining)
+    event = create_progress_event(stream, bytes_remaining)
+    ProgressBarHandler().on_progress(event)
 
 
 @dataclass
@@ -89,32 +111,24 @@ class ProgressBarHandler:
     def __init__(self, options: ProgressOptions | None = None) -> None:
         self.options = options
 
-    def on_progress(self, stream, chunk, bytes_remaining) -> None:
-        """Compute percentage and forward it to :func:`progress_bar`."""
-        total_bytes_download = getattr(stream, "filesize", None)
-        if not total_bytes_download:
-            logger.warning("Missing total filesize. Assuming complete")
-            progress = 100.0
-        else:
-            bytes_downloaded = total_bytes_download - bytes_remaining
-            progress = (bytes_downloaded / total_bytes_download) * 100
-        progress_bar(progress, self.options)
+    def on_progress(self, event: ProgressEvent) -> None:
+        """Display ``event`` using :func:`progress_bar`."""
+        progress_bar(event.percent, self.options)
 
 
 class VerboseProgressHandler:
     """Progress handler printing only the percentage."""
 
-    def on_progress(self, stream, chunk, bytes_remaining) -> None:
+    def on_progress(self, event: ProgressEvent) -> None:
         """Display the download percentage without a bar."""
-        total = stream.filesize
-        downloaded = total - bytes_remaining
-        percent = (downloaded / total) * 100
-        print(f"{percent:.2f}%")
+        print(f"{event.percent:.2f}%")
 
 
 __all__ = [
     "ProgressHandler",
+    "ProgressEvent",
     "on_download_progress",
+    "create_progress_event",
     "ProgressOptions",
     "progress_bar",
     "ProgressBarHandler",

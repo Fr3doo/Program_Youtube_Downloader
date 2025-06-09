@@ -12,6 +12,7 @@ from program_youtube_downloader import cli_utils, utils
 from program_youtube_downloader.downloader import YoutubeDownloader
 from program_youtube_downloader.exceptions import DownloadError, StreamAccessError
 from program_youtube_downloader.config import DownloadOptions
+from program_youtube_downloader import progress
 from program_youtube_downloader.progress import (
     progress_bar,
     ProgressBarHandler,
@@ -123,7 +124,8 @@ def test_progressbarhandler_on_progress(capsys):
     """The default handler should print the current percentage."""
     handler = ProgressBarHandler()
     stream = DummyStream()
-    handler.on_progress(stream, b"", bytes_remaining=500)
+    event = progress.create_progress_event(stream, 500)
+    handler.on_progress(event)
     out = capsys.readouterr().out
     assert "50.00%" in out
 
@@ -140,7 +142,8 @@ def test_progressbarhandler_no_total(caplog, capsys, size):
     handler = ProgressBarHandler()
     stream = Stream(size)
     with caplog.at_level(logging.WARNING):
-        handler.on_progress(stream, b"", bytes_remaining=50)
+        event = progress.create_progress_event(stream, 50)
+        handler.on_progress(event)
     out = capsys.readouterr().out
     assert "100.00%" in out
     assert "filesize" in caplog.text.lower()
@@ -150,7 +153,8 @@ def test_verboseprogresshandler_on_progress(capsys):
     """Verbose handler should print only the percentage."""
     handler = VerboseProgressHandler()
     stream = DummyStream()
-    handler.on_progress(stream, b"", bytes_remaining=750)
+    event = progress.create_progress_event(stream, 750)
+    handler.on_progress(event)
     out = capsys.readouterr().out.strip()
     assert out.endswith("25.00%")
 

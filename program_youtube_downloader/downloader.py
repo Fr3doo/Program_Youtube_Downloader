@@ -10,7 +10,11 @@ from .types import YouTubeVideo
 from .exceptions import DownloadError, StreamAccessError
 from . import cli_utils
 from .config import DownloadOptions
-from .progress import ProgressHandler, ProgressBarHandler
+from .progress import (
+    ProgressHandler,
+    ProgressBarHandler,
+    create_progress_event,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +58,11 @@ class YoutubeDownloader:
         try:
             yt = self.youtube_cls(url)
             if progress_handler:
-                yt.register_on_progress_callback(progress_handler.on_progress)
+                def _wrapper(stream, chunk, bytes_remaining):
+                    event = create_progress_event(stream, bytes_remaining)
+                    progress_handler.on_progress(event)
+
+                yt.register_on_progress_callback(_wrapper)
             return yt
         except KeyError as e:
             logger.error("[ERREUR] : Problème de clé dans les données : %s", e)
