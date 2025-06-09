@@ -18,7 +18,7 @@ Ce document résume les tests unitaires situés dans le dossier `tests/`. Chaque
 
     Fonctions d’aide – teste `program_break_time` et `clear_screen`.
 
-    Comportement du téléchargeur – teste `streams_video`, `conversion_mp4_in_mp3`
+    Comportement du téléchargeur – teste `get_video_streams`, `conversion_mp4_in_mp3`
     et certaines parties de `download_multiple_videos`, y compris les scénarios d’erreur.
 ```
 

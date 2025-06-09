@@ -12,3 +12,6 @@ class YouTubeVideo(Protocol):
 
     def register_on_progress_callback(self, cb) -> None:  # pragma: no cover - typing stub
         ...
+
+
+__all__ = ["YouTubeVideo"]

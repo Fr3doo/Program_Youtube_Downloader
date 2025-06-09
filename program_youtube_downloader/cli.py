@@ -139,3 +139,6 @@ class CLI:
 
             # end match
         # end while
+
+
+__all__ = ["CLI"]

@@ -110,3 +110,13 @@ class VerboseProgressHandler:
         downloaded = total - bytes_remaining
         percent = (downloaded / total) * 100
         print(f"{percent:.2f}%")
+
+
+__all__ = [
+    "ProgressHandler",
+    "on_download_progress",
+    "ProgressOptions",
+    "progress_bar",
+    "ProgressBarHandler",
+    "VerboseProgressHandler",
+]

@@ -34,3 +34,11 @@ class MenuOption(Enum):
 
 # Base URL used to validate YouTube links throughout the project.
 BASE_YOUTUBE_URL = "https://www.youtube.com"
+
+__all__ = [
+    "TITLE_PROGRAM",
+    "TITLE_QUESTION_MENU_ACCUEIL",
+    "CHOICE_MENU_ACCUEIL",
+    "MenuOption",
+    "BASE_YOUTUBE_URL",
+]

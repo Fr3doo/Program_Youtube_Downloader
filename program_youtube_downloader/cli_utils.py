@@ -308,3 +308,16 @@ def pause_return_to_menu() -> None:
     input("Appuyer sur ENTREE pour revenir au menu d'accueil")
     program_break_time(3, "Le menu d'accueil va revenir dans")
     clear_screen()
+
+
+__all__ = [
+    "print_separator",
+    "ask_numeric_value",
+    "display_main_menu",
+    "ask_save_file_path",
+    "ask_youtube_url",
+    "ask_youtube_link_file",
+    "ask_resolution_or_bitrate",
+    "print_end_download_message",
+    "pause_return_to_menu",
+]

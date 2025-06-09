@@ -29,3 +29,15 @@ class DirectoryCreationError(PydlError):
 class InvalidURLError(PydlError):
     """Raised when a provided URL does not match expected YouTube patterns."""
 
+
+__all__ = [
+    "PydlError",
+    "DownloadError",
+    "ValidationError",
+    "PlaylistConnectionError",
+    "ChannelConnectionError",
+    "StreamAccessError",
+    "DirectoryCreationError",
+    "InvalidURLError",
+]
+

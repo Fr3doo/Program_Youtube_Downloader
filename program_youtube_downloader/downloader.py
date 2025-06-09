@@ -374,3 +374,6 @@ class YoutubeDownloader:
         self._report_errors(futures)
         return None
 
+
+__all__ = ["YoutubeDownloader"]
+
