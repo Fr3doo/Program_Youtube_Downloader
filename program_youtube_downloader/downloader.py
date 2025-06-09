@@ -302,8 +302,9 @@ class YoutubeDownloader:
                 logger.exception("Unexpected error in downloader thread")
                 errors.append(url)
 
-        cli_utils.print_end_download_message()
-        if errors:
+        if not errors:
+            cli_utils.print_end_download_message()
+        else:
             logger.error(
                 "[ERREUR] : Les téléchargements suivants ont échoué : %s",
                 ", ".join(errors),
