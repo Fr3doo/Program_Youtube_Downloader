@@ -183,8 +183,8 @@ activer un niveau plus verbeux de deux manières&nbsp;:
    pas sur la variable d'environnement&nbsp;:
 
     ```bash
-program-youtube-downloader --log-level INFO video https://youtu.be/example
-```
+    program-youtube-downloader --log-level INFO video https://youtu.be/example
+    ```
 
 Vous pouvez également passer le dossier de destination directement avec
 `--output-dir` pour les sous-commandes `video`, `playlist` et `channel` :
