@@ -128,6 +128,24 @@ def test_progressbarhandler_on_progress(capsys):
     assert "50.00%" in out
 
 
+@pytest.mark.parametrize("size", [0, None])
+def test_progressbarhandler_no_total(caplog, capsys, size):
+    """When filesize is missing or zero, handler assumes completion."""
+
+    class Stream:
+        def __init__(self, size):
+            if size is not None:
+                self.filesize = size
+
+    handler = ProgressBarHandler()
+    stream = Stream(size)
+    with caplog.at_level(logging.WARNING):
+        handler.on_progress(stream, b"", bytes_remaining=50)
+    out = capsys.readouterr().out
+    assert "100.00%" in out
+    assert "filesize" in caplog.text.lower()
+
+
 def test_verboseprogresshandler_on_progress(capsys):
     """Verbose handler should print only the percentage."""
     handler = VerboseProgressHandler()
