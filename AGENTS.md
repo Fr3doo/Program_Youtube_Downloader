@@ -25,7 +25,7 @@ main()
 ```
 
 ## Agent de téléchargement
-**Rôle** : Récupérer des vidéos ou des pistes audio depuis YouTube et gérer les flux de téléchargement.**
+**Rôle** : Récupérer des vidéos ou des pistes audio depuis YouTube et gérer les flux de téléchargement.
 
 **Point d'entrée** : `download_multiple_videos()` dans [downloader.py](downloader.py).
 
@@ -48,7 +48,7 @@ yd.download_multiple_videos(urls, False)
 ```
 
 ## Agent de conversion
-**Rôle** : Convertir un fichier mp4 téléchargé en mp3.**
+**Rôle** : Convertir un fichier mp4 téléchargé en mp3.
 
 **Point d'entrée** : `conversion_mp4_in_mp3()` dans [downloader.py](downloader.py).
 
@@ -64,7 +64,7 @@ yd.conversion_mp4_in_mp3("video.mp4")
 ```
 
 ## Agent de progression
-**Rôle** : Afficher les informations d'avancement pendant les téléchargements.**
+**Rôle** : Afficher les informations d'avancement pendant les téléchargements.
 
 **Points d'entrée** :
 - `on_download_progress()` dans [program_youtube_downloader/progress.py](program_youtube_downloader/progress.py).
@@ -80,7 +80,7 @@ Utilisation :
 ```
 
 ## Agent de validation
-**Rôle** : Valider les entrées utilisateur et les nettoyer.**
+**Rôle** : Valider les entrées utilisateur et les nettoyer.
 
 **Points d'entrée** :
 - `ask_numeric_value()` dans [program_youtube_downloader/cli_utils.py](program_youtube_downloader/cli_utils.py).
@@ -99,7 +99,7 @@ value = ask_numeric_value(1, 3)
 ```
 
 ## Agent utilitaires
-**Rôle** : Fournir des fonctions d'affichage diverses utilisées dans la CLI et les tests.**
+**Rôle** : Fournir des fonctions d'affichage diverses utilisées dans la CLI et les tests.
 
 **Point d'entrée** : [program_youtube_downloader/utils.py](program_youtube_downloader/utils.py)
 
@@ -108,7 +108,7 @@ value = ask_numeric_value(1, 3)
 - `program_break_time()` pour afficher un compte à rebours textuel.
 
 ## Agent des exceptions
-**Rôle** : Centraliser les classes d'erreur spécifiques au projet.**
+**Rôle** : Centraliser les classes d'erreur spécifiques au projet.
 
 **Point d'entrée** : [program_youtube_downloader/exceptions.py](program_youtube_downloader/exceptions.py)
 
