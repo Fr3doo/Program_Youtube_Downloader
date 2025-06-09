@@ -55,3 +55,5 @@ Ces éléments composent l'API interne du projet et sont utilisés par la CLI ai
 - `PlaylistConnectionError` : connexion à une playlist YouTube impossible.
 - `ChannelConnectionError` : connexion à une chaîne YouTube impossible.
 - `StreamAccessError` : récupération des flux d'une vidéo impossible.
+- `DirectoryCreationError` : levée lorsque le dossier de destination ne peut pas être créé.
+- `InvalidURLError` : levée lorsque une URL ne correspond pas aux schémas YouTube attendus.
