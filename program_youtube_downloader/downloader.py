@@ -186,6 +186,100 @@ class YoutubeDownloader:
                 file_path.unlink()
             logger.info("")
 
+    def _process_url(
+        self,
+        video_url: str,
+        download_sound_only: bool,
+        progress_handler: ProgressHandler | None,
+    ) -> tuple[Any, YouTubeVideo, str] | None:
+        """Return streams, video object and title for ``video_url``."""
+
+        youtube_video = self._create_youtube(video_url, progress_handler)
+        if youtube_video is None:
+            return None
+
+        try:
+            streams = self.get_video_streams(download_sound_only, youtube_video)
+        except StreamAccessError as e:
+            logger.error(
+                "[ERREUR] : Les flux pour la vidéo (%s) n'ont pas pu être récupérés. %s",
+                video_url,
+                e,
+            )
+            return None
+
+        if not streams:
+            logger.error(
+                "[ERREUR] : Aucun flux disponible pour la vidéo (%s).",
+                video_url,
+            )
+            return None
+
+        try:
+            video_title = youtube_video.title
+        except KeyError as e:
+            logger.error(
+                "[ERREUR] : Impossible d'accéder au titre de la vidéo %s. Détail : %s",
+                video_url,
+                e,
+            )
+            return None
+        except PytubeError as e:
+            logger.exception("Error while accessing video title")
+            logger.error(
+                "[ERREUR] : Une erreur est survenue lors de l'accès au titre : %s",
+                e,
+            )
+            return None
+        except Exception:  # pragma: no cover - defensive
+            logger.exception("Unexpected error while accessing video title")
+            return None
+
+        return streams, youtube_video, video_title
+
+    def _submit_download(
+        self,
+        executor: ThreadPoolExecutor,
+        stream: Any,
+        save_path: Path,
+        video_url: str,
+        download_sound_only: bool,
+        futures: dict[Any, str],
+    ) -> None:
+        """Schedule ``stream`` for download using ``executor``."""
+
+        future = executor.submit(
+            self._download_stream,
+            stream,
+            save_path,
+            video_url,
+            download_sound_only,
+        )
+        futures[future] = video_url
+
+    def _report_errors(self, futures: dict[Any, str]) -> None:
+        """Display download results for ``futures``."""
+
+        errors: list[str] = []
+        for future in as_completed(futures):
+            url = futures[future]
+            try:
+                future.result()
+            except DownloadError:
+                errors.append(url)
+            except Exception:  # pragma: no cover - defensive
+                logger.exception("Unexpected error in downloader thread")
+                errors.append(url)
+
+        if not errors:
+            cli_utils.print_end_download_message()
+        else:
+            logger.error(
+                "[ERREUR] : Les téléchargements suivants ont échoué : %s",
+                ", ".join(errors),
+            )
+        cli_utils.pause_return_to_menu()
+
     def download_multiple_videos(
         self,
         youtube_video_urls: Iterable[str],
@@ -218,46 +312,15 @@ class YoutubeDownloader:
         futures: dict[Any, str] = {}
         with ThreadPoolExecutor(max_workers=options.max_workers) as executor:
             for video_url in url_list:
-                youtube_video = self._create_youtube(video_url, progress_handler)
-                if youtube_video is None:
+                processed = self._process_url(
+                    video_url,
+                    download_sound_only,
+                    progress_handler,
+                )
+                if processed is None:
                     continue
 
-                try:
-                    streams = self.get_video_streams(download_sound_only, youtube_video)
-                except StreamAccessError as e:
-                    logger.error(
-                        "[ERREUR] : Les flux pour la vidéo (%s) n'ont pas pu être récupérés. %s",
-                        video_url,
-                        e,
-                    )
-                    continue
-
-                if not streams:
-                    logger.error(
-                        "[ERREUR] : Aucun flux disponible pour la vidéo (%s).",
-                        video_url,
-                    )
-                    continue
-
-                try:
-                    video_title = youtube_video.title
-                except KeyError as e:
-                    logger.error(
-                        "[ERREUR] : Impossible d'accéder au titre de la vidéo %s. Détail : %s",
-                        video_url,
-                        e,
-                    )
-                    continue
-                except PytubeError as e:
-                    logger.exception("Error while accessing video title")
-                    logger.error(
-                        "[ERREUR] : Une erreur est survenue lors de l'accès au titre : %s",
-                        e,
-                    )
-                    continue
-                except Exception:  # pragma: no cover - defensive
-                    logger.exception("Unexpected error while accessing video title")
-                    continue
+                streams, youtube_video, video_title = processed
 
                 if choice_once:
                     choice_user = self._choose_stream(
@@ -282,33 +345,15 @@ class YoutubeDownloader:
 
                 logger.info("Titre: %s", video_title[0:53])
 
-                future = executor.submit(
-                    self._download_stream,
+                self._submit_download(
+                    executor,
                     stream,
                     save_path,
                     video_url,
                     download_sound_only,
+                    futures,
                 )
-                futures[future] = video_url
 
-        errors: list[str] = []
-        for future in as_completed(futures):
-            url = futures[future]
-            try:
-                future.result()
-            except DownloadError:
-                errors.append(url)
-            except Exception:  # pragma: no cover - defensive
-                logger.exception("Unexpected error in downloader thread")
-                errors.append(url)
-
-        if not errors:
-            cli_utils.print_end_download_message()
-        else:
-            logger.error(
-                "[ERREUR] : Les téléchargements suivants ont échoué : %s",
-                ", ".join(errors),
-            )
-        cli_utils.pause_return_to_menu()
+        self._report_errors(futures)
         return None
 
