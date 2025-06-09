@@ -7,8 +7,7 @@ Chaque agent regroupe des fonctions et responsabilités associées.
 ## Agent CLI
 **Rôle** : Fournir l'interface en ligne de commande et dispatcher les choix de l'utilisateur.**
 
-**Points d'entrée** :
-- `main()` dans [main.py](main.py) pour le lancement général.
+- `main()` dans [program_youtube_downloader/main.py](program_youtube_downloader/main.py) pour le lancement général.
 - Classe `CLI` dans [program_youtube_downloader/cli.py](program_youtube_downloader/cli.py) pour la gestion du menu et des sous-commandes.
 
 **Entrées** : arguments de la ligne de commande ou sélections depuis le menu.
@@ -20,7 +19,7 @@ Chaque agent regroupe des fonctions et responsabilités associées.
 
 Utilisation :
 ```python
-from main import main
+from program_youtube_downloader.main import main
 main()
 ```
 
@@ -121,7 +120,7 @@ value = ask_numeric_value(1, 3)
 
 | Agent | Fichier(s) | Fonctions principales |
 |-------|------------|----------------------|
-| Agent CLI | `main.py`, `program_youtube_downloader/cli.py` | `main()`, classe `CLI` |
+| Agent CLI | `program_youtube_downloader/main.py`, `program_youtube_downloader/cli.py` | `main()`, classe `CLI` |
 | Agent de téléchargement | `downloader.py` | `download_multiple_videos` |
 | Agent de conversion | `downloader.py` | `conversion_mp4_in_mp3` |
 | Agent de progression | `program_youtube_downloader/progress.py` | `on_download_progress`, `progress_bar` |

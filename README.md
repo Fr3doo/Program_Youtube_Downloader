@@ -72,7 +72,7 @@ Un menu s’affichera pour choisir le type de téléchargement (vidéo ou audio,
 Pour générer une version autonome du programme vous pouvez utiliser `pyinstaller` :
 
 ```bash
-pyinstaller --onefile --add-data "mypy.ini;." --hidden-import "youtube_downloader" main.py
+pyinstaller --onefile --add-data "mypy.ini;." --hidden-import "youtube_downloader" program_youtube_downloader/main.py
 ```
 
 ## Aperçu
@@ -110,7 +110,7 @@ Image :
 
 ## Structure du projet
 
-- `main.py` : point d’entrée du programme contenant la boucle de menu.
+- `program_youtube_downloader/main.py` : point d’entrée du programme contenant la boucle de menu.
 - `downloader.py` : logique principale de téléchargement et conversions.
 - `cli_utils.py` : fonctions d'interaction utilisateur et gestion des menus.
 - `constants.py` : libellés du menu et URL de base communes.
@@ -150,6 +150,7 @@ consultez [AGENTS.md](AGENTS.md) à la racine du dépôt.
 ## Documentation
 
 - [docs/index.md](docs/index.md)
+- [docs/project-overview.md](docs/project-overview.md)
 - [docs/guides/](docs/guides/)
 - [docs/releases/](docs/releases/)
 - [docs/reference/api-reference.md](docs/reference/api-reference.md)

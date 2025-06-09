@@ -19,7 +19,7 @@ Le cœur de l’application se trouve dans le package `program_youtube_downloade
 
 ## Composants techniques
 
-- **`main.py`** : point d’entrée de la CLI et gestion des arguments.
+- **`program_youtube_downloader/main.py`** : point d’entrée de la CLI et gestion des arguments.
 - **`downloader.py`** : récupération des flux YouTube et sauvegarde des fichiers.
 - **`cli_utils.py`** : affichage des menus et validation des choix utilisateur.
 - **`progress.py`** : barre de progression pendant les téléchargements.

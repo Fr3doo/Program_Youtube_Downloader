@@ -6,7 +6,7 @@ Ce document résume le fonctionnement global du projet **Program Youtube Downloa
 
 Le dépôt contient un outil en ligne de commande permettant de télécharger des vidéos ou l'audio depuis YouTube. La configuration du projet et l'installation des dépendances sont décrites dans `pyproject.toml`, qui déclare un script `program-youtube-downloader` exécutant `program_youtube_downloader.main:main`.
 
-Le README précise les fichiers clés et leur rôle : `main.py` pour la boucle de menu, `downloader.py` pour les téléchargements et conversions, `cli_utils.py` pour les interactions utilisateur, `constants.py` pour les messages du menu, `progress.py` pour la barre de progression, `validators.py` pour vérifier les URL, `config.py` pour l'objet `DownloadOptions`, et `youtube_downloader.py` pour des utilitaires divers.
+Le README précise les fichiers clés et leur rôle : `program_youtube_downloader/main.py` pour la boucle de menu, `downloader.py` pour les téléchargements et conversions, `cli_utils.py` pour les interactions utilisateur, `constants.py` pour les messages du menu, `progress.py` pour la barre de progression, `validators.py` pour vérifier les URL, `config.py` pour l'objet `DownloadOptions`, et `youtube_downloader.py` pour des utilitaires divers.
 
 ## Nouveautés
 
@@ -17,7 +17,7 @@ Le README précise les fichiers clés et leur rôle : `main.py` pour la boucle 
 
 Le fichier `AGENTS.md` décrit chaque *agent* (groupe de responsabilités) en indiquant son point d'entrée principal :
 
-- **Agent CLI** : `main()` dans `main.py` gère les arguments et lance une sous-commande ou un menu interactif.
+- **Agent CLI** : `main()` dans `program_youtube_downloader/main.py` gère les arguments et lance une sous-commande ou un menu interactif.
 - **Agent de téléchargement** : `download_multiple_videos()` dans `downloader.py` se charge d'obtenir les flux vidéo via `pytubefix` et de les enregistrer.
 - **Agent de conversion** : `conversion_mp4_in_mp3()` dans `downloader.py` renomme un fichier MP4 en MP3 et supprime l'original.
 - **Agent de progression** : `on_download_progress` et `progress_bar` dans `progress.py` pour l'affichage d'une barre de téléchargement.
