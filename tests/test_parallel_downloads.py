@@ -110,6 +110,27 @@ def test_end_message_skipped_on_error(monkeypatch, tmp_path: Path):
     assert "printed" not in called
 
 
+def test_end_message_shown_on_success(monkeypatch, tmp_path: Path) -> None:
+    """The end download message should be printed when downloads succeed."""
+
+    monkeypatch.setattr(YoutubeDownloader, "get_video_streams", lambda self, dso, yt: yt.streams)
+
+    called = {}
+
+    def end_message() -> None:
+        called["printed"] = True
+
+    monkeypatch.setattr(cli_utils, "print_end_download_message", end_message)
+    monkeypatch.setattr(cli_utils, "pause_return_to_menu", lambda *a, **k: None)
+
+    yd = YoutubeDownloader(youtube_cls=fake_constructor)
+    options = DownloadOptions(save_path=tmp_path, max_workers=2)
+    urls = ["https://youtu.be/a", "https://youtu.be/b"]
+    yd.download_multiple_videos(urls, options)
+
+    assert "printed" in called
+
+
 def test_invalid_max_workers(tmp_path: Path) -> None:
     """max_workers < 1 should raise an error."""
     yd = YoutubeDownloader(youtube_cls=fake_constructor)
