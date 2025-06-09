@@ -1,5 +1,5 @@
-# main.py
-# pyinstaller --onefile --add-data "mypy.ini;." --hidden-import "youtube_downloader" main.py
+# program_youtube_downloader/main.py
+# pyinstaller --onefile --add-data "mypy.ini;." --hidden-import "youtube_downloader" program_youtube_downloader/main.py
 import os
 import sys
 import argparse
