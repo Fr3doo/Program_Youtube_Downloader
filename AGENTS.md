@@ -68,10 +68,12 @@ yd.conversion_mp4_in_mp3("video.mp4")
 **Points d'entrée** :
 - `on_download_progress()` dans [program_youtube_downloader/progress.py](program_youtube_downloader/progress.py).
 - `progress_bar()` dans [program_youtube_downloader/progress.py](program_youtube_downloader/progress.py).
+- Dataclass `ProgressOptions` pour personnaliser l'affichage.
+- Classes `ProgressBarHandler` et `VerboseProgressHandler` implémentant `ProgressHandler`.
 
 **Entrées** : rappels de flux provenant de `pytubefix`, pourcentages d'avancement.
 
-**Sorties** : barre de progression textuelle dans la console.
+**Sorties** : barre de progression textuelle dans la console ou simple pourcentage.
 
 Utilisation :
 ```python
@@ -121,10 +123,10 @@ value = ask_numeric_value(1, 3)
 
 | Agent | Fichier(s) | Fonctions principales |
 |-------|------------|----------------------|
-| Agent CLI | `program_youtube_downloader/main.py`, `program_youtube_downloader/cli.py` | `main()`, classe `CLI` |
+| Agent CLI | `program_youtube_downloader/main.py`, `program_youtube_downloader/cli.py` | `setup_logging`, `parse_args`, `main()`, classe `CLI` |
 | Agent de téléchargement | `downloader.py` | `download_multiple_videos` |
 | Agent de conversion | `downloader.py` | `conversion_mp4_in_mp3` |
-| Agent de progression | `program_youtube_downloader/progress.py` | `on_download_progress`, `progress_bar` |
+| Agent de progression | `program_youtube_downloader/progress.py` | `on_download_progress`, `progress_bar`, `ProgressOptions`, `ProgressBarHandler`, `VerboseProgressHandler` |
 | Agent de validation | `program_youtube_downloader/cli_utils.py` | `ask_numeric_value`, `ask_youtube_url`, `ask_youtube_link_file` |
 | Agent des constantes | `program_youtube_downloader/constants.py` | libellés du menu, `BASE_YOUTUBE_URL` |
 | Agent de configuration | `program_youtube_downloader/config.py` | dataclass `DownloadOptions` |

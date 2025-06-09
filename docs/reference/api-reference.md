@@ -3,7 +3,8 @@
 Cette section décrit brièvement les fonctions et classes disponibles dans le package `program_youtube_downloader`.
 
 ## `program_youtube_downloader/main.py`
-- **`parse_args(argv=None)`** : analyse les arguments de la ligne de commande et retourne un objet `argparse.Namespace`.
+- **`setup_logging(level)`** : configure le module `logging` pour l'application.
+- **`parse_args(argv=None)`** : analyse les arguments de la ligne de commande et lit la variable d'environnement `PYDL_LOG_LEVEL` pour le niveau par défaut.
 - **`menu()`** : lance le menu interactif (non couvert par les tests).
 - **`main(argv=None)`** : point d'entrée principal qui redirige vers les sous-commandes ou le menu.
 - **`create_download_options(audio_only, output_dir=None)`** : construit un objet `DownloadOptions` prêt à l'emploi.
@@ -31,14 +32,14 @@ Fonctions d'interaction utilisateur :
 
 ## `progress.py`
 - `on_download_progress(stream, chunk, remaining)` : gestionnaire simple de progression.
+- `ProgressOptions` : dataclass de configuration de la barre.
 - `ProgressEvent` : informations structurées sur l'avancement d'un téléchargement.
-- `ProgressOptions` : configuration de l'affichage de la barre.
 - `progress_bar(progress, options=None)` : affiche une barre de progression dans le terminal.
 - `ProgressBarHandler` : implémente `on_progress` pour `pytubefix`.
 - `VerboseProgressHandler` : affiche uniquement le pourcentage sans barre.
 
 ## `config.py`
-- `DownloadOptions` : dataclass regroupant les options de téléchargement (dossier, audio seul, callback de choix, gestionnaire de progression, nombre de threads).
+- `DownloadOptions` : dataclass regroupant les options de téléchargement (dossier, audio seul, callback de choix, gestionnaire de progression, nombre de threads). Le champ `max_workers` est initialisé depuis la variable d'environnement `PYDL_MAX_WORKERS` si elle est définie.
 
 ## `youtube_downloader.py`
 Utilitaires généraux :

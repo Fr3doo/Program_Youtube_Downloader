@@ -5,7 +5,8 @@ Toutes les modifications notables sont listées par version.
 Le format est inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
 ## [Unreleased]
-- Documentez ici les changements prévus pour la prochaine version.
+- Ajout de la variable d'environnement `PYDL_LOG_LEVEL` pour contrôler la verbosité des logs.
+- Nouvelle dataclass `ProgressOptions` et gestionnaires `ProgressBarHandler`/`VerboseProgressHandler` pour suivre l'avancement des téléchargements.
 
 ## [0.1.0] - 2025-06-06
 ### Added

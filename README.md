@@ -145,6 +145,16 @@ handler = VerboseProgressHandler()
 yd = YoutubeDownloader(progress_handler=handler)
 ```
 
+Vous pouvez également personnaliser l'apparence de la barre de
+progression grâce à la dataclass `ProgressOptions` :
+
+```python
+from program_youtube_downloader.progress import ProgressBarHandler, ProgressOptions
+
+options = ProgressOptions(size=50, prefix_end="Fini !")
+yd = YoutubeDownloader(progress_handler=ProgressBarHandler(options))
+```
+
 Pour une description détaillée des agents internes et de leurs responsabilités,
 consultez [AGENTS.md](AGENTS.md) à la racine du dépôt.
 
