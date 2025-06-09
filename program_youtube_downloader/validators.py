@@ -1,14 +1,9 @@
-import re
+"""Input validation helpers."""
+
+from urllib.parse import urlparse, parse_qs
 
 from .exceptions import InvalidURLError
 
-
-_VIDEO_RE = re.compile(
-    r"^https?://(?:www\.)?"
-    r"(?:(?:[\w-]+\.)?youtube\.com/watch\?(?:[^\s]*\bv=[\w-]+)(?:[^\s]*\blist=[\w-]+)?"
-    r"|youtu\.be/[\w-]+(?:\?list=[\w-]+)?)$",
-    re.IGNORECASE,
-)
 
 
 def validate_youtube_url(url: str) -> bool:
@@ -27,7 +22,31 @@ def validate_youtube_url(url: str) -> bool:
     Raises:
         InvalidURLError: If the URL does not look like a YouTube link.
     """
-    if not url or not _VIDEO_RE.match(url.strip()):
+    clean_url = url.strip()
+    if not clean_url or " " in clean_url:
+        raise InvalidURLError("URL invalide")
+
+    parsed = urlparse(clean_url)
+
+    if parsed.scheme not in ("http", "https"):
+        raise InvalidURLError("URL invalide")
+
+    netloc = parsed.netloc.lower()
+    if netloc == "www.youtube.com":
+        netloc = "youtube.com"
+
+    if netloc not in {"youtube.com", "youtu.be"}:
+        raise InvalidURLError("URL invalide")
+
+    video_id = ""
+    if netloc == "youtube.com":
+        video_id = parse_qs(parsed.query).get("v", [""])[0]
+    else:
+        path = parsed.path.strip("/")
+        if path:
+            video_id = path.split("/", 1)[0]
+
+    if not video_id:
         raise InvalidURLError("URL invalide")
 
     return True
