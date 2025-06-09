@@ -1,11 +1,14 @@
 import sys
 from dataclasses import dataclass
 from typing import Protocol
+import logging
 
 import colorama
 from colorama import init
 
 init(autoreset=True)
+
+logger = logging.getLogger(__name__)
 
 
 class ProgressHandler(Protocol):
@@ -88,9 +91,13 @@ class ProgressBarHandler:
 
     def on_progress(self, stream, chunk, bytes_remaining) -> None:
         """Compute percentage and forward it to :func:`progress_bar`."""
-        total_bytes_download = stream.filesize
-        bytes_downloaded = stream.filesize - bytes_remaining
-        progress = (bytes_downloaded / total_bytes_download) * 100
+        total_bytes_download = getattr(stream, "filesize", None)
+        if not total_bytes_download:
+            logger.warning("Missing total filesize. Assuming complete")
+            progress = 100.0
+        else:
+            bytes_downloaded = total_bytes_download - bytes_remaining
+            progress = (bytes_downloaded / total_bytes_download) * 100
         progress_bar(progress, self.options)
 
 
