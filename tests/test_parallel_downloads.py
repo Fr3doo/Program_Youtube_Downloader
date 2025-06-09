@@ -71,7 +71,7 @@ def test_parallel_error_collection(monkeypatch, tmp_path: Path, caplog):
             raise DownloadError("boom")
         Path(path / stream.default_filename).write_text("ok")
 
-    monkeypatch.setattr(YoutubeDownloader, "_download_stream", failing)
+    monkeypatch.setattr(YoutubeDownloader, "_download_video", failing)
     yd = YoutubeDownloader(youtube_cls=fake_constructor)
     options = DownloadOptions(save_path=tmp_path, max_workers=2)
     urls = ["https://youtu.be/a", "https://youtu.be/b"]
@@ -92,7 +92,7 @@ def test_end_message_skipped_on_error(monkeypatch, tmp_path: Path):
             raise DownloadError("boom")
         Path(path / stream.default_filename).write_text("ok")
 
-    monkeypatch.setattr(YoutubeDownloader, "_download_stream", failing)
+    monkeypatch.setattr(YoutubeDownloader, "_download_video", failing)
 
     called = {}
 

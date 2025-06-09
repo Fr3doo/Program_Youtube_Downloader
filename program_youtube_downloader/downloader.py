@@ -68,7 +68,7 @@ class YoutubeDownloader:
             logger.error("[ERREUR] : Connexion à la vidéo impossible : %s", e)
             return None
 
-    def _choose_stream(
+    def _select_stream(
         self,
         download_sound_only: bool,
         streams: Any,
@@ -80,7 +80,7 @@ class YoutubeDownloader:
             return callback(download_sound_only, streams)
         return 1
 
-    def _download_stream(
+    def _download_video(
         self,
         stream: Any,
         save_path: Path,
@@ -186,7 +186,7 @@ class YoutubeDownloader:
                 file_path.unlink()
             logger.info("")
 
-    def _process_url(
+    def _prepare_video(
         self,
         video_url: str,
         download_sound_only: bool,
@@ -249,7 +249,7 @@ class YoutubeDownloader:
         """Schedule ``stream`` for download using ``executor``."""
 
         future = executor.submit(
-            self._download_stream,
+            self._download_video,
             stream,
             save_path,
             video_url,
@@ -318,7 +318,7 @@ class YoutubeDownloader:
         futures: dict[Any, str] = {}
         with ThreadPoolExecutor(max_workers=options.max_workers) as executor:
             for video_url in url_list:
-                processed = self._process_url(
+                processed = self._prepare_video(
                     video_url,
                     download_sound_only,
                     progress_handler,
@@ -329,7 +329,7 @@ class YoutubeDownloader:
                 streams, youtube_video, video_title = processed
 
                 if choice_once:
-                    choice_user = self._choose_stream(
+                    choice_user = self._select_stream(
                         download_sound_only,
                         streams,
                         choice_callback,

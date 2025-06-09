@@ -63,7 +63,7 @@ def test_create_youtube_registers_progress(monkeypatch) -> None:
     assert created['yt'].progress.__self__ is progress
 
 
-def test_choose_stream_uses_callback() -> None:
+def test_select_stream_uses_callback() -> None:
     called = {}
 
     def cb(sound_only: bool, streams: list[int]) -> int:
@@ -71,13 +71,13 @@ def test_choose_stream_uses_callback() -> None:
         return 2
 
     yd = YoutubeDownloader()
-    result = yd._choose_stream(True, [1, 2], cb)
+    result = yd._select_stream(True, [1, 2], cb)
 
     assert result == 2
     assert called['args'] == (True, [1, 2])
 
 
-def test_download_stream_error(monkeypatch, tmp_path: Path) -> None:
+def test_download_video_error(monkeypatch, tmp_path: Path) -> None:
     class FailStream(DummyStream):
         def download(self, output_path: str) -> str:
             raise OSError("boom")
@@ -86,17 +86,17 @@ def test_download_stream_error(monkeypatch, tmp_path: Path) -> None:
     yd = YoutubeDownloader()
 
     with pytest.raises(DownloadError):
-        yd._download_stream(stream, tmp_path, "https://youtu.be/fail", False)
+        yd._download_video(stream, tmp_path, "https://youtu.be/fail", False)
 
 
-def test_process_url_success(monkeypatch) -> None:
+def test_prepare_video_success(monkeypatch) -> None:
     monkeypatch.setattr(
         YoutubeDownloader, "get_video_streams", lambda self, dso, yt: yt.streams
     )
     progress = DummyHandler()
     yd = YoutubeDownloader(progress_handler=progress, youtube_cls=lambda u: DummyYT(u))
 
-    result = yd._process_url("https://youtu.be/x", False, progress)
+    result = yd._prepare_video("https://youtu.be/x", False, progress)
 
     assert result is not None
     streams, yt, title = result
@@ -112,7 +112,7 @@ def test_submit_download(monkeypatch, tmp_path: Path) -> None:
         called["args"] = (stream, path, url, sound_only)
 
     yd = YoutubeDownloader()
-    monkeypatch.setattr(yd, "_download_stream", fake_download)
+    monkeypatch.setattr(yd, "_download_video", fake_download)
 
     class DummyExecutor:
         def __init__(self) -> None:
