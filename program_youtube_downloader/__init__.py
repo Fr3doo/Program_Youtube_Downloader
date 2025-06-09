@@ -1,8 +1,9 @@
 """Public exports for program_youtube_downloader."""
-from .exceptions import DownloadError, ValidationError
+from .exceptions import PydlError, DownloadError, ValidationError
 from .utils import clear_screen, program_break_time
 
 __all__ = [
+    "PydlError",
     "DownloadError",
     "ValidationError",
     "clear_screen",
