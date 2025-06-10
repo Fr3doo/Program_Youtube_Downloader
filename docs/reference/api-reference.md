@@ -15,6 +15,9 @@ Cette section décrit brièvement les fonctions et classes disponibles dans le p
   - `conversion_mp4_in_mp3(path)` : convertit un fichier MP4 en MP3 et supprime l'original.
   - `download_multiple_videos(urls, options)` : télécharge une liste d'URL ou de ressources YouTube.
 
+## `cli.py`
+- `CLI` : interface interactive basée sur `YoutubeDownloader`.
+
 ## `cli_utils.py`
 Fonctions d'interaction utilisateur :
 - `print_separator()` : affiche un séparateur visuel.
@@ -40,6 +43,7 @@ Fonctions d'interaction utilisateur :
 
 ## `config.py`
 - `DownloadOptions` : dataclass regroupant les options de téléchargement (dossier, audio seul, callback de choix, gestionnaire de progression, nombre de threads). Le champ `max_workers` est initialisé depuis la variable d'environnement `PYDL_MAX_WORKERS` si elle est définie.
+- `_max_workers_from_env()` : récupère `PYDL_MAX_WORKERS` et retourne `1` en cas de valeur invalide.
 
 ## `legacy_utils.py`
 Utilitaires généraux :
