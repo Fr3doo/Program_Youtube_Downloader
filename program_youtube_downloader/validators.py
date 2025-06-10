@@ -10,9 +10,10 @@ from .exceptions import InvalidURLError
 def validate_youtube_url(url: str) -> bool:
     """Check whether ``url`` points to a YouTube video.
 
-    The link must use HTTP(S) and either contain a ``v=`` parameter or use the
-    short ``youtu.be/<id>`` form. A ``list`` query parameter is also accepted
-    when present.
+    The link must use HTTP(S), come from ``youtube.com``/``www.youtube.com`` or
+    ``youtu.be`` and either contain a ``v=`` parameter or use the short
+    ``youtu.be/<id>`` form. A ``list`` query parameter is also accepted when
+    present.
 
     Args:
         url: URL provided by the user.
@@ -33,14 +34,11 @@ def validate_youtube_url(url: str) -> bool:
         raise InvalidURLError("URL invalide")
 
     netloc = parsed.netloc.lower()
-    if netloc == "www.youtube.com":
-        netloc = "youtube.com"
-
-    if netloc not in {"youtube.com", "youtu.be"}:
+    if netloc not in {"youtube.com", "www.youtube.com", "youtu.be"}:
         raise InvalidURLError("URL invalide")
 
     video_id = ""
-    if netloc == "youtube.com":
+    if netloc in {"youtube.com", "www.youtube.com"}:
         video_id = parse_qs(parsed.query).get("v", [""])[0]
     else:
         path = parsed.path.strip("/")

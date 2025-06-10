@@ -33,8 +33,10 @@ Fonctions d'interaction utilisateur :
 - `pause_return_to_menu()` : attend une touche avant de revenir au menu.
 
 ## `validators.py`
-- `validate_youtube_url(url)` : vérifie qu'une URL appartient bien à YouTube et
-  que l'identifiant vidéo extrait contient exactement 11 caractères valides.
+- `validate_youtube_url(url)` : s'assure que le domaine est
+  `youtube.com`, `www.youtube.com` ou `youtu.be` et qu'un identifiant vidéo
+  unique de 11 caractères est présent (paramètre `v` ou segment
+  `youtu.be/<id>`).
 
 ## `progress.py`
 - `on_download_progress(stream, chunk, remaining)` : gestionnaire simple de progression.
