@@ -30,6 +30,10 @@ Le cœur de l’application se trouve dans le package `program_youtube_downloade
 - **`types.py`** : protocoles employés pour typer les objets YouTube.
 - **`legacy_utils.py`** : utilitaires généraux (compte à rebours, nettoyage de l’écran).
 
+La fonction `main()` peut recevoir un paramètre `cli_cls` pour instancier une
+classe dérivée de `CLI`. Cela permet d’étendre ou remplacer l’interface en ligne
+de commande sans modifier le reste du code.
+
 ## Schéma de fonctionnement
 
 ```mermaid

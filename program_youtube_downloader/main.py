@@ -113,6 +113,7 @@ def menu() -> None:  # pragma: no cover
 def main(
     argv: list[str] | None = None,
     downloader: YoutubeDownloader | None = None,
+    cli_cls: type[CLI] = CLI,
 ) -> None:
     """Entry point called by the ``program-youtube-downloader`` script.
 
@@ -125,7 +126,7 @@ def main(
     setup_logging(args.log_level)
     command = args.command
 
-    cli = CLI(downloader)
+    cli = cli_cls(downloader)
 
     if command is None or command == "menu":
         menu()
