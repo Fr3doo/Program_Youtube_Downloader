@@ -87,3 +87,28 @@ def test_validate_youtube_url_space_handling() -> None:
     )
     with pytest.raises(InvalidURLError):
         validate_youtube_url(f"https://www.youtube.com/watch?v=dQw4w9 WgXcQ")
+
+
+def test_validate_youtube_url_shorts_and_extra() -> None:
+    assert (
+        validate_youtube_url(f"https://www.youtube.com/shorts/{VALID_ID}") is True
+    )
+    assert (
+        validate_youtube_url(
+            f"https://www.youtube.com/playlist?list=abc&v={VALID_ID}"
+        )
+        is True
+    )
+    with pytest.raises(InvalidURLError):
+        validate_youtube_url("https://www.youtube.com/shorts/")
+    with pytest.raises(InvalidURLError):
+        validate_youtube_url("https://www.youtube.com/channel/UC12345")
+
+
+def test_validate_youtube_url_rejects_bad_query() -> None:
+    with pytest.raises(InvalidURLError):
+        validate_youtube_url(
+            f"https://www.youtube.com/watch?v={VALID_ID}&feature=share"
+        )
+    with pytest.raises(InvalidURLError):
+        validate_youtube_url(f"https://youtu.be/{VALID_ID}?foo=bar")

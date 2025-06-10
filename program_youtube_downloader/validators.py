@@ -37,9 +37,27 @@ def validate_youtube_url(url: str) -> bool:
     if netloc not in {"youtube.com", "www.youtube.com", "youtu.be"}:
         raise InvalidURLError("URL invalide")
 
+    # only allow common share/query parameters
+    allowed_params = {"v", "list", "t"}
+    query_params = parse_qs(parsed.query, keep_blank_values=True)
+    if any(k not in allowed_params for k in query_params):
+        raise InvalidURLError("URL invalide")
+
     video_id = ""
     if netloc in {"youtube.com", "www.youtube.com"}:
-        video_id = parse_qs(parsed.query).get("v", [""])[0]
+        path = parsed.path
+        if path.startswith("/shorts"):
+            parts = path.strip("/").split("/")
+            if len(parts) >= 2:
+                video_id = parts[1]
+            else:
+                video_id = ""
+        else:
+            video_id = query_params.get("v", [""])[0]
+
+        # reject playlist or channel URLs that don't specify a video ID
+        if not video_id and (path.startswith("/playlist") or path.startswith("/channel")):
+            raise InvalidURLError("URL invalide")
     else:
         path = parsed.path.strip("/")
         if path:
