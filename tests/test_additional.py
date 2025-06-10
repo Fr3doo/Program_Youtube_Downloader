@@ -81,7 +81,7 @@ def test_ask_resolution_or_bitrate_audio(monkeypatch):
         called["range"] = (vmin, vmax)
         return 2
 
-    monkeypatch.setattr(cli_utils, "ask_numeric_value", fake_numeric)
+    monkeypatch.setattr(cli_utils, "ask_numeric_value", lambda *a, **k: fake_numeric(*a))
     choice = cli_utils.ask_resolution_or_bitrate(True, streams)
     assert choice == 2
     assert called["range"] == (1, len(streams))
@@ -90,7 +90,7 @@ def test_ask_resolution_or_bitrate_audio(monkeypatch):
 def test_ask_resolution_or_bitrate_video(monkeypatch):
     """Video resolution flow mirrors the audio version."""
     streams = [SimpleNamespace(resolution="360p"), SimpleNamespace(resolution="720p")]
-    monkeypatch.setattr(cli_utils, "ask_numeric_value", lambda a, b: 1)
+    monkeypatch.setattr(cli_utils, "ask_numeric_value", lambda *a, **k: 1)
     assert (
         cli_utils.ask_resolution_or_bitrate(False, streams) == 1
     )

@@ -4,6 +4,8 @@ from pathlib import Path
 import logging
 from typing import Iterable, Any
 
+from .types import ConsoleIO, DefaultConsoleIO
+
 from .exceptions import ValidationError, DirectoryCreationError, InvalidURLError
 
 from .constants import (
@@ -17,12 +19,18 @@ from .validators import validate_youtube_url
 logger = logging.getLogger(__name__)
 
 
-def print_separator() -> None:
+def print_separator(console: ConsoleIO = DefaultConsoleIO()) -> None:
     """Print a decorative separator line used in menus."""
-    print("*************************************************************")
+    console.print("*************************************************************")
 
 
-def ask_numeric_value(min_value: int, max_value: int, max_attempts: int = 3) -> int:
+def ask_numeric_value(
+    min_value: int,
+    max_value: int,
+    max_attempts: int = 3,
+    *,
+    console: ConsoleIO = DefaultConsoleIO(),
+) -> int:
     """Prompt the user to enter a number between ``min_value`` and ``max_value``.
 
     Args:
@@ -40,7 +48,7 @@ def ask_numeric_value(min_value: int, max_value: int, max_attempts: int = 3) -> 
     """
     attempts = 0
     while True:
-        v_str = input(
+        v_str = console.input(
             f"Donnez une valeur entre {min_value} et {max_value} : \n --> "
         )
         try:
@@ -66,28 +74,32 @@ def ask_numeric_value(min_value: int, max_value: int, max_attempts: int = 3) -> 
         return v_int
 
 
-def display_main_menu() -> int:
+def display_main_menu(*, console: ConsoleIO = DefaultConsoleIO()) -> int:
     """Display the main menu and return the number of choices."""
-    print()
-    print()
-    print_separator()
-    print(f"*            {TITLE_PROGRAM}                     *")
-    print_separator()
-    print(f"{TITLE_QUESTION_MENU_ACCUEIL}                          ")
-    print()
+    console.print()
+    console.print()
+    print_separator(console)
+    console.print(f"*            {TITLE_PROGRAM}                     *")
+    print_separator(console)
+    console.print(f"{TITLE_QUESTION_MENU_ACCUEIL}                          ")
+    console.print()
     i = 0
     for items in CHOICE_MENU_ACCUEIL:
         menu_choice = items
         i += 1
-        print(f"    {i} - {menu_choice}                              ")
-    print("                                                           ")
-    print_separator()
+        console.print(f"    {i} - {menu_choice}                              ")
+    console.print("                                                           ")
+    print_separator(console)
     max_choice_value = i
 
     return max_choice_value
 
 
-def ask_save_file_path(max_attempts: int = 3) -> Path:
+def ask_save_file_path(
+    max_attempts: int = 3,
+    *,
+    console: ConsoleIO = DefaultConsoleIO(),
+) -> Path:
     """Prompt for a destination directory and create it if necessary.
 
     Args:
@@ -105,13 +117,13 @@ def ask_save_file_path(max_attempts: int = 3) -> Path:
 
     attempts = 0
     while True:
-        print()
-        print()
-        print_separator()
-        print("*             Sauvegarde fichier                            *")
-        print_separator()
+        console.print()
+        console.print()
+        print_separator(console)
+        console.print("*             Sauvegarde fichier                            *")
+        print_separator(console)
 
-        save_path = input(
+        save_path = console.input(
             "Indiquez l'endroit où vous voulez stocker le fichier : \n --> "
         )
         path = Path(save_path).expanduser().resolve()
@@ -120,7 +132,9 @@ def ask_save_file_path(max_attempts: int = 3) -> Path:
             path = path.parent
 
         if not path.exists():
-            create = input("Le dossier n'existe pas. Voulez-vous le créer ? [y/N] : ")
+            create = console.input(
+                "Le dossier n'existe pas. Voulez-vous le créer ? [y/N] : "
+            )
             if create.lower().startswith("y"):
                 try:
                     path.mkdir(parents=True, exist_ok=True)
@@ -141,7 +155,11 @@ def ask_save_file_path(max_attempts: int = 3) -> Path:
         return path
 
 
-def ask_youtube_url(max_attempts: int = 3) -> str:
+def ask_youtube_url(
+    max_attempts: int = 3,
+    *,
+    console: ConsoleIO = DefaultConsoleIO(),
+) -> str:
     """Ask the user to provide a single YouTube video URL.
 
     Args:
@@ -157,12 +175,12 @@ def ask_youtube_url(max_attempts: int = 3) -> str:
     """
     attempts = 0
     while True:
-        print()
-        print()
-        print_separator()
-        print("*             Url de votre vidéo Youtube                    *")
-        print_separator()
-        url = input("Indiquez l'url de la vidéo Youtube : \n --> ")
+        console.print()
+        console.print()
+        print_separator(console)
+        console.print("*             Url de votre vidéo Youtube                    *")
+        print_separator(console)
+        url = console.input("Indiquez l'url de la vidéo Youtube : \n --> ")
         url = url.replace(
             "https://www.youtube.com/@", "https://www.youtube.com/c/"
         )
@@ -177,7 +195,11 @@ def ask_youtube_url(max_attempts: int = 3) -> str:
                 raise ValidationError("URL invalide")
 
 
-def ask_youtube_link_file(max_attempts: int = 3) -> list[str]:
+def ask_youtube_link_file(
+    max_attempts: int = 3,
+    *,
+    console: ConsoleIO = DefaultConsoleIO(),
+) -> list[str]:
     """Load a list of YouTube URLs from a text file.
 
     Args:
@@ -195,13 +217,13 @@ def ask_youtube_link_file(max_attempts: int = 3) -> list[str]:
     attempts = 0
     while True:
         valid_urls: list[str] = []
-        print()
-        print()
-        print_separator()
-        print("*             Fichier contenant les urls Youtube            *")
-        print_separator()
-        user_file = input("Indiquez le nom du fichier : \n --> ")
-        print()
+        console.print()
+        console.print()
+        print_separator(console)
+        console.print("*             Fichier contenant les urls Youtube            *")
+        print_separator(console)
+        user_file = console.input("Indiquez le nom du fichier : \n --> ")
+        console.print()
         try:
             file_path = Path(user_file)
             with file_path.open("r", encoding="utf-8") as f:
@@ -255,7 +277,10 @@ def ask_youtube_link_file(max_attempts: int = 3) -> list[str]:
 
 
 def ask_resolution_or_bitrate(
-    download_sound_only: bool, list_available_streams: Iterable[Any]
+    download_sound_only: bool,
+    list_available_streams: Iterable[Any],
+    *,
+    console: ConsoleIO = DefaultConsoleIO(),
 ) -> int:
     """Prompt the user to choose a resolution or bitrate.
 
@@ -275,48 +300,48 @@ def ask_resolution_or_bitrate(
     max_choice_value = i
 
     if download_sound_only:
-        print()
-        print()
-        print_separator()
-        print("*             Choisissez la qualité audio                  *")
-        print_separator()
+        console.print()
+        console.print()
+        print_separator(console)
+        console.print("*             Choisissez la qualité audio                  *")
+        print_separator(console)
         for stream in list_available_streams:
             menu_choice = stream.abr  # Audio quality
             i += 1
-            print(f"      {i} - {menu_choice} ")
+            console.print(f"      {i} - {menu_choice} ")
             max_choice_value = i
 
-        print_separator()
-        v_int = ask_numeric_value(1, max_choice_value)
+        print_separator(console)
+        v_int = ask_numeric_value(1, max_choice_value, console=console)
         return v_int
 
-    print()
-    print()
-    print_separator()
-    print("*             Choisissez la résolution vidéo               *")
-    print_separator()
+    console.print()
+    console.print()
+    print_separator(console)
+    console.print("*             Choisissez la résolution vidéo               *")
+    print_separator(console)
     for stream in list_available_streams:
         menu_choice = stream.resolution  # Video quality
         i += 1
-        print(f"      {i} - {menu_choice} ")
+        console.print(f"      {i} - {menu_choice} ")
         max_choice_value = i
 
-    print_separator()
-    v_int = ask_numeric_value(1, max_choice_value)
+    print_separator(console)
+    v_int = ask_numeric_value(1, max_choice_value, console=console)
     return v_int
 
 
-def print_end_download_message() -> None:
+def print_end_download_message(*, console: ConsoleIO = DefaultConsoleIO()) -> None:
     """Print a short message indicating that all downloads completed."""
     log_blank_line()
     logger.info("Fin du téléchargement")
-    print_separator()
+    print_separator(console)
     log_blank_line()
 
 
-def pause_return_to_menu() -> None:
+def pause_return_to_menu(*, console: ConsoleIO = DefaultConsoleIO()) -> None:
     """Wait for the user to press ENTER then clear the screen."""
-    input("Appuyer sur ENTREE pour revenir au menu d'accueil")
+    console.input("Appuyer sur ENTREE pour revenir au menu d'accueil")
     program_break_time(3, "Le menu d'accueil va revenir dans")
     clear_screen()
 

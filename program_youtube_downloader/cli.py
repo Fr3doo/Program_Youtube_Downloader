@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
+from functools import partial
 
 from pytube import Playlist, Channel
 from pytube.exceptions import PytubeError
 
 from . import cli_utils
+from .types import ConsoleIO, DefaultConsoleIO
 from .downloader import YoutubeDownloader
 from .exceptions import PlaylistConnectionError, ChannelConnectionError
 from .config import DownloadOptions
@@ -21,14 +23,20 @@ logger = logging.getLogger(__name__)
 class CLI:
     """Interactive command line interface for the application."""
 
-    def __init__(self, downloader: YoutubeDownloader | None = None) -> None:
+    def __init__(
+        self,
+        downloader: YoutubeDownloader | None = None,
+        console: ConsoleIO = DefaultConsoleIO(),
+    ) -> None:
         """Create the CLI wrapper around ``YoutubeDownloader``.
 
         Args:
             downloader: Optional custom downloader instance. When ``None`` a
                 new :class:`YoutubeDownloader` is created.
+            console: Object used for ``input``/``print`` operations.
         """
         self.downloader = downloader or YoutubeDownloader()
+        self.console = console
 
     # ------------------------------------------------------------------
     # Download option helpers
@@ -40,11 +48,13 @@ class CLI:
         if output_dir is not None:
             save_path = output_dir.expanduser().resolve()
         else:
-            save_path = cli_utils.ask_save_file_path()
+            save_path = cli_utils.ask_save_file_path(console=self.console)
         return DownloadOptions(
             save_path=save_path,
             download_sound_only=audio_only,
-            choice_callback=cli_utils.ask_resolution_or_bitrate,
+            choice_callback=partial(
+                cli_utils.ask_resolution_or_bitrate, console=self.console
+            ),
         )
 
     # ------------------------------------------------------------------
@@ -62,13 +72,13 @@ class CLI:
 
     def handle_video_option(self, audio_only: bool) -> None:
         """Download a single video or its audio track."""
-        url = cli_utils.ask_youtube_url()
+        url = cli_utils.ask_youtube_url(console=self.console)
         options = self.create_download_options(audio_only)
         self.downloader.download_multiple_videos([url], options)
 
     def handle_videos_option(self, audio_only: bool) -> None:
         """Download multiple videos or their audio tracks from a file."""
-        urls = cli_utils.ask_youtube_link_file()
+        urls = cli_utils.ask_youtube_link_file(console=self.console)
         options = self.create_download_options(audio_only)
         self.downloader.download_multiple_videos(urls, options)
 
@@ -99,14 +109,14 @@ class CLI:
 
     def handle_playlist_option(self, audio_only: bool) -> None:
         """Download an entire playlist."""
-        url = cli_utils.ask_youtube_url()
+        url = cli_utils.ask_youtube_url(console=self.console)
         playlist = self.load_playlist(url)
         options = self.create_download_options(audio_only)
         self.downloader.download_multiple_videos(playlist, options)  # type: ignore
 
     def handle_channel_option(self, audio_only: bool) -> None:
         """Download all videos from a channel."""
-        url = cli_utils.ask_youtube_url()
+        url = cli_utils.ask_youtube_url(console=self.console)
         channel = self.load_channel(url)
         options = self.create_download_options(audio_only)
         self.downloader.download_multiple_videos(channel, options)  # type: ignore
@@ -118,9 +128,13 @@ class CLI:
         """Interactively ask the user what to download and start the process."""
         try:
             while True:
-                choix_max_menu_accueil = cli_utils.display_main_menu()
+                choix_max_menu_accueil = cli_utils.display_main_menu(
+                    console=self.console
+                )
                 choix = MenuOption(
-                    cli_utils.ask_numeric_value(1, choix_max_menu_accueil)
+                    cli_utils.ask_numeric_value(
+                        1, choix_max_menu_accueil, console=self.console
+                    )
                 )
 
                 match choix:

@@ -108,6 +108,17 @@ value = ask_numeric_value(1, 3)
 - `clear_screen()` pour effacer la console selon le système.
 - `program_break_time()` pour afficher un compte à rebours textuel.
 
+## Agent console
+**Rôle** : Abstraire les entrées/sorties console pour faciliter les tests.**
+
+**Point d'entrée** : [program_youtube_downloader/types.py](program_youtube_downloader/types.py)
+
+**Interfaces** :
+- `ConsoleIO` protocole avec les méthodes ``input`` et ``print``.
+- `DefaultConsoleIO` implémentation utilisant les fonctions intégrées.
+
+`CLI` accepte un paramètre ``console`` respectant ce protocole.
+
 ## Agent des exceptions
 **Rôle** : Centraliser les classes d'erreur spécifiques au projet.
 
@@ -131,6 +142,7 @@ value = ask_numeric_value(1, 3)
 | Agent des constantes | `program_youtube_downloader/constants.py` | libellés du menu, `BASE_YOUTUBE_URL` |
 | Agent de configuration | `program_youtube_downloader/config.py` | dataclass `DownloadOptions` |
 | Agent utilitaires | `program_youtube_downloader/utils.py` | `clear_screen`, `program_break_time` |
+| Agent console | `program_youtube_downloader/types.py` | `ConsoleIO`, `DefaultConsoleIO` |
 | Agent des exceptions | `program_youtube_downloader/exceptions.py` | classes d'erreurs |
 
 ## Diagramme d'interaction

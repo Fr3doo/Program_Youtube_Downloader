@@ -2,6 +2,9 @@
 
 Ce tutoriel explique comment dériver `CLI` afin d'ajouter de nouvelles options ou d'adapter le menu interactif.
 La fonction `main()` accepte un argument `cli_cls` pour instancier cette classe personnalisée.
+Depuis la version 0.1.0, `CLI.__init__` prend aussi un paramètre `console`
+implémentant `ConsoleIO`. Vous pouvez fournir un objet personnalisé pour
+rediriger `input` et `print` durant les tests.
 
 ## Exemple minimal
 
