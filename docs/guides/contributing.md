@@ -28,6 +28,17 @@ PYDL_LOG_LEVEL=DEBUG pytest
 PYDL_MAX_WORKERS=2 pytest
 ```
 
+## Vérification du style et des types
+
+Avant de proposer vos modifications, assurez-vous que le code respecte les
+conventions du projet :
+
+```bash
+flake8
+mypy program_youtube_downloader
+```
+
+
 # Module logging
 Ce projet utilise le module `logging` de Python pour signaler l'état et les erreurs. Lors de l'ajout de nouveaux messages :
 

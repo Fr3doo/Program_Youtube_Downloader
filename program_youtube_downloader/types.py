@@ -1,4 +1,4 @@
-from typing import Protocol, Any
+from typing import Protocol, Any, Callable
 
 
 class ConsoleIO(Protocol):
@@ -32,7 +32,9 @@ class YouTubeVideo(Protocol):
 
         ...
 
-    def register_on_progress_callback(self, cb) -> None:  # pragma: no cover - typing stub
+    def register_on_progress_callback(
+        self, cb: Callable[[Any, bytes, int], None]
+    ) -> None:  # pragma: no cover - typing stub
         """Register a callback invoked during downloads."""
 
         ...
