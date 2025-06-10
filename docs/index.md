@@ -40,6 +40,8 @@ Les différents dossiers de `docs/` sont organisés ainsi :
 ### 🧪 Tutoriels & Guides avancés
 - [`guides/download-video-guide.md`](guides/download-video-guide.md)
   > Guide pas à pas pour utiliser la CLI et télécharger une vidéo.
+- [`guides/custom-progress-handler.md`](guides/custom-progress-handler.md)
+  > Créer et enregistrer un gestionnaire de progression personnalisé.
 
 ---
 
