@@ -125,7 +125,7 @@ def ask_save_file_path(max_attempts: int = 3) -> Path:
                 try:
                     path.mkdir(parents=True, exist_ok=True)
                 except OSError:
-                    logger.exception("Directory creation failed")
+                    logger.exception("Échec de la création du dossier")
                     logger.error("Impossible de créer le dossier")
                     attempts += 1
                     if attempts >= max_attempts:

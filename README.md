@@ -180,6 +180,8 @@ Ce projet est destiné à un usage personnel pour faciliter la récupération de
 ## Journalisation
 
 L'outil utilise le module `logging` de Python pour afficher les messages d'erreur.
+Tous les messages affichés dans la console ou dans les journaux sont rédigés en
+**français** afin de conserver une interface cohérente.
 Par défaut, seuls les messages de niveau `ERROR` sont affichés. Vous pouvez
 activer un niveau plus verbeux de deux manières&nbsp;:
 

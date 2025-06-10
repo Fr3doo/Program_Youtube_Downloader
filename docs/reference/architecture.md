@@ -30,6 +30,12 @@ Le cœur de l’application se trouve dans le package `program_youtube_downloade
 - **`types.py`** : protocoles employés pour typer les objets YouTube.
 - **`legacy_utils.py`** : utilitaires généraux (compte à rebours, nettoyage de l’écran).
 
+### Convention de langue
+
+Tous les messages affichés par la CLI et les journaux sont écrits en **français**. Les modules
+`cli.py`, `cli_utils.py`, `downloader.py` et `progress.py` respectent cette règle
+pour garantir une expérience cohérente.
+
 La fonction `main()` peut recevoir un paramètre `cli_cls` pour instancier une
 classe dérivée de `CLI`. Cela permet d’étendre ou remplacer l’interface en ligne
 de commande sans modifier le reste du code.
