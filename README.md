@@ -228,6 +228,15 @@ Les tests unitaires sont écrits avec `pytest`. Après l’installation des dép
 pytest
 ```
 
+### Running the test suite
+
+```bash
+pip install -r requirements.txt
+pytest
+```
+
+L'exécution doit se terminer par `91 passed` indiquant que l'ensemble des tests s'est déroulé sans erreur.
+
 ## Vérification du style
 
 Un fichier `.flake8` configure les règles de base. Pour lancer la vérification :
