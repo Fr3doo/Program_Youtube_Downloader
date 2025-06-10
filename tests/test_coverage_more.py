@@ -94,11 +94,11 @@ def test_ask_youtube_link_file_all_invalid(monkeypatch, tmp_path):
     bad = tmp_path / "bad.txt"
     bad.write_text("not_a_url\n")
     good = tmp_path / "good.txt"
-    good.write_text("https://youtu.be/ok\n")
+    good.write_text("https://youtu.be/dQw4w9WgXcQ\n")
     inputs = iter([str(bad), str(good)])
     monkeypatch.setattr(builtins, "input", lambda *a, **k: next(inputs))
     links = cli_utils.ask_youtube_link_file()
-    assert links == ["https://youtu.be/ok"]
+    assert links == ["https://youtu.be/dQw4w9WgXcQ"]
 
 
 def test_ask_youtube_link_file_oserror(monkeypatch, tmp_path):

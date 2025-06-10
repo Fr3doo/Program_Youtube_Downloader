@@ -7,6 +7,8 @@ from program_youtube_downloader.exceptions import (
     DirectoryCreationError,
 )
 
+VALID_ID = "dQw4w9WgXcQ"
+
 
 def test_ask_numeric_value_retries(monkeypatch):
     inputs = iter(["foo", "5", "2"])
@@ -18,31 +20,31 @@ def test_ask_numeric_value_retries(monkeypatch):
 def test_ask_youtube_url_normalizes_channel(monkeypatch):
     inputs = iter([
         "https://www.youtube.com/@MyChannel",
-        "https://www.youtube.com/watch?v=good",
+        f"https://www.youtube.com/watch?v={VALID_ID}",
     ])
     monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
     url = cli_utils.ask_youtube_url()
-    assert url == "https://www.youtube.com/watch?v=good"
+    assert url == f"https://www.youtube.com/watch?v={VALID_ID}"
 
 
 def test_ask_youtube_url_invalid_prefix(monkeypatch):
     inputs = iter([
         "http://example.com/video",
-        "https://www.youtube.com/watch?v=ok",
+        f"https://www.youtube.com/watch?v={VALID_ID}",
     ])
     monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
     url = cli_utils.ask_youtube_url()
-    assert url == "https://www.youtube.com/watch?v=ok"
+    assert url == f"https://www.youtube.com/watch?v={VALID_ID}"
 
 
 def test_ask_youtube_url_invalid_then_valid(monkeypatch):
     inputs = iter([
         "invalid",
-        "https://www.youtube.com/watch?v=good",
+        f"https://www.youtube.com/watch?v={VALID_ID}",
     ])
     monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
     url = cli_utils.ask_youtube_url()
-    assert url == "https://www.youtube.com/watch?v=good"
+    assert url == f"https://www.youtube.com/watch?v={VALID_ID}"
 
 
 def test_ask_save_file_path_existing(tmp_path, monkeypatch):
@@ -104,14 +106,14 @@ def test_ask_save_file_path_dircreation_error(monkeypatch, tmp_path):
 def test_ask_youtube_link_file(monkeypatch, tmp_path):
     links_file = tmp_path / "links.txt"
     links_file.write_text(
-        "https://www.youtube.com/watch?v=ok\ninvalid\nhttps://youtu.be/abc\n"
+        f"https://www.youtube.com/watch?v={VALID_ID}\ninvalid\nhttps://youtu.be/{VALID_ID}\n"
     )
     inputs = iter([str(links_file)])
     monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
     links = cli_utils.ask_youtube_link_file()
     assert links == [
-        "https://www.youtube.com/watch?v=ok",
-        "https://youtu.be/abc",
+        f"https://www.youtube.com/watch?v={VALID_ID}",
+        f"https://youtu.be/{VALID_ID}",
     ]
 
 
