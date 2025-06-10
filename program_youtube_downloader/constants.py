@@ -2,6 +2,9 @@
 
 from enum import Enum
 
+# Visual separator used in menus and logs
+SEPARATOR = "*************************************************************"
+
 TITLE_PROGRAM = "Program Youtube Downloader"
 
 TITLE_QUESTION_MENU_ACCUEIL = "Que voulez-vous télécharger sur Youtube ?"
@@ -41,4 +44,5 @@ __all__ = [
     "CHOICE_MENU_ACCUEIL",
     "MenuOption",
     "BASE_YOUTUBE_URL",
+    "SEPARATOR",
 ]

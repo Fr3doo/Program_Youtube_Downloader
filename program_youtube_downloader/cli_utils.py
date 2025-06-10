@@ -12,6 +12,7 @@ from .constants import (
     TITLE_PROGRAM,
     TITLE_QUESTION_MENU_ACCUEIL,
     CHOICE_MENU_ACCUEIL,
+    SEPARATOR,
 )
 from .utils import program_break_time, clear_screen, log_blank_line
 from .validators import validate_youtube_url
@@ -21,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 def print_separator(console: ConsoleIO = DefaultConsoleIO()) -> None:
     """Print a decorative separator line used in menus."""
-    console.print("*************************************************************")
+    console.print(SEPARATOR)
 
 
 def ask_numeric_value(
