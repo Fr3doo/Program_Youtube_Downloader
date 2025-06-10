@@ -21,6 +21,13 @@ pytest
 ```
 Les tests utilisent uniquement des objets factices et ne requièrent pas de connexion réseau.
 
+Pour vérifier le comportement avec différentes options, vous pouvez exécuter la suite en modifiant les variables d'environnement :
+
+```bash
+PYDL_LOG_LEVEL=DEBUG pytest
+PYDL_MAX_WORKERS=2 pytest
+```
+
 # Module logging
 Ce projet utilise le module `logging` de Python pour signaler l'état et les erreurs. Lors de l'ajout de nouveaux messages :
 

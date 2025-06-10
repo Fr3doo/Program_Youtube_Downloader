@@ -210,6 +210,15 @@ en définissant la variable d'environnement `PYDL_MAX_WORKERS` :
 PYDL_MAX_WORKERS=4 program-youtube-downloader video https://youtu.be/example
 ```
 
+## Variables d'environnement
+
+Le programme peut être configuré via deux variables principales :
+
+- **`PYDL_LOG_LEVEL`** détermine le niveau de verbosité du module `logging`. En l'absence de cette variable, le niveau `ERROR` est utilisé.
+- **`PYDL_MAX_WORKERS`** fixe le nombre maximal de téléchargements lancés en parallèle. Une valeur trop élevée peut ralentir la connexion.
+
+Ces paramètres sont lus lors de la création des `DownloadOptions`. Consultez la [partie configuration](docs/reference/api-reference.md#configpy) pour les détails sur le comportement associé.
+
 ## Tests
 
 Les tests unitaires sont écrits avec `pytest`. Après l’installation des dépendances, exécutez :
