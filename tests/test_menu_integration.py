@@ -32,3 +32,20 @@ def test_menu_audio_only_triggers_download(monkeypatch, tmp_path):
     called = run_menu_with_choice(monkeypatch, tmp_path, cli_module.MenuOption.VIDEO_AUDIO_ONLY.value)
     assert called[0] == ["https://youtu.be/x"]
     assert called[1].download_sound_only is True
+
+
+def test_menu_keyboard_interrupt(monkeypatch):
+    dd = DummyDownloader()
+    monkeypatch.setattr(
+        main_module.cli_utils,
+        "display_main_menu",
+        lambda: len(cli_module.MenuOption),
+    )
+
+    def raise_interrupt(*args, **kwargs):
+        raise KeyboardInterrupt()
+
+    monkeypatch.setattr(
+        main_module.cli_utils, "ask_numeric_value", raise_interrupt
+    )
+    main_module.main(["menu"], dd)
