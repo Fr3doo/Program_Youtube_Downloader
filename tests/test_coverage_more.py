@@ -221,3 +221,19 @@ def test_main_menu_invocation(monkeypatch):
 def test_main_unknown_command():
     with pytest.raises(SystemExit):
         main_module.main(["unknown"])
+
+
+def test_main_custom_cli_class(monkeypatch, tmp_path):
+    dd = DummyDownloader()
+    called = {}
+
+    class DummyCLI(main_module.CLI):
+        def __init__(self, downloader=None):
+            super().__init__(downloader)
+            called["used"] = True
+
+    monkeypatch.setattr(main_module.cli_utils, "ask_save_file_path", lambda: tmp_path)
+    monkeypatch.setattr(main_module.cli_utils, "ask_resolution_or_bitrate", lambda *a, **k: 1)
+
+    main_module.main(["video", "https://youtu.be/x"], dd, DummyCLI)
+    assert called.get("used")

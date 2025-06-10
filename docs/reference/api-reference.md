@@ -6,7 +6,9 @@ Cette section décrit brièvement les fonctions et classes disponibles dans le p
 - **`setup_logging(level)`** : configure le module `logging` pour l'application.
 - **`parse_args(argv=None)`** : analyse les arguments de la ligne de commande et lit la variable d'environnement `PYDL_LOG_LEVEL` pour le niveau par défaut.
 - **`menu()`** : lance le menu interactif (non couvert par les tests).
-- **`main(argv=None)`** : point d'entrée principal qui redirige vers les sous-commandes ou le menu.
+ - **`main(argv=None, downloader=None, cli_cls=CLI)`** : point d'entrée principal
+   qui redirige vers les sous-commandes ou le menu. Le paramètre `cli_cls`
+   permet d'utiliser une sous-classe personnalisée de `CLI`.
 - **`create_download_options(audio_only, output_dir=None)`** : construit un objet `DownloadOptions` prêt à l'emploi.
 
 ## `downloader.py`
