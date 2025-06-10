@@ -212,10 +212,15 @@ def test_main_channel_command(monkeypatch, tmp_path):
 
 def test_main_menu_invocation(monkeypatch):
     called = {}
-    monkeypatch.setattr(main_module, "menu", lambda: called.setdefault("menu", True))
-    monkeypatch.setattr(main_module, "YoutubeDownloader", lambda: DummyDownloader())
-    main_module.main(["menu"])
-    assert called.get("menu")
+
+    def fake_menu(self):
+        called["menu"] = self.downloader
+
+    monkeypatch.setattr(main_module.CLI, "menu", fake_menu)
+
+    dd = DummyDownloader()
+    main_module.main(["menu"], dd)
+    assert called["menu"] is dd
 
 
 def test_main_unknown_command():

@@ -104,8 +104,10 @@ def handle_channel_option(cli: CLI, audio_only: bool) -> None:
 
 
 def menu() -> None:  # pragma: no cover
-    """Interactively ask the user what to download and start the process."""
+    """Interactively ask the user what to download.
 
+    Deprecated wrapper kept for backward compatibility.
+    """
     CLI().menu()
 
     
@@ -129,7 +131,7 @@ def main(
     cli = cli_cls(downloader)
 
     if command is None or command == "menu":
-        menu()
+        cli.menu()
         return
 
     yd = cli.downloader
