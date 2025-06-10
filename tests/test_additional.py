@@ -318,3 +318,20 @@ def test_download_multiple_videos_download_error(monkeypatch, tmp_path, caplog):
         yd.download_multiple_videos(["https://youtu.be/fail"], options)
     assert "fail" in caplog.text
     assert not any(tmp_path.iterdir())
+
+
+def test_download_video_error_logs_url(tmp_path, caplog):
+    """_download_video should mention the URL in error messages."""
+
+    class FailingStream(DummyStream):
+        def download(self, output_path: str) -> str:
+            raise OSError("boom")
+
+    stream = FailingStream()
+    yd = YoutubeDownloader()
+
+    with caplog.at_level(logging.ERROR):
+        with pytest.raises(DownloadError):
+            yd._download_video(stream, tmp_path, "https://youtu.be/boom", False)
+
+    assert "boom" in caplog.text
