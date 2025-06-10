@@ -15,6 +15,7 @@ from .progress import (
     ProgressBarHandler,
     create_progress_event,
 )
+from .utils import shorten_url
 
 logger = logging.getLogger(__name__)
 
@@ -227,13 +228,16 @@ class YoutubeDownloader:
             streams = self.get_video_streams(download_sound_only, youtube_video)
         except StreamAccessError as e:
             logger.error(
-                f"Les flux pour la vidéo {video_url} n'ont pas pu être récupérés : {e}"
+                "Les flux pour la vidéo %s n'ont pas pu être récupérés : %s",
+                shorten_url(video_url),
+                e,
             )
             return None
 
         if not streams:
             logger.error(
-                f"Aucun flux disponible pour la vidéo {video_url}."
+                "Aucun flux disponible pour la vidéo %s.",
+                shorten_url(video_url),
             )
             return None
 
@@ -241,7 +245,9 @@ class YoutubeDownloader:
             video_title = youtube_video.title
         except KeyError as e:
             logger.error(
-                f"Impossible d'accéder au titre de la vidéo {video_url}. Détail : {e}"
+                "Impossible d'accéder au titre de la vidéo %s. Détail : %s",
+                shorten_url(video_url),
+                e,
             )
             return None
         except PytubeError as e:
@@ -297,8 +303,10 @@ class YoutubeDownloader:
         if not errors:
             cli_utils.print_end_download_message()
         else:
+            failed = ", ".join(shorten_url(u) for u in errors)
             logger.error(
-                f"Les téléchargements suivants ont échoué : {', '.join(errors)}"
+                "Les téléchargements suivants ont échoué : %s",
+                failed,
             )
         cli_utils.pause_return_to_menu()
 

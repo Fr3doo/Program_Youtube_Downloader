@@ -6,8 +6,9 @@ import os
 import subprocess
 import time
 import logging
+from urllib.parse import urlparse, parse_qs
 
-__all__ = ["clear_screen", "program_break_time"]
+__all__ = ["clear_screen", "program_break_time", "shorten_url"]
 
 logger = logging.getLogger(__name__)
 
@@ -41,3 +42,19 @@ def program_break_time(memorization_time: int, message: str) -> None:
         time.sleep(1)
         print(f"{remaining_seconds} ", end="", flush=True)
         remaining_seconds -= 1
+
+
+def shorten_url(url: str) -> str:
+    """Return video ID from ``url`` for safer logging."""
+    try:
+        parsed = urlparse(url.strip())
+        host = parsed.netloc.lower()
+        if host in {"youtu.be", "www.youtu.be"}:
+            vid = parsed.path.strip("/").split("/", 1)[0]
+        else:
+            vid = parse_qs(parsed.query).get("v", [""])[0]
+        if vid:
+            return vid
+    except Exception:  # pragma: no cover - defensive
+        logger.debug("Failed to shorten url", exc_info=True)
+    return "<url>"
