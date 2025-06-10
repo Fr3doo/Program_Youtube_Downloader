@@ -14,7 +14,7 @@ Principales fonctionnalités :
 **English summary**
 
 A simple command-line tool for downloading YouTube content using
-[pytubefix](https://pypi.org/project/pytubefix/). It requires Python 3.10 or
+[pytubefix](https://pypi.org/project/pytubefix/). It requires Python 3.11 or
 newer and the dependencies listed in `requirements.txt` installed inside a
 virtual environment. After installing the package with `pip install .`,
 run the `program-youtube-downloader` command and follow the menu to
@@ -22,7 +22,7 @@ download videos, playlists or channels, or to extract audio only.
 
 ## Prérequis
 
-- Python 3.10 ou plus récent
+- Python 3.11 ou plus récent
 - Créez un environnement virtuel : `python -m venv .venv`
 - Les dépendances listées dans `requirements.txt` :
   - `pytubefix` (pour récupérer correctement les flux YouTube)

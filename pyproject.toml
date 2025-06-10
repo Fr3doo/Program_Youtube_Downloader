@@ -7,7 +7,7 @@ name = "program_youtube_downloader"
 version = "0.1.0"
 description = "CLI tool for downloading YouTube content"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = "MIT"
 dependencies = [
     "pytubefix",
