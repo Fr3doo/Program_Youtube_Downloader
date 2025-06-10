@@ -2,6 +2,7 @@ import builtins
 import logging
 from pathlib import Path
 from types import SimpleNamespace
+import functools
 
 import pytest
 
@@ -142,7 +143,7 @@ class DummyDownloader:
 
 def test_create_download_options(monkeypatch, tmp_path):
     monkeypatch.setattr(
-        main_module.cli_utils, "ask_save_file_path", lambda: tmp_path
+        main_module.cli_utils, "ask_save_file_path", lambda *a, **k: tmp_path
     )
     monkeypatch.setattr(
         main_module.cli_utils,
@@ -153,16 +154,14 @@ def test_create_download_options(monkeypatch, tmp_path):
     opt = main_module.create_download_options(cli, True)
     assert opt.save_path == tmp_path
     assert opt.download_sound_only is True
-    assert (
-        opt.choice_callback
-        is main_module.cli_utils.ask_resolution_or_bitrate
-    )
+    assert isinstance(opt.choice_callback, functools.partial)
+    assert opt.choice_callback.func is main_module.cli_utils.ask_resolution_or_bitrate
 
 
 def test_main_video_command(monkeypatch, tmp_path):
     dd = DummyDownloader()
     monkeypatch.setattr(
-        main_module.cli_utils, "ask_save_file_path", lambda: tmp_path
+        main_module.cli_utils, "ask_save_file_path", lambda *a, **k: tmp_path
     )
     monkeypatch.setattr(
         main_module.cli_utils,
@@ -181,7 +180,7 @@ def test_main_playlist_command(monkeypatch, tmp_path):
         main_module.CLI, "load_playlist", lambda self, u: ["https://youtu.be/1"]
     )
     monkeypatch.setattr(
-        main_module.cli_utils, "ask_save_file_path", lambda: tmp_path
+        main_module.cli_utils, "ask_save_file_path", lambda *a, **k: tmp_path
     )
     monkeypatch.setattr(
         main_module.cli_utils,
@@ -199,7 +198,7 @@ def test_main_channel_command(monkeypatch, tmp_path):
         main_module.CLI, "load_channel", lambda self, u: ["https://youtu.be/2"]
     )
     monkeypatch.setattr(
-        main_module.cli_utils, "ask_save_file_path", lambda: tmp_path
+        main_module.cli_utils, "ask_save_file_path", lambda *a, **k: tmp_path
     )
     monkeypatch.setattr(
         main_module.cli_utils,
@@ -237,7 +236,9 @@ def test_main_custom_cli_class(monkeypatch, tmp_path):
             super().__init__(downloader)
             called["used"] = True
 
-    monkeypatch.setattr(main_module.cli_utils, "ask_save_file_path", lambda: tmp_path)
+    monkeypatch.setattr(
+        main_module.cli_utils, "ask_save_file_path", lambda *a, **k: tmp_path
+    )
     monkeypatch.setattr(main_module.cli_utils, "ask_resolution_or_bitrate", lambda *a, **k: 1)
 
     main_module.main(["video", "https://youtu.be/x"], dd, DummyCLI)
