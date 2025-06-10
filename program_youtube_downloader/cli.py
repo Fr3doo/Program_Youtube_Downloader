@@ -73,10 +73,10 @@ class CLI:
         try:
             return Playlist(url)
         except (PytubeError, KeyError, ValueError) as e:
-            logger.exception("Error connecting to playlist")
+            logger.exception("Erreur lors de la connexion à la playlist")
             raise PlaylistConnectionError("Connexion à la Playlist impossible") from e
         except Exception:
-            logger.exception("Unexpected error while connecting to playlist")
+            logger.exception("Erreur inattendue lors de la connexion à la playlist")
             raise
 
     def load_channel(self, url: str) -> Channel:
@@ -84,10 +84,10 @@ class CLI:
         try:
             return Channel(url)
         except (PytubeError, KeyError, ValueError) as e:
-            logger.exception("Error connecting to channel")
+            logger.exception("Erreur lors de la connexion à la chaîne")
             raise ChannelConnectionError("Connexion à la chaîne Youtube impossible") from e
         except Exception:
-            logger.exception("Unexpected error while connecting to channel")
+            logger.exception("Erreur inattendue lors de la connexion à la chaîne")
             raise
 
     def handle_playlist_option(self, audio_only: bool) -> None:
