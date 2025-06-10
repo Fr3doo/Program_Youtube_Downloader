@@ -67,3 +67,23 @@ def test_validate_youtube_url_bad_chars() -> None:
         validate_youtube_url(f"https://www.youtube.com/watch?v={bad}")
     with pytest.raises(InvalidURLError):
         validate_youtube_url(f"https://youtu.be/{bad}")
+
+
+def test_validate_youtube_url_invalid_domain() -> None:
+    with pytest.raises(InvalidURLError):
+        validate_youtube_url(f"https://m.youtube.com/watch?v={VALID_ID}")
+    with pytest.raises(InvalidURLError):
+        validate_youtube_url(f"https://youtube.co/watch?v={VALID_ID}")
+    with pytest.raises(InvalidURLError):
+        validate_youtube_url(f"https://youtu.be.com/watch?v={VALID_ID}")
+
+
+def test_validate_youtube_url_space_handling() -> None:
+    assert (
+        validate_youtube_url(
+            f"  https://www.youtube.com/watch?v={VALID_ID}  "
+        )
+        is True
+    )
+    with pytest.raises(InvalidURLError):
+        validate_youtube_url(f"https://www.youtube.com/watch?v=dQw4w9 WgXcQ")
