@@ -32,7 +32,7 @@ def create_progress_event(stream, bytes_remaining) -> ProgressEvent:
     """Return a :class:`ProgressEvent` from pytube callback arguments."""
     total = getattr(stream, "filesize", None)
     if not total:
-        logger.warning("Missing total filesize. Assuming complete")
+        logger.warning("Taille totale manquante. Supposée complète")
         percent = 100.0
         downloaded = total or 0
         total = total or 0
@@ -58,8 +58,8 @@ class ProgressOptions:
     sides: str = "||"
     full: str = "█"
     empty: str = " "
-    prefix_start: str = "Downloading ..."
-    prefix_end: str = "Download OK ..."
+    prefix_start: str = "Téléchargement en cours ..."
+    prefix_end: str = "Téléchargement terminé ..."
     color_text: str = colorama.Fore.WHITE
     color_Downloading: str = colorama.Fore.LIGHTYELLOW_EX
     color_Download_OK: str = colorama.Fore.GREEN

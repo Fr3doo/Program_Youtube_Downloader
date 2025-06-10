@@ -1,3 +1,4 @@
+import logging
 import pytest
 from pathlib import Path
 
@@ -73,7 +74,7 @@ def test_ask_save_file_path_retry(monkeypatch, tmp_path):
     assert p == existing.resolve()
 
 
-def test_ask_save_file_path_mkdir_failure(monkeypatch, tmp_path):
+def test_ask_save_file_path_mkdir_failure(monkeypatch, tmp_path, caplog):
     new_dir = tmp_path / "newdir"
     inputs = iter([str(new_dir), "y", str(tmp_path)])
     monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
@@ -85,8 +86,10 @@ def test_ask_save_file_path_mkdir_failure(monkeypatch, tmp_path):
     fail_once.calls = 0
     monkeypatch.setattr(Path, "mkdir", fail_once)
 
-    result = cli_utils.ask_save_file_path()
+    with caplog.at_level(logging.ERROR):
+        result = cli_utils.ask_save_file_path()
     assert result == tmp_path.resolve()
+    assert "Échec de la création du dossier" in caplog.text
 
 
 def test_ask_save_file_path_dircreation_error(monkeypatch, tmp_path):
