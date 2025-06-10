@@ -1,6 +1,7 @@
 """Input validation helpers."""
 
 from urllib.parse import urlparse, parse_qs
+import re
 
 from .exceptions import InvalidURLError
 
@@ -47,6 +48,9 @@ def validate_youtube_url(url: str) -> bool:
             video_id = path.split("/", 1)[0]
 
     if not video_id:
+        raise InvalidURLError("URL invalide")
+
+    if not re.fullmatch(r"[A-Za-z0-9_-]{11}", video_id):
         raise InvalidURLError("URL invalide")
 
     return True
