@@ -90,6 +90,20 @@ class YoutubeDownloader:
             return callback(download_sound_only, streams)
         return 1
 
+    def _attempt_download(self, stream: Any, save_path: Path) -> Path:
+        """Download ``stream`` to ``save_path`` once.
+
+        Returns the resulting :class:`~pathlib.Path` on success or raises
+        :class:`DownloadError` if an exception occurs.
+        """
+
+        try:
+            return Path(stream.download(output_path=str(save_path)))
+        except (HTTPError, OSError, PytubeError) as e:
+            raise DownloadError(str(e)) from e
+        except Exception as e:  # pragma: no cover - defensive
+            raise DownloadError(str(e)) from e
+
     def _download_video(
         self,
         stream: Any,
@@ -111,14 +125,10 @@ class YoutubeDownloader:
         out_file = None
         for attempt in range(3):
             try:
-                out_file = Path(stream.download(output_path=str(save_path)))
+                out_file = self._attempt_download(stream, save_path)
                 log_blank_line()
                 break
-            except (
-                HTTPError,
-                OSError,
-                PytubeError,
-            ) as e:  # pragma: no cover - network/io issues
+            except DownloadError as e:
                 logger.exception(
                     "Échec du téléchargement pour %s",
                     shorten_url(video_url),
