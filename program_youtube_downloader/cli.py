@@ -127,6 +127,17 @@ class CLI:
     def menu(self) -> None:  # pragma: no cover - manual user interaction
         """Interactively ask the user what to download and start the process."""
         try:
+            handlers = {
+                MenuOption.VIDEO: self.handle_video_option,
+                MenuOption.VIDEO_AUDIO_ONLY: self.handle_video_option,
+                MenuOption.VIDEOS: self.handle_videos_option,
+                MenuOption.VIDEOS_AUDIO_ONLY: self.handle_videos_option,
+                MenuOption.PLAYLIST_VIDEO: self.handle_playlist_option,
+                MenuOption.PLAYLIST_AUDIO_ONLY: self.handle_playlist_option,
+                MenuOption.CHANNEL_VIDEOS: self.handle_channel_option,
+                MenuOption.CHANNEL_AUDIO_ONLY: self.handle_channel_option,
+            }
+
             while True:
                 choix_max_menu_accueil = cli_utils.display_main_menu(
                     console=self.console
@@ -137,32 +148,20 @@ class CLI:
                     )
                 )
 
-                match choix:
-                    case MenuOption.QUIT:
-                        self.handle_quit_option()
-                        break
-                    case MenuOption.VIDEO:
-                        self.handle_video_option(False)
-                    case MenuOption.VIDEO_AUDIO_ONLY:
-                        self.handle_video_option(True)
-                    case MenuOption.VIDEOS:
-                        self.handle_videos_option(False)
-                    case MenuOption.VIDEOS_AUDIO_ONLY:
-                        self.handle_videos_option(True)
-                    case MenuOption.PLAYLIST_VIDEO:
-                        self.handle_playlist_option(False)
-                    case MenuOption.PLAYLIST_AUDIO_ONLY:
-                        self.handle_playlist_option(True)
-                    case MenuOption.CHANNEL_VIDEOS:
-                        self.handle_channel_option(False)
-                    case MenuOption.CHANNEL_AUDIO_ONLY:
-                        self.handle_channel_option(True)
+                if choix is MenuOption.QUIT:
+                    self.handle_quit_option()
+                    break
 
+                audio_only = choix in (
+                    MenuOption.VIDEO_AUDIO_ONLY,
+                    MenuOption.VIDEOS_AUDIO_ONLY,
+                    MenuOption.PLAYLIST_AUDIO_ONLY,
+                    MenuOption.CHANNEL_AUDIO_ONLY,
+                )
 
+                handlers[choix](audio_only)
 
-
-            # end match
-        # end while
+            # end while
         except KeyboardInterrupt:
             self.handle_quit_option()
             return
