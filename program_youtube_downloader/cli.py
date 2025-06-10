@@ -14,7 +14,7 @@ from .types import ConsoleIO, DefaultConsoleIO
 from .downloader import YoutubeDownloader
 from .exceptions import PlaylistConnectionError, ChannelConnectionError
 from .config import DownloadOptions
-from .constants import MenuOption
+from .constants import MenuOption, SEPARATOR
 from .utils import log_blank_line
 
 logger = logging.getLogger(__name__)
@@ -64,11 +64,11 @@ class CLI:
         """Display the exit banner."""
         log_blank_line()
         log_blank_line()
-        logger.info("******************************************************")
+        logger.info(SEPARATOR)
         logger.info("*                                                    *")
         logger.info("*                    Fin du programme                *")
         logger.info("*                                                    *")
-        logger.info("******************************************************")
+        logger.info(SEPARATOR)
 
     def handle_video_option(self, audio_only: bool) -> None:
         """Download a single video or its audio track."""
