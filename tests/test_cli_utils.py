@@ -84,7 +84,7 @@ def test_ask_save_file_path_mkdir_failure(tmp_path, caplog, monkeypatch):
 
     def fail_once(self, *a, **k):
         fail_once.calls += 1
-        raise OSError()
+        raise OSError("boom")
 
     fail_once.calls = 0
     monkeypatch.setattr(Path, "mkdir", fail_once)
@@ -93,6 +93,7 @@ def test_ask_save_file_path_mkdir_failure(tmp_path, caplog, monkeypatch):
         result = cli_utils.ask_save_file_path(console=console)
     assert result == tmp_path.resolve()
     assert "Échec de la création du dossier" in caplog.text
+    assert "boom" in caplog.text
 
 
 def test_ask_save_file_path_dircreation_error(tmp_path, monkeypatch):
@@ -103,6 +104,27 @@ def test_ask_save_file_path_dircreation_error(tmp_path, monkeypatch):
         raise OSError()
 
     monkeypatch.setattr(Path, "mkdir", always_fail)
+
+    with pytest.raises(DirectoryCreationError):
+        cli_utils.ask_save_file_path(max_attempts=2, console=console)
+
+
+def test_ask_save_file_path_missing_after_creation(tmp_path, monkeypatch):
+    missing = tmp_path / "missing"
+    console = DummyConsole([str(missing), "y", str(missing), "y"])
+
+    def fake_mkdir(self, *a, **k):
+        pass
+
+    orig_exists = Path.exists
+
+    def fake_exists(self):
+        if self == missing:
+            return False
+        return orig_exists(self)
+
+    monkeypatch.setattr(Path, "mkdir", fake_mkdir)
+    monkeypatch.setattr(Path, "exists", fake_exists)
 
     with pytest.raises(DirectoryCreationError):
         cli_utils.ask_save_file_path(max_attempts=2, console=console)
