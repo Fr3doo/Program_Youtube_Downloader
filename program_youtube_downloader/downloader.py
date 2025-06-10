@@ -119,18 +119,32 @@ class YoutubeDownloader:
                 OSError,
                 PytubeError,
             ) as e:  # pragma: no cover - network/io issues
-                logger.exception("Échec du téléchargement")
+                logger.exception(
+                    "Échec du téléchargement pour %s",
+                    shorten_url(video_url),
+                )
                 log_blank_line()
-                logger.error(f"Le téléchargement a échoué : {e}")
+                logger.error(
+                    "Le téléchargement de %s a échoué : %s",
+                    shorten_url(video_url),
+                    e,
+                )
                 log_blank_line()
                 if attempt == 2:
                     raise DownloadError(
                         f"Echec du téléchargement pour {video_url}"
                     ) from e
             except Exception as e:  # pragma: no cover - defensive
-                logger.exception("Erreur inattendue pendant le téléchargement")
+                logger.exception(
+                    "Erreur inattendue pendant le téléchargement de %s",
+                    shorten_url(video_url),
+                )
                 log_blank_line()
-                logger.error(f"Le téléchargement a échoué : {e}")
+                logger.error(
+                    "Le téléchargement de %s a échoué : %s",
+                    shorten_url(video_url),
+                    e,
+                )
                 log_blank_line()
                 if attempt == 2:
                     raise DownloadError(
@@ -251,14 +265,25 @@ class YoutubeDownloader:
             )
             return None
         except PytubeError as e:
-            logger.exception("Erreur lors de l'accès au titre de la vidéo")
+            logger.exception(
+                "Erreur lors de l'accès au titre de la vidéo %s",
+                shorten_url(video_url),
+            )
             logger.error(
-                f"Une erreur est survenue lors de l'accès au titre : {e}"
+                "Une erreur est survenue lors de l'accès au titre de %s : %s",
+                shorten_url(video_url),
+                e,
             )
             return None
-        except Exception:  # pragma: no cover - defensive
+        except Exception as e:  # pragma: no cover - defensive
             logger.exception(
-                "Erreur inattendue lors de l'accès au titre de la vidéo"
+                "Erreur inattendue lors de l'accès au titre de la vidéo %s",
+                shorten_url(video_url),
+            )
+            logger.error(
+                "Une erreur inattendue s'est produite lors de l'accès au titre de %s : %s",
+                shorten_url(video_url),
+                e,
             )
             return None
 
