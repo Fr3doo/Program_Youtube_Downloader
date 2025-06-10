@@ -278,7 +278,7 @@ def ask_resolution_or_bitrate(
         print()
         print()
         print_separator()
-        print("*             Choississez la qualité audio                  *")
+        print("*             Choisissez la qualité audio                  *")
         print_separator()
         for stream in list_available_streams:
             menu_choice = stream.abr  # Audio quality
@@ -293,7 +293,7 @@ def ask_resolution_or_bitrate(
     print()
     print()
     print_separator()
-    print("*             Choississez la résolution vidéo               *")
+    print("*             Choisissez la résolution vidéo               *")
     print_separator()
     for stream in list_available_streams:
         menu_choice = stream.resolution  # Video quality
