@@ -1,6 +1,6 @@
 import sys
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Protocol, Any
 import logging
 
 import colorama
@@ -28,7 +28,7 @@ class ProgressEvent:
     percent: float
 
 
-def create_progress_event(stream, bytes_remaining) -> ProgressEvent:
+def create_progress_event(stream: Any, bytes_remaining: int) -> ProgressEvent:
     """Return a :class:`ProgressEvent` from pytube callback arguments."""
     total = getattr(stream, "filesize", None)
     if not total:
@@ -43,7 +43,7 @@ def create_progress_event(stream, bytes_remaining) -> ProgressEvent:
 
 
 def on_download_progress(
-    stream, chunk, bytes_remaining
+    stream: Any, chunk: bytes, bytes_remaining: int
 ) -> None:  # pragma: no cover - legacy
     """Backward compatible wrapper around :class:`ProgressBarHandler`."""
     event = create_progress_event(stream, bytes_remaining)

@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install .
+          pip install mypy flake8 pytest
+      - name: Run flake8
+        run: flake8
+      - name: Run mypy
+        run: mypy program_youtube_downloader
+      - name: Run tests
+        run: pytest

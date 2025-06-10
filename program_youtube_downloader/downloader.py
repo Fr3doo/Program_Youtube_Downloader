@@ -59,7 +59,7 @@ class YoutubeDownloader:
         try:
             yt = self.youtube_cls(url)
             if progress_handler:
-                def _wrapper(stream, chunk, bytes_remaining):
+                def _wrapper(stream: Any, chunk: bytes, bytes_remaining: int) -> None:
                     """Translate pytube progress callback to :class:`ProgressEvent`."""
                     event = create_progress_event(stream, bytes_remaining)
                     progress_handler.on_progress(event)
