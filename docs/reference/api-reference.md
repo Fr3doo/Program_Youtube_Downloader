@@ -41,7 +41,7 @@ Fonctions d'interaction utilisateur :
 ## `config.py`
 - `DownloadOptions` : dataclass regroupant les options de téléchargement (dossier, audio seul, callback de choix, gestionnaire de progression, nombre de threads). Le champ `max_workers` est initialisé depuis la variable d'environnement `PYDL_MAX_WORKERS` si elle est définie.
 
-## `youtube_downloader.py`
+## `legacy_utils.py`
 Utilitaires généraux :
 - `clear_screen()` : nettoie la console selon le système.
 - `program_break_time(seconds, text)` : petite minuterie textuelle.

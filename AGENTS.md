@@ -14,7 +14,7 @@ Chaque agent regroupe des fonctions et responsabilités associées.
 
 **Sorties** : appelle les fonctions de téléchargement et se termine quand l'utilisateur choisit de quitter.
 
-**Dépendances** : module `youtube_downloader`. Les libellés du menu sont définis dans
+**Dépendances** : module `legacy_utils`. Les libellés du menu sont définis dans
 [`constants.py`](program_youtube_downloader/constants.py).
 
 Utilisation :
@@ -158,7 +158,7 @@ graph TD
 - Garder les agents petits et concentrés sur une seule responsabilité.
 - Chaque agent doit être autonome avec des entrées/sorties claires.
 - Exposer une API minimale aux autres modules.
-- Réutiliser systématiquement les hints de type (voir l'utilisation actuelle de `typing` et `Optional` dans `youtube_downloader.py`).
+- Réutiliser systématiquement les hints de type (voir l'utilisation actuelle de `typing` et `Optional` dans `legacy_utils.py`).
 - Lorsqu'on ajoute des fonctionnalités, privilégier l'extension d'un agent existant plutôt que la duplication de logique.
 - Écrire des tests pour tout nouveau comportement dans `tests/` avec `pytest`.
 
