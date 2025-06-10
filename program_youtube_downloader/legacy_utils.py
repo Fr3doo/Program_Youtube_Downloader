@@ -1,4 +1,8 @@
-"""Backward compatibility utilities (deprecated)."""
+"""Deprecated helper wrapper to preserve old imports.
+
+Import :func:`clear_screen` and :func:`program_break_time` from
+``program_youtube_downloader.utils`` instead.
+"""
 
 from __future__ import annotations
 
