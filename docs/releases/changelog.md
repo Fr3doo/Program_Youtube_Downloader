@@ -8,6 +8,8 @@ Le format est inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0
 - Ajout de la variable d'environnement `PYDL_LOG_LEVEL` pour contrôler la verbosité des logs.
 - Nouvelle dataclass `ProgressOptions` et gestionnaires `ProgressBarHandler`/`VerboseProgressHandler` pour suivre l'avancement des téléchargements.
 - Renommage de `youtube_downloader.py` en `legacy_utils.py`.
+- Les URL des vidéos sont tronquées dans les messages de log pour éviter d'afficher
+  l'adresse complète.
 
 ## [0.1.0] - 2025-06-06
 ### Added
