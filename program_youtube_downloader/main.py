@@ -106,9 +106,10 @@ def handle_channel_option(cli: CLI, audio_only: bool) -> None:
 def menu() -> None:  # pragma: no cover
     """Interactively ask the user what to download.
 
-    Deprecated wrapper kept for backward compatibility.
+    Deprecated wrapper kept for backward compatibility. It now
+    simply forwards to :func:`main` with the ``"menu"`` command.
     """
-    CLI().menu()
+    main(["menu"])  # type: ignore[arg-type]
 
     
 
