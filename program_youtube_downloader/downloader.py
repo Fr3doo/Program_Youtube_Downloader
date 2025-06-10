@@ -68,11 +68,11 @@ class YoutubeDownloader:
             logger.error(f"Problème de clé dans les données : {e}")
             return None
         except PytubeError as e:
-            logger.exception("Error while connecting to video")
+            logger.exception("Erreur lors de la connexion à la vidéo")
             logger.error(f"Connexion à la vidéo impossible : {e}")
             return None
         except Exception as e:  # pragma: no cover - defensive
-            logger.exception("Unexpected error while connecting to video")
+            logger.exception("Erreur inattendue lors de la connexion à la vidéo")
             logger.error(f"Connexion à la vidéo impossible : {e}")
             return None
 
@@ -117,7 +117,7 @@ class YoutubeDownloader:
                 OSError,
                 PytubeError,
             ) as e:  # pragma: no cover - network/io issues
-                logger.exception("Download failed")
+                logger.exception("Échec du téléchargement")
                 logger.info("")
                 logger.error(f"Le téléchargement a échoué : {e}")
                 logger.info("")
@@ -126,7 +126,7 @@ class YoutubeDownloader:
                         f"Echec du téléchargement pour {video_url}"
                     ) from e
             except Exception as e:  # pragma: no cover - defensive
-                logger.exception("Unexpected error during download")
+                logger.exception("Erreur inattendue pendant le téléchargement")
                 logger.info("")
                 logger.error(f"Le téléchargement a échoué : {e}")
                 logger.info("")
@@ -164,14 +164,16 @@ class YoutubeDownloader:
             )
             raise StreamAccessError(f"HTTP {e.code}: {e.reason}") from e
         except PytubeError as e:
-            logger.exception("Error while retrieving streams")
+            logger.exception("Erreur lors de la récupération des flux")
             logger.error(
                 "Une erreur est survenue lors de la récupération des flux : "
                 f"{e}"
             )
             raise StreamAccessError(str(e)) from e
         except Exception as e:  # pragma: no cover - defensive
-            logger.exception("Unexpected error while retrieving streams")
+            logger.exception(
+                "Erreur inattendue lors de la récupération des flux"
+            )
             logger.error(
                 "Une erreur inattendue s'est produite lors de la récupération "
                 f"des flux : {e}"
@@ -202,7 +204,7 @@ class YoutubeDownloader:
             if file_path.exists():
                 file_path.unlink()
         except OSError:
-            logger.exception("Error during MP4 to MP3 conversion")
+            logger.exception("Erreur lors de la conversion MP4 vers MP3")
             logger.warning("Un fichier MP3 portant le même nom existe déjà")
             if file_path.exists():
                 file_path.unlink()
@@ -242,13 +244,15 @@ class YoutubeDownloader:
             )
             return None
         except PytubeError as e:
-            logger.exception("Error while accessing video title")
+            logger.exception("Erreur lors de l'accès au titre de la vidéo")
             logger.error(
                 f"Une erreur est survenue lors de l'accès au titre : {e}"
             )
             return None
         except Exception:  # pragma: no cover - defensive
-            logger.exception("Unexpected error while accessing video title")
+            logger.exception(
+                "Erreur inattendue lors de l'accès au titre de la vidéo"
+            )
             return None
 
         return streams, youtube_video, video_title
@@ -284,7 +288,9 @@ class YoutubeDownloader:
             except DownloadError:
                 errors.append(url)
             except Exception:  # pragma: no cover - defensive
-                logger.exception("Unexpected error in downloader thread")
+                logger.exception(
+                    "Erreur inattendue dans le thread de téléchargement"
+                )
                 errors.append(url)
 
         if not errors:
