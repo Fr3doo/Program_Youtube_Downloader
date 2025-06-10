@@ -15,7 +15,7 @@ from .progress import (
     ProgressBarHandler,
     create_progress_event,
 )
-from .utils import shorten_url
+from .utils import shorten_url, log_blank_line
 
 logger = logging.getLogger(__name__)
 
@@ -112,7 +112,7 @@ class YoutubeDownloader:
         for attempt in range(3):
             try:
                 out_file = Path(stream.download(output_path=str(save_path)))
-                logger.info("")
+                log_blank_line()
                 break
             except (
                 HTTPError,
@@ -120,18 +120,18 @@ class YoutubeDownloader:
                 PytubeError,
             ) as e:  # pragma: no cover - network/io issues
                 logger.exception("Échec du téléchargement")
-                logger.info("")
+                log_blank_line()
                 logger.error(f"Le téléchargement a échoué : {e}")
-                logger.info("")
+                log_blank_line()
                 if attempt == 2:
                     raise DownloadError(
                         f"Echec du téléchargement pour {video_url}"
                     ) from e
             except Exception as e:  # pragma: no cover - defensive
                 logger.exception("Erreur inattendue pendant le téléchargement")
-                logger.info("")
+                log_blank_line()
                 logger.error(f"Le téléchargement a échoué : {e}")
-                logger.info("")
+                log_blank_line()
                 if attempt == 2:
                     raise DownloadError(
                         f"Echec du téléchargement pour {video_url}"
@@ -210,7 +210,7 @@ class YoutubeDownloader:
             logger.warning("Un fichier MP3 portant le même nom existe déjà")
             if file_path.exists():
                 file_path.unlink()
-            logger.info("")
+            log_blank_line()
 
     def _prepare_video(
         self,
@@ -365,8 +365,8 @@ class YoutubeDownloader:
                         choice_callback,
                     )
                     choice_once = False
-                    logger.info("")
-                    logger.info("")
+                    log_blank_line()
+                    log_blank_line()
                     cli_utils.print_separator()
                     logger.info("*             Stream vidéo sélectionné :          *")
                     cli_utils.print_separator()
@@ -374,7 +374,7 @@ class YoutubeDownloader:
                         "Nombre de liens vidéo YouTube dans le fichier : "
                         f"{len(url_list)}"
                     )
-                    logger.info("")
+                    log_blank_line()
 
                 itag = streams[choice_user - 1].itag  # type: ignore
                 stream = youtube_video.streams.get_by_itag(itag)

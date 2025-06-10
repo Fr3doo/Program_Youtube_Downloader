@@ -11,7 +11,7 @@ from .constants import (
     TITLE_QUESTION_MENU_ACCUEIL,
     CHOICE_MENU_ACCUEIL,
 )
-from .utils import program_break_time, clear_screen
+from .utils import program_break_time, clear_screen, log_blank_line
 from .validators import validate_youtube_url
 
 logger = logging.getLogger(__name__)
@@ -47,7 +47,7 @@ def ask_numeric_value(min_value: int, max_value: int, max_attempts: int = 3) -> 
             v_int = int(v_str)
         except ValueError:
             logger.warning("Entrée invalide : saisissez une valeur numérique.")
-            logger.info("")
+            log_blank_line()
             attempts += 1
             if attempts >= max_attempts:
                 raise ValidationError("Nombre de tentatives dépassé")
@@ -57,7 +57,7 @@ def ask_numeric_value(min_value: int, max_value: int, max_attempts: int = 3) -> 
                 "Entrée invalide : saisissez un nombre entre "
                 f"{min_value} et {max_value}."
             )
-            logger.info("")
+            log_blank_line()
             attempts += 1
             if attempts >= max_attempts:
                 raise ValidationError("Nombre de tentatives dépassé")
@@ -308,10 +308,10 @@ def ask_resolution_or_bitrate(
 
 def print_end_download_message() -> None:
     """Print a short message indicating that all downloads completed."""
-    logger.info("")
+    log_blank_line()
     logger.info("Fin du téléchargement")
     print_separator()
-    logger.info("")
+    log_blank_line()
 
 
 def pause_return_to_menu() -> None:

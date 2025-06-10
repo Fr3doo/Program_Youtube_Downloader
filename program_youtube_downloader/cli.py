@@ -13,6 +13,7 @@ from .downloader import YoutubeDownloader
 from .exceptions import PlaylistConnectionError, ChannelConnectionError
 from .config import DownloadOptions
 from .constants import MenuOption
+from .utils import log_blank_line
 
 logger = logging.getLogger(__name__)
 
@@ -51,8 +52,8 @@ class CLI:
     # ------------------------------------------------------------------
     def handle_quit_option(self) -> None:
         """Display the exit banner."""
-        logger.info("")
-        logger.info("")
+        log_blank_line()
+        log_blank_line()
         logger.info("******************************************************")
         logger.info("*                                                    *")
         logger.info("*                    Fin du programme                *")

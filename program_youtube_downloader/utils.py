@@ -8,9 +8,14 @@ import time
 import logging
 from urllib.parse import urlparse, parse_qs
 
-__all__ = ["clear_screen", "program_break_time", "shorten_url"]
+__all__ = ["clear_screen", "program_break_time", "shorten_url", "log_blank_line"]
 
 logger = logging.getLogger(__name__)
+
+
+def log_blank_line() -> None:
+    """Insert a blank line in the logs."""
+    logger.info("")
 
 
 def clear_screen() -> None:
