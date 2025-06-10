@@ -139,8 +139,14 @@ def ask_save_file_path(
             if create.lower().startswith("y"):
                 try:
                     path.mkdir(parents=True, exist_ok=True)
-                except OSError:
-                    logger.exception("Échec de la création du dossier")
+                except OSError as e:
+                    logger.exception("Échec de la création du dossier: %s", e)
+                    logger.error("Impossible de créer le dossier: %s", e)
+                    attempts += 1
+                    if attempts >= max_attempts:
+                        raise DirectoryCreationError("Création du dossier impossible")
+                    continue
+                if not path.exists():
                     logger.error("Impossible de créer le dossier")
                     attempts += 1
                     if attempts >= max_attempts:
@@ -266,9 +272,9 @@ def ask_youtube_link_file(
                     if attempts >= max_attempts:
                         raise ValidationError("Aucune URL valide")
                     continue
-        except OSError:
-            logger.exception("Le fichier n'est pas accessible")
-            logger.error("Le fichier n'est pas accessible")
+        except OSError as e:
+            logger.exception("Le fichier n'est pas accessible: %s", e)
+            logger.error("Le fichier n'est pas accessible: %s", e)
             attempts += 1
             if attempts >= max_attempts:
                 raise ValidationError("Fichier inaccessible")
