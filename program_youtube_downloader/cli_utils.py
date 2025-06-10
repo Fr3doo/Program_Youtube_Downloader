@@ -21,7 +21,14 @@ logger = logging.getLogger(__name__)
 
 
 def print_separator(console: ConsoleIO = DefaultConsoleIO()) -> None:
-    """Print a decorative separator line used in menus."""
+    """Print a decorative separator line.
+
+    Parameters
+    ----------
+    console:
+        Object used to output the separator. Defaults to
+        :class:`DefaultConsoleIO`.
+    """
     console.print(SEPARATOR)
 
 
@@ -76,7 +83,18 @@ def ask_numeric_value(
 
 
 def display_main_menu(*, console: ConsoleIO = DefaultConsoleIO()) -> int:
-    """Display the main menu and return the number of choices."""
+    """Display the main menu and return the number of choices available.
+
+    Parameters
+    ----------
+    console:
+        Console implementation used for ``print`` operations.
+
+    Returns
+    -------
+    int
+        The number of menu options displayed to the user.
+    """
     console.print()
     console.print()
     print_separator(console)
@@ -339,7 +357,13 @@ def ask_resolution_or_bitrate(
 
 
 def print_end_download_message(*, console: ConsoleIO = DefaultConsoleIO()) -> None:
-    """Print a short message indicating that all downloads completed."""
+    """Inform the user that all downloads have completed.
+
+    Parameters
+    ----------
+    console:
+        Console used to display the message.
+    """
     log_blank_line()
     logger.info("Fin du téléchargement")
     print_separator(console)
@@ -347,7 +371,13 @@ def print_end_download_message(*, console: ConsoleIO = DefaultConsoleIO()) -> No
 
 
 def pause_return_to_menu(*, console: ConsoleIO = DefaultConsoleIO()) -> None:
-    """Wait for the user to press ENTER then clear the screen."""
+    """Pause execution until the user presses ENTER and clear the screen.
+
+    Parameters
+    ----------
+    console:
+        Console used for the prompt and clearing.
+    """
     console.input("Appuyer sur ENTREE pour revenir au menu d'accueil")
     program_break_time(3, "Le menu d'accueil va revenir dans")
     clear_screen()
