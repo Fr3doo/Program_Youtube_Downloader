@@ -1,6 +1,7 @@
 import program_youtube_downloader.cli as cli_module
 import program_youtube_downloader.main as main_module
 from program_youtube_downloader.config import DownloadOptions
+import pytest
 
 
 class DummyDownloader:
@@ -29,21 +30,47 @@ def run_menu_with_choice(monkeypatch, tmp_path, menu_choice):
         "ask_youtube_url",
         lambda *a, **k: "https://youtu.be/x",
     )
-    monkeypatch.setattr(main_module.CLI, "create_download_options", lambda self, ao: DownloadOptions(save_path=tmp_path, download_sound_only=ao))
+    monkeypatch.setattr(
+        main_module.cli_utils,
+        "ask_youtube_link_file",
+        lambda *a, **k: ["https://youtu.be/a", "https://youtu.be/b"],
+    )
+    monkeypatch.setattr(
+        main_module.CLI,
+        "load_playlist",
+        lambda self, u: ["https://youtu.be/p"],
+    )
+    monkeypatch.setattr(
+        main_module.CLI,
+        "load_channel",
+        lambda self, u: ["https://youtu.be/c"],
+    )
+    monkeypatch.setattr(
+        main_module.CLI,
+        "create_download_options",
+        lambda self, ao: DownloadOptions(save_path=tmp_path, download_sound_only=ao),
+    )
     main_module.main(["menu"], dd)
     return dd.called
 
 
-def test_menu_video_triggers_download(monkeypatch, tmp_path):
-    called = run_menu_with_choice(monkeypatch, tmp_path, cli_module.MenuOption.VIDEO.value)
-    assert called[0] == ["https://youtu.be/x"]
-    assert called[1].download_sound_only is False
-
-
-def test_menu_audio_only_triggers_download(monkeypatch, tmp_path):
-    called = run_menu_with_choice(monkeypatch, tmp_path, cli_module.MenuOption.VIDEO_AUDIO_ONLY.value)
-    assert called[0] == ["https://youtu.be/x"]
-    assert called[1].download_sound_only is True
+@pytest.mark.parametrize(
+    "menu_choice,expected_urls,audio_only",
+    [
+        (cli_module.MenuOption.VIDEO.value, ["https://youtu.be/x"], False),
+        (cli_module.MenuOption.VIDEO_AUDIO_ONLY.value, ["https://youtu.be/x"], True),
+        (cli_module.MenuOption.VIDEOS.value, ["https://youtu.be/a", "https://youtu.be/b"], False),
+        (cli_module.MenuOption.VIDEOS_AUDIO_ONLY.value, ["https://youtu.be/a", "https://youtu.be/b"], True),
+        (cli_module.MenuOption.PLAYLIST_VIDEO.value, ["https://youtu.be/p"], False),
+        (cli_module.MenuOption.PLAYLIST_AUDIO_ONLY.value, ["https://youtu.be/p"], True),
+        (cli_module.MenuOption.CHANNEL_VIDEOS.value, ["https://youtu.be/c"], False),
+        (cli_module.MenuOption.CHANNEL_AUDIO_ONLY.value, ["https://youtu.be/c"], True),
+    ],
+)
+def test_menu_dispatch(monkeypatch, tmp_path, menu_choice, expected_urls, audio_only):
+    called = run_menu_with_choice(monkeypatch, tmp_path, menu_choice)
+    assert called[0] == expected_urls
+    assert called[1].download_sound_only is audio_only
 
 
 def test_menu_keyboard_interrupt(monkeypatch):
