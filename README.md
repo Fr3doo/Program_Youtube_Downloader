@@ -218,6 +218,14 @@ Les tests unitaires sont écrits avec `pytest`. Après l’installation des dép
 pytest
 ```
 
+## Vérification du style
+
+Un fichier `.flake8` configure les règles de base. Pour lancer la vérification :
+
+```bash
+flake8
+```
+
 ## Contribuer
 
 Les contributions sont les bienvenues ! Vous pouvez ouvrir une *issue* pour signaler un problème ou demander une fonctionnalité. Pour proposer une correction ou une amélioration, créez une *pull request* depuis votre fork du dépôt.

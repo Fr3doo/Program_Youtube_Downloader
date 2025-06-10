@@ -54,7 +54,8 @@ def ask_numeric_value(min_value: int, max_value: int, max_attempts: int = 3) -> 
             continue
         if not (min_value <= v_int <= max_value):
             logger.warning(
-                f"Entrée invalide : saisissez un nombre entre {min_value} et {max_value}."
+                "Entrée invalide : saisissez un nombre entre "
+                f"{min_value} et {max_value}."
             )
             logger.info("")
             attempts += 1
@@ -110,7 +111,9 @@ def ask_save_file_path(max_attempts: int = 3) -> Path:
         print("*             Sauvegarde fichier                            *")
         print_separator()
 
-        save_path = input("Indiquez l'endroit où vous voulez stocker le fichier : \n --> ")
+        save_path = input(
+            "Indiquez l'endroit où vous voulez stocker le fichier : \n --> "
+        )
         path = Path(save_path).expanduser().resolve()
 
         if path.is_file():
@@ -208,7 +211,8 @@ def ask_youtube_link_file(max_attempts: int = 3) -> list[str]:
 
                 if not total_links:
                     logger.error(
-                        "Vous devez fournir un fichier contenant au moins une URL de vidéo YouTube"
+                        "Vous devez fournir un fichier contenant au moins une"
+                        " URL de vidéo YouTube"
                     )
                     attempts += 1
                     if attempts >= max_attempts:
@@ -223,14 +227,17 @@ def ask_youtube_link_file(max_attempts: int = 3) -> list[str]:
                         valid_urls.append(video_url)
                     except InvalidURLError:
                         logger.error(
-                            f"URL invalide à la ligne {line_counter} ; le préfixe attendu est : https://www.youtube.com/"
+                            "URL invalide à la ligne "
+                            f"{line_counter} ; le préfixe attendu est : "
+                            "https://www.youtube.com/"
                         )
                         logger.error("")
                         error_count += 1
 
                 if error_count == total_links:
                     logger.error(
-                        "Vous devez fournir un fichier contenant au moins une URL de vidéo YouTube"
+                        "Vous devez fournir un fichier contenant au moins une"
+                        " URL de vidéo YouTube"
                     )
                     attempts += 1
                     if attempts >= max_attempts:
@@ -250,7 +257,9 @@ def ask_youtube_link_file(max_attempts: int = 3) -> list[str]:
 def ask_resolution_or_bitrate(
     download_sound_only: bool, list_available_streams: Iterable[Any]
 ) -> int:
-    """Prompt the user to choose a resolution or bitrate from ``list_available_streams``.
+    """Prompt the user to choose a resolution or bitrate.
+
+    The options are taken from ``list_available_streams``.
 
     Args:
         download_sound_only: If ``True`` ``list_available_streams`` contains

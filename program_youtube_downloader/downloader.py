@@ -1,6 +1,6 @@
 from urllib.error import HTTPError
 from pathlib import Path
-from typing import Optional, Union, Iterable, Callable, Any
+from typing import Union, Iterable, Callable, Any
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import logging
 
@@ -112,7 +112,11 @@ class YoutubeDownloader:
                 out_file = Path(stream.download(output_path=str(save_path)))
                 logger.info("")
                 break
-            except (HTTPError, OSError, PytubeError) as e:  # pragma: no cover - network/io issues
+            except (
+                HTTPError,
+                OSError,
+                PytubeError,
+            ) as e:  # pragma: no cover - network/io issues
                 logger.exception("Download failed")
                 logger.info("")
                 logger.error(f"Le téléchargement a échoué : {e}")
@@ -155,17 +159,22 @@ class YoutubeDownloader:
             return streams
         except HTTPError as e:
             logger.error(
-                f"Impossible d'accéder aux flux pour la vidéo. HTTP {e.code} : {e.reason}"
+                "Impossible d'accéder aux flux pour la vidéo. "
+                f"HTTP {e.code} : {e.reason}"
             )
             raise StreamAccessError(f"HTTP {e.code}: {e.reason}") from e
         except PytubeError as e:
             logger.exception("Error while retrieving streams")
-            logger.error(f"Une erreur est survenue lors de la récupération des flux : {e}")
+            logger.error(
+                "Une erreur est survenue lors de la récupération des flux : "
+                f"{e}"
+            )
             raise StreamAccessError(str(e)) from e
         except Exception as e:  # pragma: no cover - defensive
             logger.exception("Unexpected error while retrieving streams")
             logger.error(
-                f"Une erreur inattendue s'est produite lors de la récupération des flux : {e}"
+                "Une erreur inattendue s'est produite lors de la récupération "
+                f"des flux : {e}"
             )
             raise StreamAccessError(str(e)) from e
 
@@ -347,7 +356,8 @@ class YoutubeDownloader:
                     logger.info("*             Stream vidéo sélectionné :          *")
                     cli_utils.print_separator()
                     logger.info(
-                        f"Nombre de liens vidéo YouTube dans le fichier : {len(url_list)}"
+                        "Nombre de liens vidéo YouTube dans le fichier : "
+                        f"{len(url_list)}"
                     )
                     logger.info("")
 
@@ -370,4 +380,3 @@ class YoutubeDownloader:
 
 
 __all__ = ["YoutubeDownloader"]
-
