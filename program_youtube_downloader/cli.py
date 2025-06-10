@@ -21,6 +21,12 @@ class CLI:
     """Interactive command line interface for the application."""
 
     def __init__(self, downloader: YoutubeDownloader | None = None) -> None:
+        """Create the CLI wrapper around ``YoutubeDownloader``.
+
+        Args:
+            downloader: Optional custom downloader instance. When ``None`` a
+                new :class:`YoutubeDownloader` is created.
+        """
         self.downloader = downloader or YoutubeDownloader()
 
     # ------------------------------------------------------------------

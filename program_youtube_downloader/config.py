@@ -7,6 +7,7 @@ from .progress import ProgressHandler
 
 
 def _max_workers_from_env() -> int:
+    """Return ``PYDL_MAX_WORKERS`` as an integer or fallback to ``1``."""
     value = os.getenv("PYDL_MAX_WORKERS")
     if value is None:
         return 1

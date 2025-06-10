@@ -109,6 +109,7 @@ class ProgressBarHandler:
     """Default progress handler displaying a textual bar."""
 
     def __init__(self, options: ProgressOptions | None = None) -> None:
+        """Instantiate the handler with optional display options."""
         self.options = options
 
 
