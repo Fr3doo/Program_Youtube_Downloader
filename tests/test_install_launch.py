@@ -2,7 +2,11 @@ import os
 import sys
 import subprocess
 from pathlib import Path
-import tomllib
+
+try:  # Python 3.11+
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover - Python < 3.11
+    import tomli as tomllib
 
 
 def test_console_script_defined() -> None:
