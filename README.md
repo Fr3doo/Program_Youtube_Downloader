@@ -164,6 +164,7 @@ consultez [AGENTS.md](AGENTS.md) à la racine du dépôt.
 - [docs/project-overview.md](docs/project-overview.md)
 - [docs/guides/](docs/guides/)
 - [docs/guides/custom-progress-handler.md](docs/guides/custom-progress-handler.md)
+- [docs/guides/custom-cli-class.md](docs/guides/custom-cli-class.md)
 - [docs/releases/](docs/releases/)
 - [docs/reference/api-reference.md](docs/reference/api-reference.md)
 - [docs/reference/architecture.md](docs/reference/architecture.md)

@@ -41,7 +41,9 @@ Les différents dossiers de `docs/` sont organisés ainsi :
 - [`guides/download-video-guide.md`](guides/download-video-guide.md)
   > Guide pas à pas pour utiliser la CLI et télécharger une vidéo.
 - [`guides/custom-progress-handler.md`](guides/custom-progress-handler.md)
-  > Créer et enregistrer un gestionnaire de progression personnalisé.
+  > Créer et enregistrer un gestionnaire de progression personnalisé.
+- [`guides/custom-cli-class.md`](guides/custom-cli-class.md)
+  > Étendre la classe `CLI` pour ajouter de nouvelles options.
 
 ---
 
