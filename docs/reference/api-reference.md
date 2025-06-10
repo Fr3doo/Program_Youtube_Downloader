@@ -19,6 +19,17 @@ Cette section décrit brièvement les fonctions et classes disponibles dans le p
 
 ## `cli.py`
 - `CLI` : interface interactive basée sur `YoutubeDownloader`.
+  - `create_download_options(audio_only, output_dir=None)` : construit un
+    objet `DownloadOptions` complet.
+  - `handle_video_option(audio_only)` / `handle_videos_option(audio_only)` :
+    téléchargent une ou plusieurs vidéos selon le choix de l'utilisateur.
+  - `handle_playlist_option(audio_only)` / `handle_channel_option(audio_only)` :
+    récupèrent respectivement une playlist entière ou toutes les vidéos d'une
+    chaîne.
+  - `load_playlist(url)` et `load_channel(url)` : helpers retournant les objets
+    `Playlist` ou `Channel` prêt à l'emploi.
+  - `menu()` : boucle interactive principale affichant le menu jusqu'à
+    sélection de *Quitter*.
 
 ## `cli_utils.py`
 Fonctions d'interaction utilisateur :

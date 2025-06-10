@@ -21,19 +21,28 @@ logger = logging.getLogger(__name__)
 
 
 class CLI:
-    """Interactive command line interface for the application."""
+    """Interactive command line interface for the downloader.
+
+    The class exposes small helper methods that orchestrate the user
+    interaction logic.  It delegates the actual download work to
+    :class:`YoutubeDownloader` and only handles the prompts and menu
+    dispatching.
+    """
 
     def __init__(
         self,
         downloader: YoutubeDownloader | None = None,
         console: ConsoleIO = DefaultConsoleIO(),
     ) -> None:
-        """Create the CLI wrapper around ``YoutubeDownloader``.
+        """Instantiate the interface.
 
-        Args:
-            downloader: Optional custom downloader instance. When ``None`` a
-                new :class:`YoutubeDownloader` is created.
-            console: Object used for ``input``/``print`` operations.
+        Parameters
+        ----------
+        downloader:
+            Optional pre-configured :class:`YoutubeDownloader` instance.
+            If ``None`` a new one is created.
+        console:
+            Implementation of :class:`ConsoleIO` used for user interaction.
         """
         self.downloader = downloader or YoutubeDownloader()
         self.console = console
@@ -44,7 +53,22 @@ class CLI:
     def create_download_options(
         self, audio_only: bool, output_dir: Path | None = None
     ) -> DownloadOptions:
-        """Build a :class:`DownloadOptions` with destination and callbacks."""
+        """Return a fully initialised :class:`DownloadOptions` instance.
+
+        Parameters
+        ----------
+        audio_only:
+            When ``True`` the downloader will only fetch the audio streams and
+            convert them to MP3.
+        output_dir:
+            Optional directory to save the downloads.  If omitted the user is
+            prompted for a path via :func:`cli_utils.ask_save_file_path`.
+
+        Returns
+        -------
+        DownloadOptions
+            The options object to pass to :meth:`YoutubeDownloader.download_multiple_videos`.
+        """
         if output_dir is not None:
             save_path = output_dir.expanduser().resolve()
         else:
@@ -61,7 +85,7 @@ class CLI:
     # Menu handlers
     # ------------------------------------------------------------------
     def handle_quit_option(self) -> None:
-        """Display the exit banner."""
+        """Display the closing banner and end of program message."""
         log_blank_line()
         log_blank_line()
         logger.info(SEPARATOR)
@@ -71,13 +95,26 @@ class CLI:
         logger.info(SEPARATOR)
 
     def handle_video_option(self, audio_only: bool) -> None:
-        """Download a single video or its audio track."""
+        """Handle the "download single video" menu entry.
+
+        Parameters
+        ----------
+        audio_only:
+            When ``True`` only the audio stream of the selected video is
+            downloaded.
+        """
         url = cli_utils.ask_youtube_url(console=self.console)
         options = self.create_download_options(audio_only)
         self.downloader.download_multiple_videos([url], options)
 
     def handle_videos_option(self, audio_only: bool) -> None:
-        """Download multiple videos or their audio tracks from a file."""
+        """Handle the "download from file" menu entry.
+
+        Parameters
+        ----------
+        audio_only:
+            When ``True`` only the audio stream of each video is downloaded.
+        """
         urls = cli_utils.ask_youtube_link_file(console=self.console)
         options = self.create_download_options(audio_only)
         self.downloader.download_multiple_videos(urls, options)
@@ -86,7 +123,22 @@ class CLI:
     # Loader helpers
     # ------------------------------------------------------------------
     def load_playlist(self, url: str) -> Playlist:
-        """Return a :class:`Playlist` instance for ``url`` or raise an error."""
+        """Instantiate :class:`pytubefix.Playlist` from ``url``.
+
+        Parameters
+        ----------
+        url:
+            URL of the YouTube playlist to load.
+
+        Returns
+        -------
+        pytubefix.Playlist
+
+        Raises
+        ------
+        PlaylistConnectionError
+            If the playlist cannot be accessed.
+        """
         try:
             return Playlist(url)
         except (PytubeError, KeyError, ValueError) as e:
@@ -97,7 +149,22 @@ class CLI:
             raise
 
     def load_channel(self, url: str) -> Channel:
-        """Return a :class:`Channel` instance for ``url`` or raise an error."""
+        """Instantiate :class:`pytubefix.Channel` from ``url``.
+
+        Parameters
+        ----------
+        url:
+            URL of the YouTube channel to load.
+
+        Returns
+        -------
+        pytubefix.Channel
+
+        Raises
+        ------
+        ChannelConnectionError
+            If the channel cannot be accessed.
+        """
         try:
             return Channel(url)
         except (PytubeError, KeyError, ValueError) as e:
@@ -108,14 +175,28 @@ class CLI:
             raise
 
     def handle_playlist_option(self, audio_only: bool) -> None:
-        """Download an entire playlist."""
+        """Handle the playlist download menu entry.
+
+        Parameters
+        ----------
+        audio_only:
+            If ``True`` download only the audio tracks from the playlist
+            videos.
+        """
         url = cli_utils.ask_youtube_url(console=self.console)
         playlist = self.load_playlist(url)
         options = self.create_download_options(audio_only)
         self.downloader.download_multiple_videos(playlist, options)  # type: ignore
 
     def handle_channel_option(self, audio_only: bool) -> None:
-        """Download all videos from a channel."""
+        """Handle the channel download menu entry.
+
+        Parameters
+        ----------
+        audio_only:
+            If ``True`` download only the audio tracks from each video
+            of the channel.
+        """
         url = cli_utils.ask_youtube_url(console=self.console)
         channel = self.load_channel(url)
         options = self.create_download_options(audio_only)
@@ -125,7 +206,12 @@ class CLI:
     # Interactive menu
     # ------------------------------------------------------------------
     def menu(self) -> None:  # pragma: no cover - manual user interaction
-        """Interactively ask the user what to download and start the process."""
+        """Run the interactive menu until the user decides to quit.
+
+        The method simply loops over user choices, dispatching to the
+        appropriate handler.  It catches ``KeyboardInterrupt`` so that
+        pressing ``CTRL+C`` results in a clean exit banner.
+        """
         try:
             handlers = {
                 MenuOption.VIDEO: self.handle_video_option,
