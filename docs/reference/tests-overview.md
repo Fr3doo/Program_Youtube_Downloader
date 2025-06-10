@@ -8,7 +8,7 @@ Ce document résume les tests unitaires situés dans le dossier `tests/`. Chaque
 # Classes factices (dummy) réutilisées entre les tests
 # Fonctions utilitaires pour l’interface en ligne de commande (CLI)
 # Gestion de la progression
-# Petites fonctions utilitaires du module legacy_utils
+# Petites fonctions utilitaires du module utils
 # Comportements spécifiques à YoutubeDownloader
 
     Utilitaires CLI – vérifie l'affichage des menus, la sélection de résolution/bitrate,

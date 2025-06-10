@@ -28,7 +28,7 @@ Le cœur de l’application se trouve dans le package `program_youtube_downloade
 - **`constants.py`** : chaînes affichées dans le menu et URL de base.
 - **`exceptions.py`** : classes d’erreur utilisées lors des validations et téléchargements.
 - **`types.py`** : protocoles employés pour typer les objets YouTube.
-- **`legacy_utils.py`** : utilitaires généraux (compte à rebours, nettoyage de l’écran).
+- **`utils.py`** : utilitaires généraux (compte à rebours, nettoyage de l’écran).
 
 ### Convention de langue
 

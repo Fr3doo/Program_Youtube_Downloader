@@ -50,7 +50,7 @@ Fonctions d'interaction utilisateur :
 - `DownloadOptions` : dataclass regroupant les options de téléchargement (dossier, audio seul, callback de choix, gestionnaire de progression, nombre de threads). Le champ `max_workers` est initialisé depuis la variable d'environnement `PYDL_MAX_WORKERS` si elle est définie.
 - `_max_workers_from_env()` : récupère `PYDL_MAX_WORKERS` et retourne `1` en cas de valeur invalide.
 
-## `legacy_utils.py`
+## `utils.py`
 Utilitaires généraux :
 - `clear_screen()` : nettoie la console selon le système.
 - `program_break_time(seconds, text)` : petite minuterie textuelle.
