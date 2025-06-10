@@ -57,3 +57,12 @@ graph TD
 3. `YoutubeDownloader` télécharge les flux grâce à `pytubefix` puis enregistre le fichier.
 4. Si l’option audio est activée, le fichier MP4 est converti en MP3 via `conversion_mp4_in_mp3`.
 5. Une barre de progression s’affiche durant le téléchargement et un message signale la fin de l’opération.
+
+## Variables d'environnement
+
+Certaines options peuvent être définies via le système pour éviter de les
+passer à chaque exécution :
+
+- `PYDL_MAX_WORKERS` pour contrôler le nombre de téléchargements parallèles ;
+- `PYDL_OUTPUT_DIR` pour choisir le dossier de sortie par défaut ;
+- `PYDL_AUDIO_ONLY` pour activer automatiquement le mode audio.

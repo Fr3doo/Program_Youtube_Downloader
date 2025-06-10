@@ -214,12 +214,23 @@ en définissant la variable d'environnement `PYDL_MAX_WORKERS` :
 PYDL_MAX_WORKERS=4 program-youtube-downloader video https://youtu.be/example
 ```
 
+De même, `PYDL_OUTPUT_DIR` permet de choisir un dossier de sortie par défaut et
+`PYDL_AUDIO_ONLY` d'activer automatiquement le téléchargement de la piste
+audio :
+
+```bash
+PYDL_OUTPUT_DIR=/chemin/de/sortie PYDL_AUDIO_ONLY=1 \
+    program-youtube-downloader video https://youtu.be/example
+```
+
 ## Variables d'environnement
 
-Le programme peut être configuré via deux variables principales :
+Le programme peut être configuré via plusieurs variables :
 
 - **`PYDL_LOG_LEVEL`** détermine le niveau de verbosité du module `logging`. En l'absence de cette variable, le niveau `ERROR` est utilisé.
 - **`PYDL_MAX_WORKERS`** fixe le nombre maximal de téléchargements lancés en parallèle. Une valeur trop élevée peut ralentir la connexion.
+- **`PYDL_OUTPUT_DIR`** définit le dossier de destination par défaut.
+- **`PYDL_AUDIO_ONLY`** force le téléchargement de la piste audio si sa valeur est ``1`` ou ``true``.
 
 Ces paramètres sont lus lors de la création des `DownloadOptions`. Consultez la [partie configuration](docs/reference/api-reference.md#configpy) pour les détails sur le comportement associé.
 
