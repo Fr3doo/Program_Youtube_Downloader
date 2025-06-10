@@ -248,6 +248,23 @@ Un fichier `.flake8` configure les règles de base. Pour lancer la vérification
 flake8
 ```
 
+## Pré-commit
+
+Ce dépôt fournit une configuration pour exécuter automatiquement `flake8` et
+`pytest` avant chaque commit. Après avoir installé les dépendances de
+développement, installez l'outil puis le hook :
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+Lancez toutes les vérifications manuellement avec :
+
+```bash
+pre-commit run --all-files
+```
+
 ## Contribuer
 
 Les contributions sont les bienvenues ! Vous pouvez ouvrir une *issue* pour signaler un problème ou demander une fonctionnalité. Pour proposer une correction ou une amélioration, créez une *pull request* depuis votre fork du dépôt.
