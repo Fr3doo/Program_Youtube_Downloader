@@ -95,6 +95,49 @@ def test_download_video_error(monkeypatch, tmp_path: Path) -> None:
         yd._download_video(stream, tmp_path, "https://youtu.be/fail", False)
 
 
+def test_attempt_download_success(tmp_path: Path) -> None:
+    stream = DummyStream()
+    yd = YoutubeDownloader()
+
+    path = yd._attempt_download(stream, tmp_path)
+
+    assert path == tmp_path / stream.default_filename
+    assert path.exists()
+
+
+def test_attempt_download_failure(tmp_path: Path) -> None:
+    class Fail(DummyStream):
+        def download(self, output_path: str) -> str:
+            raise OSError("boom")
+
+    yd = YoutubeDownloader()
+
+    with pytest.raises(DownloadError):
+        yd._attempt_download(Fail(), tmp_path)
+
+
+def test_download_video_uses_attempt(monkeypatch, tmp_path: Path) -> None:
+    stream = DummyStream()
+    yd = YoutubeDownloader()
+
+    called: dict[str, Any] = {}
+
+    def fake_attempt(s, p):
+        called["args"] = (s, p)
+        file_path = p / stream.default_filename
+        file_path.write_text("x")
+        return file_path
+
+    monkeypatch.setattr(yd, "_attempt_download", fake_attempt)
+    mp3: dict[str, Path] = {}
+    monkeypatch.setattr(yd, "conversion_mp4_in_mp3", lambda p: mp3.setdefault("p", p))
+
+    yd._download_video(stream, tmp_path, "https://youtu.be/x", True)
+
+    assert called["args"] == (stream, tmp_path)
+    assert mp3["p"] == tmp_path / stream.default_filename
+
+
 def test_prepare_video_success(monkeypatch) -> None:
     monkeypatch.setattr(
         YoutubeDownloader, "get_video_streams", lambda self, dso, yt: yt.streams
