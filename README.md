@@ -72,7 +72,7 @@ Un menu s’affichera pour choisir le type de téléchargement (vidéo ou audio,
 Pour générer une version autonome du programme vous pouvez utiliser `pyinstaller` :
 
 ```bash
-pyinstaller --onefile --add-data "mypy.ini;." --hidden-import "legacy_utils" program_youtube_downloader/main.py
+pyinstaller --onefile --add-data "mypy.ini;." program_youtube_downloader/main.py
 ```
 
 ## Aperçu
@@ -117,7 +117,7 @@ Image :
 - `progress.py` : gestion de l'affichage de la barre de progression.
 - `validators.py` : vérifications des liens YouTube fournis par l'utilisateur.
 - `config.py` : objet `DownloadOptions` pour paramétrer les téléchargements.
-- `legacy_utils.py` : utilitaires généraux (effacement d'écran, compte à rebours).
+- `utils.py` : utilitaires généraux (effacement d'écran, compte à rebours).
 - `exceptions.py` : définit la base `PydlError` et toutes les exceptions
   dérivées (`DownloadError`, `ValidationError`, etc.).
 - `requirements.txt` : liste des dépendances Python nécessaires.

@@ -20,7 +20,7 @@ def test_youtube_downloader_does_not_configure_logging(monkeypatch):
         calls.append((args, kwargs))
 
     monkeypatch.setattr(logging, "basicConfig", fake_basicConfig)
-    module_name = "program_youtube_downloader.legacy_utils"
+    module_name = "program_youtube_downloader.utils"
     sys.modules.pop(module_name, None)
     import importlib
 

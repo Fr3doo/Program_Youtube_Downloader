@@ -6,7 +6,7 @@ Ce document résume le fonctionnement global du projet **Program Youtube Downloa
 
 Le dépôt contient un outil en ligne de commande permettant de télécharger des vidéos ou l'audio depuis YouTube. La configuration du projet et l'installation des dépendances sont décrites dans `pyproject.toml`, qui déclare un script `program-youtube-downloader` exécutant `program_youtube_downloader.main:main`.
 
-Le README précise les fichiers clés et leur rôle : `program_youtube_downloader/main.py` pour la boucle de menu, `downloader.py` pour les téléchargements et conversions, `cli_utils.py` pour les interactions utilisateur, `constants.py` pour les messages du menu, `progress.py` pour la barre de progression, `validators.py` pour vérifier les URL, `config.py` pour l'objet `DownloadOptions`, et `legacy_utils.py` pour des utilitaires divers.
+Le README précise les fichiers clés et leur rôle : `program_youtube_downloader/main.py` pour la boucle de menu, `downloader.py` pour les téléchargements et conversions, `cli_utils.py` pour les interactions utilisateur, `constants.py` pour les messages du menu, `progress.py` pour la barre de progression, `validators.py` pour vérifier les URL, `config.py` pour l'objet `DownloadOptions`, et `utils.py` pour des utilitaires divers.
 
 ## Nouveautés
 
