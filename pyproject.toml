@@ -12,6 +12,7 @@ license = "MIT"
 dependencies = [
     "pytubefix",
     "colorama",
+    "tomli; python_version < \"3.11\"",
 ]
 
 [project.scripts]

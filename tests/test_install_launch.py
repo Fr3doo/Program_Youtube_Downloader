@@ -3,9 +3,9 @@ import sys
 import subprocess
 from pathlib import Path
 
-try:  # Python 3.11+
+try:
     import tomllib
-except ModuleNotFoundError:  # pragma: no cover - Python < 3.11
+except ModuleNotFoundError:
     import tomli as tomllib
 
 
