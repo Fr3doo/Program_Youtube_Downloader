@@ -134,9 +134,16 @@ options = DownloadOptions(download_sound_only=True)
 yd.download_multiple_videos(["https://youtu.be/dQw4w9WgXcQ"], options)
 ```
 
-Vous pouvez fournir votre propre gestionnaire de progression en implémentant
-`ProgressHandler` et en le passant au constructeur ou via
-`DownloadOptions` :
+### Gestionnaire de progression personnalisé
+
+Le protocole `ProgressHandler` définit la méthode `on_progress`. En
+implémentant ce protocole, vous pouvez contrôler l'affichage de la
+progression. Injectez votre gestionnaire via
+`DownloadOptions(progress_handler=handler)` ou directement au
+constructeur `YoutubeDownloader`. Un guide complet est disponible dans
+[docs/guides/custom-progress-handler.md](docs/guides/custom-progress-handler.md).
+
+Exemple d'utilisation d'un gestionnaire de progression personnalisé :
 
 ```python
 from program_youtube_downloader.progress import VerboseProgressHandler
